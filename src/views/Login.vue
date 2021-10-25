@@ -13,7 +13,7 @@
         <span class="avatar flex-center">
           <!-- <img src="../assets/images/avatar.png" alt="author" /> -->
         </span>
-        <h1 class="island">K.island</h1>
+        <h1 class="island">Mytrol</h1>
       </div>
       <div class="form-item">
         <label class="ipt-item">
