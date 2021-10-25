@@ -7,20 +7,17 @@ const routes = [
     children: [
       {
         path: "/",
-        component: () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/views/Commanding'),
+        component: () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/views/Commanding/index.vue'),
       },
       {
         path: "/audit",
-        component: () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/views/Commanding'),
+        component: () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/views/Commanding/index.vue'),
       },
       {
         path: "/order",
-        component: () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/views/Commanding'),
+        component: () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/views/Order/index.vue'),
       },
-      {
-        path: "/edit",
-        component: () => import(/* webpackChunkName: 'ImportFuncDemo' */ '@/views/Commanding'),
-      },
+     
     ],
   },
   {

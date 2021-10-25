@@ -8,7 +8,7 @@
       <div class="avator">
         <img src="../assets/images/avtor.png" alt="" />
       </div>
-      <a-select v-model:value="value2" style="width: 80px">
+      <a-select class="select" v-model:value="value2">
         <a-select-option value="lucy">Lucy</a-select-option>
       </a-select>
       <div class="waring">
@@ -19,12 +19,8 @@
 </template>
 
 <script>
-import { Select } from "ant-design-vue";
 import { ref } from "vue";
 export default {
-  components: {
-    "a-select": Select,
-  },
   setup() {
     return {
       value2: ref("lucy"),
@@ -69,8 +65,9 @@ header {
         height: 100%;
       }
     }
-    select {
+    .select {
       margin: 0 10px;
+      width: 80px;
     }
   }
 }
