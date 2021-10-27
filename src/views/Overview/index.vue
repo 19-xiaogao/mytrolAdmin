@@ -1,9 +1,11 @@
 <template>
-  <div class="edit-message">
+  <div class="overivew">
+    <div class="edit-message">
     <PersonSpace />
     <EditBanner />
   </div>
   <DetaAnalysis />
+  </div>
 </template>
 
 <script>
@@ -20,6 +22,10 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.overivew{
+  width: 100%;
+  height: 100%;
+}
 .edit-message {
   display: flex;
   justify-content: space-between;

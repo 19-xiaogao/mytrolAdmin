@@ -3,9 +3,18 @@
     <div class="header">
       <h4>订单</h4>
       <div class="search-box">
-        <span>编码</span>
-        <input type="text" />
-        <span class="icon"></span>
+        <div class="dropdown">
+          <div class="current-option">
+            <div class="text">编码</div>
+            <div class="icon"></div>
+          </div>
+        </div>
+        <div class="search">
+          <span class="line"></span>
+          <input type="text" class="input" />
+          <span class="icon">
+            <img src="../../assets/images/search.png" alt=""> </span>
+        </div>
       </div>
     </div>
     <a-table
@@ -19,13 +28,15 @@
       "
     >
       <template #detail>
-        <span>详情</span>
+        <a-button type="link">查看</a-button>
       </template>
     </a-table>
   </div>
+  <!-- <OrderDetail /> -->
 </template>
 
 <script>
+// import OrderDetail from "./OrderDetail";
 import { defineComponent, reactive } from "vue";
 const columns = [
   {
@@ -34,7 +45,7 @@ const columns = [
     key: "ID",
   },
   {
-    title: "编码",
+    title: "订单号",
     dataIndex: "code",
     key: "code",
   },
@@ -89,6 +100,9 @@ const datas = [
 ];
 export default defineComponent({
   name: "order",
+  components: {
+    // OrderDetail,
+  },
   setup() {
     const data = reactive(datas);
     return {
@@ -113,6 +127,62 @@ export default defineComponent({
   .header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+    .search-box {
+      width: 301px;
+      height: 40px;
+      background: #f1f1f1;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      .dropdown {
+        width: 20%;
+        .current-option {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          .text {
+            font-size: 14px;
+            font-weight: 400;
+            color: #000000;
+            margin: 0 10px;
+          }
+          .icon {
+            cursor: pointer;
+            width: 6px;
+            height: 6px;
+            border: 1px solid #151515;
+            border-left-color: transparent;
+            border-top-color: transparent;
+            transform: translateY(-3px) rotate(45deg);
+          }
+        }
+      }
+      .search {
+        flex: 1;
+        text-align: left;
+        padding-left: 4px;
+        display: flex;
+        align-items: center;
+        .line {
+          display: inline-block;
+          width: 1px;
+          height: 16px;
+          background: #d8d8d8;
+          border-radius: 1px;
+          border: 1px solid #c7c7c7;
+        }
+        .input {
+          margin-left: 5px;
+          width: 80%;
+        }
+        .icon{
+          cursor: pointer;
+        }
+      }
+    }
   }
 }
 .ant-table-striped :deep(.table-striped) td {

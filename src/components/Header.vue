@@ -1,6 +1,6 @@
 <template>
   <header>
-    <div class="logo">
+    <div class="logo" @click="handleRouteClick">
       <img src="../assets/images/mytrolLogo.png" alt="" />
       <span>后台</span>
     </div>
@@ -19,11 +19,17 @@
 </template>
 
 <script>
+import { useRouter } from "vue-router";
 import { ref } from "vue";
 export default {
   setup() {
+    const router = useRouter();
+    const handleRouteClick = () => {
+      router.push("/");
+    };
     return {
       value2: ref("lucy"),
+      handleRouteClick,
     };
   },
 };
@@ -43,6 +49,7 @@ header {
     display: flex;
     align-items: flex-end;
     margin-left: 10px;
+    cursor: pointer;
   }
   .avator-message {
     display: flex;

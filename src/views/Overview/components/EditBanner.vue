@@ -2,7 +2,12 @@
   <div class="edit-banner">
     <h3>首页Banner</h3>
     <div class="swiper-box">
-      <div class="swiper-pew"></div>
+      <a-carousel class="swiper-pew" autoplay>
+        <div><h3>1</h3></div>
+        <div><h3>2</h3></div>
+        <div><h3>3</h3></div>
+        <div><h3>4</h3></div>
+      </a-carousel>
       <div class="swiper-link">
         <div class="link-detail">
           <h5>banner1链接</h5>
@@ -39,6 +44,19 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+.ant-carousel :deep(.slick-slide) {
+  text-align: center;
+  // height: 100%;
+  width: 22vw;
+  // line-height: 100%;
+  height: 225px;
+  background: #364d79;
+  overflow: hidden;
+}
+
+.ant-carousel :deep(.slick-slide h3) {
+  color: #fff;
+}
 .edit-banner {
   width: 58%;
   height: 33.11%;
@@ -47,7 +65,7 @@ export default {};
   border-radius: 8px;
   border: 0px solid rgba(213, 213, 213, 0.58);
   box-sizing: border-box;
-  padding: 20px 30px;
+  padding: 23px 30px;
   h3 {
     text-align: left;
   }
@@ -56,6 +74,7 @@ export default {};
     justify-content: space-between;
     .swiper-pew {
       width: 22vw;
+      margin-right: 10px;
     }
     .swiper-link {
       flex: 1;

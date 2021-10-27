@@ -3,7 +3,13 @@
     <Header />
     <Sidebar />
     <div class="body">
-      <router-view />
+      <router-view v-slot="{ Component }">
+        <keep-alive>
+          <transition name="fadeRightIn">
+            <component :is="Component" />
+          </transition>
+        </keep-alive>
+      </router-view>
     </div>
   </div>
 </template>

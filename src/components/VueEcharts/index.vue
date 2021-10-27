@@ -1,5 +1,5 @@
 <template>
-  <div class="k-echarts" ref="echartsRef" />
+  <div class="echarts" ref="echartsRef" />
 </template>
 
 <script>
@@ -20,8 +20,8 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss">
-.k-echarts {
+<style lang="scss" scoped>
+.echarts {
   width: 100%;
   height: 100%;
   padding: 10px;

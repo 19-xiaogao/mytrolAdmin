@@ -13,11 +13,12 @@ ul,
 li,
 input,
 button {
-    margin: 0;
+    margin: 0 ;
     padding: 0;
 }
 
-input {
+input,
+textarea {
     background: none;
     outline: none;
     border: none;
