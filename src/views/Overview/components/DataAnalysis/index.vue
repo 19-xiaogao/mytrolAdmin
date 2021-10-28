@@ -14,7 +14,7 @@
       <div class="data-detail">
         <div class="title">
           <h3>3123</h3>
-          <span>用户注册量</span>
+          <span>NFT创作量</span>
         </div>
         <div class="echart">
           <v-chart :options="lineOption" />
@@ -23,7 +23,7 @@
       <div class="data-detail">
         <div class="title">
           <h3>3123</h3>
-          <span>用户注册量</span>
+          <span>已上市NFT量</span>
         </div>
         <div class="echart">
           <v-chart :options="lineOption" />

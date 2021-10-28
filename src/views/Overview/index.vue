@@ -1,17 +1,17 @@
 <template>
   <div class="overivew">
     <div class="edit-message">
-    <PersonSpace />
-    <EditBanner />
-  </div>
-  <DetaAnalysis />
+      <PersonSpace />
+      <EditBanner />
+    </div>
+    <DetaAnalysis />
   </div>
 </template>
 
 <script>
 import PersonSpace from "./components/PersonalSpace";
-import EditBanner from "./components/EditBanner";
-import DetaAnalysis from "./components/DataAnalysis/index.vue";
+import EditBanner from "./components/EditBanner/index.vue";
+import DetaAnalysis from "./components/DataAnalysis";
 export default {
   components: {
     PersonSpace,
@@ -22,7 +22,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.overivew{
+.overivew {
   width: 100%;
   height: 100%;
 }

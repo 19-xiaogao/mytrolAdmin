@@ -10,6 +10,7 @@
   "dependencies": {
     "ant-design-vue": "^2.2.8",
     "core-js": "^3.6.5",
+    "dayjs": "^1.10.7",
     "echarts": "^5.2.1",
     "vue": "^3.0.0",
     "vue-router": "^4.0.0-0",

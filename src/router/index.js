@@ -20,15 +20,6 @@ const routes = [
           ),
       },
       {
-        path: "/shelves",
-        name: "shelves",
-        meta: {
-          title: "上架",
-        },
-        component: () =>
-          import(/* webpackChunkName: 'Shelves' */ "@/views/Shelves/index.vue"),
-      },
-      {
         path: "/order",
         name: "order",
         meta: {
@@ -36,6 +27,15 @@ const routes = [
         },
         component: () =>
           import(/* webpackChunkName: 'Order' */ "@/views/Order/index.vue"),
+      },
+      {
+        path: "/shelves",
+        name: "shelves",
+        meta: {
+          title: "上架",
+        },
+        component: () =>
+          import(/* webpackChunkName: 'Shelves' */ "@/views/Shelves/index.vue"),
       },
     ],
   },

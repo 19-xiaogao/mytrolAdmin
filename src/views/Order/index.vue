@@ -13,7 +13,8 @@
           <span class="line"></span>
           <input type="text" class="input" />
           <span class="icon">
-            <img src="../../assets/images/search.png" alt=""> </span>
+            <img src="../../assets/images/search.png" alt="" />
+          </span>
         </div>
       </div>
     </div>
@@ -28,16 +29,18 @@
       "
     >
       <template #detail>
-        <a-button type="link">查看</a-button>
+        <a-button type="link" @click.stop="handleOrderDetailClick"
+          >查看</a-button
+        >
       </template>
     </a-table>
+    <OrderDetail v-show="isOrderShow" @clonse="handleOrderDetailClick" />
   </div>
-  <!-- <OrderDetail /> -->
 </template>
 
 <script>
-// import OrderDetail from "./OrderDetail";
-import { defineComponent, reactive } from "vue";
+import OrderDetail from "./OrderDetail";
+import { defineComponent, reactive, ref } from "vue";
 const columns = [
   {
     title: "序号",
@@ -101,13 +104,19 @@ const datas = [
 export default defineComponent({
   name: "order",
   components: {
-    // OrderDetail,
+    OrderDetail,
   },
   setup() {
     const data = reactive(datas);
+    const isOrderShow = ref(false);
+    const handleOrderDetailClick = () => {
+      isOrderShow.value = !isOrderShow.value;
+    };
     return {
       columns,
       data,
+      handleOrderDetailClick,
+      isOrderShow,
     };
   },
 });
@@ -178,7 +187,7 @@ export default defineComponent({
           margin-left: 5px;
           width: 80%;
         }
-        .icon{
+        .icon {
           cursor: pointer;
         }
       }

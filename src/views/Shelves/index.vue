@@ -23,25 +23,43 @@
             <input type="text" placeholder="请输入数量" />
           </div>
           <div class="price">
-            <div>请求时间</div>
+            <div>开售时间</div>
             <input type="text" placeholder="2021.03.23" />
           </div>
-          <div class="select-headers">
+          <!-- <div class="select-headers">
             <div class="header" v-for="item in [1, 2, 3, 4, 5]" :key="item">
               <img src="../../assets/images/avtor.png" alt="" />
               <span>Jason</span>
             </div>
+          </div> -->
+        </div>
+        <div class="ups">
+          <div class="nft-des">
+            <textarea placeholder="给你的作品来一段介绍吧" />
+            <h3>NFT介绍</h3>
+          </div>
+          <div class="upload_collection">
+            <div class="titles">
+              <h3>藏品图文介绍</h3>
+              <div class="prew">
+                <icon-svg icon="icon-icon4-hover" class="icon"></icon-svg>
+                <span>预览</span>
+              </div>
+            </div>
+            <div class="upload-cot">
+              <img src="../../assets/images/sheleves-add.png" alt="" />
+              <p>
+                点击上传您的藏品图文介绍，建议宽度不超过1080px，大小不超过10M
+              </p>
+              <input type="file" />
+            </div>
           </div>
         </div>
-        <textarea
-          class="nft-des"
-          placeholder="给你的作品来一段介绍吧"
-        ></textarea>
       </div>
     </div>
     <div class="btns">
       <div class="btn">
-        <img src="../../assets/images/sheleves-through.png" alt="" />
+        <icon-svg icon="icon-icon4" class="icon"></icon-svg>
         <span>上架</span>
       </div>
     </div>
@@ -135,7 +153,7 @@ export default defineComponent({
             color: #434343;
           }
           input {
-            font-size: 24px;
+            font-size: 20px;
             width: 90%;
             font-weight: 500;
             color: #000000;
@@ -176,16 +194,99 @@ export default defineComponent({
           }
         }
       }
-      .nft-des {
+      .ups {
+        display: flex;
         margin-top: 16px;
-        width: 100%;
-        display: inline-block;
-        border-radius: 8px;
-        border: 1px solid #f3f1f1;
-        height: calc(470px - 16px - 118px - 5px - 34px);
-        padding: 20px;
-        font-size: 16px;
-        color: #000000;
+        .nft-des {
+          width: 40%;
+          border-radius: 8px;
+          border: 1px solid #f3f1f1;
+          height: calc(470px - 16px - 118px - 5px - 34px);
+          position: relative;
+          textarea {
+            padding: 20px;
+            padding-top: 44px;
+            display: inline-block;
+            width: 100%;
+            height: 100%;
+            font-size: 16px;
+            color: #000000;
+          }
+          h3 {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 19px;
+            color: #000;
+            font-weight: 600;
+          }
+        }
+        .upload_collection {
+          flex: 1;
+          flex-direction: column;
+
+          box-sizing: border-box;
+          border-radius: 8px;
+          border: 1px solid #f3f1f1;
+          margin-left: 10px;
+          padding: 20px;
+          .titles {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            h3 {
+              font-size: 19px;
+              font-weight: 600;
+              color: #000000;
+              padding: 0;
+              margin: 0;
+            }
+            .prew {
+              width: 74px;
+              height: 40px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              background: #000000;
+              border-radius: 8px;
+              cursor: pointer;
+              .icon {
+                color: #fff;
+                font-size: 1.4rem;
+              }
+              span {
+                color: #fff;
+              }
+            }
+          }
+
+          .upload-cot {
+            width: 100%;
+            margin-top: 20px;
+            height: calc(100% - 37px - 40px);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            p {
+              width: 277px;
+              text-align: center;
+              margin-top: 21px;
+            }
+            input {
+              display: inline-block;
+              width: 100%;
+              position: absolute;
+              height: 100%;
+              top: 0;
+              left: 0;
+              opacity: 0;
+              cursor: pointer;
+            }
+          }
+        }
       }
     }
   }
@@ -200,12 +301,16 @@ export default defineComponent({
     align-items: center;
     cursor: pointer;
     .btn {
-      width: 154px;
+      width: 242px;
       height: 48px;
       background: #54a44b;
       border-radius: 8px;
       display: flex;
       justify-content: center;
+      .icon {
+        font-size: 2rem;
+        color: #fff;
+      }
       span {
         color: #ffffff;
         font-size: 16px;
