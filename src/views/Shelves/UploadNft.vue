@@ -31,6 +31,7 @@ export default {};
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    text-align: center;
     p {
       margin-top: 20px;
       font-size: 14px;

@@ -32,6 +32,7 @@ export default {
   height: 100vh;
   overflow: hidden;
   position: relative;
+  animation: backInUp 0.4s linear;
   .body {
     position: absolute;
     top: 60px;

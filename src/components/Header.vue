@@ -12,7 +12,7 @@
         <a-select-option value="lucy">Lucy</a-select-option>
       </a-select>
       <div class="waring">
-        <img src="@assets/images/bell.png" alt="" />
+        <img src="@assets/images/bell.png" @click="handleRouteLogin" alt="" />
       </div>
     </div>
   </header>
@@ -27,9 +27,13 @@ export default {
     const handleRouteClick = () => {
       router.push("/");
     };
+    const handleRouteLogin = () => {
+      router.push("/login");
+    };
     return {
       value2: ref("lucy"),
       handleRouteClick,
+      handleRouteLogin,
     };
   },
 };

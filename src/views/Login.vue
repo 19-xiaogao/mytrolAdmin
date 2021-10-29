@@ -30,7 +30,13 @@
         </label>
       </div>
       <div class="form-item">
-        <button class="btn btn-primary btn-login" type="button">GO</button>
+        <button
+          class="btn btn-primary btn-login"
+          type="button"
+          @click="handleLoginBtn"
+        >
+          GO
+        </button>
       </div>
     </div>
     <div class="hint">
@@ -39,6 +45,21 @@
   </section>
 </template>
 
+<script>
+import { defineComponent } from "vue";
+import { useRouter } from "vue-router";
+export default defineComponent({
+  setup() {
+    const router = useRouter();
+    const handleLoginBtn = () => {
+      router.push("/");
+    };
+    return {
+      handleLoginBtn,
+    };
+  },
+});
+</script>
 <style lang="scss">
 @import "../assets/css/login.scss";
 </style>

@@ -88,6 +88,7 @@ export default {
       left: 50%;
       transform: translate(-50%, -50%);
       width: 80px;
+      text-align: center;
       height: 34px;
       line-height: 34px;
       background: linear-gradient(270deg, #ff451d 0%, #ffca2a 100%);
@@ -217,6 +218,7 @@ export default {
 .save {
   width: 80px;
   height: 34px;
+  text-align: center;
   line-height: 34px;
   color: #fff;
   background: linear-gradient(270deg, #ff451d 0%, #ffca2a 100%);

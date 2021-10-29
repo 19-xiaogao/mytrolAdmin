@@ -79,6 +79,7 @@ export default {
     font-size: 14px;
     box-sizing: border-box;
     padding: 4px;
+    text-align: center;
     cursor: pointer;
   }
   .act {
