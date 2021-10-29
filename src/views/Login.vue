@@ -11,7 +11,7 @@
       <span class="circle" />
       <div class="form-item login-header d-flex">
         <span class="avatar flex-center">
-          <!-- <img src="../assets/images/avatar.png" alt="author" /> -->
+          <!-- <img src="@assets/images/avatar.png" alt="author" /> -->
         </span>
         <h1 class="island">Mytrol</h1>
       </div>

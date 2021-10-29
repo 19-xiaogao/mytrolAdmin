@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <div class="left-box">
-      <img src="../../../../assets/images/order-detail-img.jpg" alt="" />
+      <img src="@assets/images/order-detail-img.jpg" alt="" />
       <div class="upload-btn">
         <span>上传图片</span>
         <input type="file" alt="" />

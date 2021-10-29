@@ -38,6 +38,12 @@ const menu = [
     path: "/shelves",
     id: 2,
   },
+  {
+    icon: "icon-icon3",
+    text: "运营",
+    path: "/operation",
+    id: 3,
+  },
 ];
 export default {
   setup() {
@@ -47,7 +53,7 @@ export default {
       path === currentPath.value ? "" : "opacity"
     );
     const isColor = computed(() => (path) =>
-      path === currentPath.value ? "color:#ED6637":  ""
+      path === currentPath.value ? "color:#ED6637" : ""
     );
     const menus = reactive(menu);
     return { menus, isOpacity, isColor };

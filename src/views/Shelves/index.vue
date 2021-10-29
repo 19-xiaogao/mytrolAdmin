@@ -9,7 +9,7 @@
         <div class="search-base">
           <div class="avator">
             <div class="header">
-              <img src="../../assets/images/avtor.png" alt="" />
+              <img src="@assets/images/avtor.png" alt="" />
               <p>Jason</p>
             </div>
             <div class="icon"></div>
@@ -28,7 +28,7 @@
           </div>
           <!-- <div class="select-headers">
             <div class="header" v-for="item in [1, 2, 3, 4, 5]" :key="item">
-              <img src="../../assets/images/avtor.png" alt="" />
+              <img src="@assets/images/avtor.png" alt="" />
               <span>Jason</span>
             </div>
           </div> -->
@@ -47,7 +47,7 @@
               </div>
             </div>
             <div class="upload-cot">
-              <img src="../../assets/images/sheleves-add.png" alt="" />
+              <img src="@assets/images/sheleves-add.png" alt="" />
               <p>
                 点击上传您的藏品图文介绍，建议宽度不超过1080px，大小不超过10M
               </p>

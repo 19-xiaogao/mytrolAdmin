@@ -6,8 +6,8 @@
     </div>
     <div class="avator-message">
       <div class="avator">
-        <img src="../../../assets/images/avtor.png" alt="" />
-        <img src="../../../assets/images/card.png" alt="" />
+        <img src="@assets/images/avtor.png" alt="" />
+        <img src="@assets/images/card.png" alt="" />
       </div>
       <div class="message">
         <h4>王晓波</h4>

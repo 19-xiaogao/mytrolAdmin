@@ -37,6 +37,14 @@ const routes = [
         component: () =>
           import(/* webpackChunkName: 'Shelves' */ "@/views/Shelves/index.vue"),
       },
+      {
+        path:"/operation",
+        name:"operation",
+        meta:{
+          title:"运营"
+        },
+        component:() => import(/*webpackChunkName:'Operation'*/"@/views/Operation/index.vue")
+      }
     ],
   },
   {

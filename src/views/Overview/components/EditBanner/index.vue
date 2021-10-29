@@ -13,15 +13,11 @@
         </div>
       </div>
     </div>
-    <!-- <transition name="banner"> -->
-      <PCBanner v-if="currentMenu === 1" />
-    <!-- </transition> -->
-    <!-- <transition name="banner"> -->
-      <SwitBanner v-if="currentMenu === 2" :smallProgram="false" />
-    <!-- </transition> -->
-    <!-- <transition name="banner"> -->
-      <SwitBanner v-if="currentMenu === 3" :smallProgram="true" />
-    <!-- </transition> -->
+    <PCBanner v-if="currentMenu === 1" />
+
+    <SwitBanner v-if="currentMenu === 2" :smallProgram="false" />
+
+    <SwitBanner v-if="currentMenu === 3" :smallProgram="true" />
   </div>
 </template>
 

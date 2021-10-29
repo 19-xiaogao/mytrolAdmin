@@ -1,5 +1,5 @@
 <template>
-  <div class="order">
+  <div class="order page-height">
     <div class="header">
       <h4>订单</h4>
       <div class="search-box">
@@ -13,7 +13,7 @@
           <span class="line"></span>
           <input type="text" class="input" />
           <span class="icon">
-            <img src="../../assets/images/search.png" alt="" />
+            <img src="@assets/images/search.png" alt="" />
           </span>
         </div>
       </div>
@@ -124,11 +124,7 @@ export default defineComponent({
 
 <style scoped lang="scss">
 .order {
-  background: #fff;
-  box-shadow: 0px 4px 12px 0px rgba(182, 182, 182, 0.13);
   border-radius: 8px;
-  border: 0px solid rgba(213, 213, 213, 0.58);
-  height: 88vh;
   padding-top: 31px;
   padding-left: 44px;
   padding-right: 36px;

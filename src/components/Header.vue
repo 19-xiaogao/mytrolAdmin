@@ -1,18 +1,18 @@
 <template>
   <header>
     <div class="logo" @click="handleRouteClick">
-      <img src="../assets/images/mytrolLogo.png" alt="" />
+      <img src="@assets/images/mytrolLogo.png" alt="" />
       <span>后台</span>
     </div>
     <div class="avator-message">
       <div class="avator">
-        <img src="../assets/images/avtor.png" alt="" />
+        <img src="@assets/images/avtor.png" alt="" />
       </div>
       <a-select class="select" v-model:value="value2">
         <a-select-option value="lucy">Lucy</a-select-option>
       </a-select>
       <div class="waring">
-        <img src="../assets/images/bell.png" alt="" />
+        <img src="@assets/images/bell.png" alt="" />
       </div>
     </div>
   </header>

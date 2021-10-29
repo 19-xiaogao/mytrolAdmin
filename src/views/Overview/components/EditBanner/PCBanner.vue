@@ -1,10 +1,9 @@
 <template>
   <div class="swiper-box">
     <a-carousel class="swiper-pew" autoplay>
-      <div><h3>1</h3></div>
-      <div><h3>2</h3></div>
-      <div><h3>3</h3></div>
-      <div><h3>4</h3></div>
+      <img src="@assets/images/order-detail-img.jpg" alt="" />
+      <img src="@assets/images/order-detail-img.jpg" alt="" />
+      <img src="@assets/images/order-detail-img.jpg" alt="" />
     </a-carousel>
     <div class="swiper-link">
       <div class="link-detail">
@@ -41,25 +40,23 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
-.ant-carousel ::v-deep(.slick-slide) {
-  text-align: center;
-  width: 22vw;
-  height: 225px;
-  background: #364d79;
-  overflow: hidden;
-}
 
-.ant-carousel ::v-deep(.slick-slide h3) {
-  color: #fff;
-}
 .swiper-box {
   display: flex;
   justify-content: space-between;
   overflow: hidden;
-   animation: slidingTBanner 0.4s linear 0s;
+  animation: slidingTBanner 0.4s linear 0s;
   .swiper-pew {
     width: 22vw;
     margin-right: 10px;
+    border-radius: 4px;
+    overflow: hidden;
+    img {
+      width: 22vw;
+      height: 225px;
+      object-fit: cover;
+      object-position: 50% 50%;
+    }
   }
   .swiper-link {
     flex: 1;

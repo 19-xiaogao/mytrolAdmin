@@ -1,8 +1,8 @@
 <template>
   <div class="upload-nft">
-    <img src="../../assets/images/mytrolLogo.png" class="logo" alt="" />
+    <img src="@assets/images/mytrolLogo.png" class="logo" alt="" />
     <div class="add-logo">
-      <img src="../../assets/images/sheleves-add.png" alt="" />
+      <img src="@assets/images/sheleves-add.png" alt="" />
       <p>点击上传你的作品</p>
     </div>
     <input type="file" class="input-file"  />

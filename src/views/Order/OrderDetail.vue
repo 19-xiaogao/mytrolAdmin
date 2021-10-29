@@ -1,8 +1,8 @@
 <template>
-  <div class="order-detail" id="order-detail" ref="orderDetailRef">
+  <div class="order-detail" ref="orderDetailRef">
     <div class="header">
       <img
-        src="../../assets/images/order-detail-menu.png"
+        src="@assets/images/order-detail-menu.png"
         @click="handleHideClick"
         alt=""
       />
@@ -11,14 +11,14 @@
       </div>
     </div>
     <div class="avator">
-      <img src="../../assets/images/avtor.png" alt="" />
+      <img src="@assets/images/avtor.png" alt="" />
       <span>尹渊</span>
     </div>
     <p class="des">
       山舞银河，原驰蜡象，欲与天公试比高
     </p>
     <div class="ikon">
-      <img src="../../assets/images/order-detail-img.jpg" alt="" />
+      <img src="@assets/images/order-detail-img.jpg" alt="" />
     </div>
     <div class="dress_chain">
       <p>上链地址</p>
@@ -33,7 +33,7 @@
       </span>
     </div>
     <div class="logo">
-      <img src="../../assets/images/mytrolLogo.png" alt="" />
+      <img src="@assets/images/mytrolLogo.png" alt="" />
     </div>
   </div>
 </template>
@@ -45,7 +45,6 @@ export default {
   setup(props, { emit }) {
     const orderDetailRef = ref(null);
     const handleHideClick = () => {
-      console.log(orderDetailRef.value.style.animationName);
       orderDetailRef.value.style.animation = "sliding-hiden 0.5s linear 0s";
       setTimeout(() => {
         emit("clonse");

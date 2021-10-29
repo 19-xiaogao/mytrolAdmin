@@ -23,7 +23,7 @@
       <div class="data-detail">
         <div class="title">
           <h3>3123</h3>
-          <span>已上市NFT量</span>
+          <span>已成交NFT量</span>
         </div>
         <div class="echart">
           <v-chart :options="lineOption" />
