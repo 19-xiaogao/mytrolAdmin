@@ -38,13 +38,26 @@ const routes = [
           import(/* webpackChunkName: 'Shelves' */ "@/views/Shelves/index.vue"),
       },
       {
-        path:"/operation",
-        name:"operation",
-        meta:{
-          title:"运营"
+        path: "/operation",
+        name: "operation",
+        meta: {
+          title: "运营",
         },
-        component:() => import(/*webpackChunkName:'Operation'*/"@/views/Operation/index.vue")
-      }
+        component: () =>
+          import(
+            /*webpackChunkName:'Operation'*/ "@/views/Operation/index.vue"
+          ),
+      },
+      {
+        path: "/setting",
+        name: "setting",
+        meta: {
+          title: "设置",
+        },
+        component: () =>
+          import(/*webpackChunkName:'Setting'*/ "@/views/Setting/index.vue"),
+        children: [],
+      },
     ],
   },
   {

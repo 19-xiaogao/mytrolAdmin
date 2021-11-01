@@ -5,8 +5,27 @@
       <div class="search-box">
         <div class="dropdown">
           <div class="current-option">
-            <div class="text">编码</div>
-            <div class="icon"></div>
+            <!-- <div class="text">编码</div> -->
+            <a-dropdown class="text">
+              <template #overlay>
+                <a-menu>
+                  <a-menu-item key="1">
+                    1st menu item
+                  </a-menu-item>
+                  <a-menu-item key="2">
+                    2nd menu item
+                  </a-menu-item>
+                  <a-menu-item key="3">
+                    3rd item
+                  </a-menu-item>
+                </a-menu>
+              </template>
+              <a-button>
+                <span class="span">编码</span>
+                <div class="icon"></div>
+                <!-- <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg> -->
+              </a-button>
+            </a-dropdown>
           </div>
         </div>
         <div class="search">
@@ -153,7 +172,14 @@ export default defineComponent({
             font-weight: 400;
             color: #000000;
             margin: 0 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f1f1f1;
+            border: none;
+            box-sizing: border-box;
           }
+
           .icon {
             cursor: pointer;
             width: 6px;
@@ -161,7 +187,8 @@ export default defineComponent({
             border: 1px solid #151515;
             border-left-color: transparent;
             border-top-color: transparent;
-            transform: translateY(-3px) rotate(45deg);
+            transition: all 0.3s;
+            transform: translate(10px, -3px) rotate(45deg);
           }
         }
       }

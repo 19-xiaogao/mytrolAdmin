@@ -85,6 +85,7 @@ export default {
       img:nth-child(2) {
         position: absolute;
         bottom: 0;
+        right: 0;
       }
     }
     .message {

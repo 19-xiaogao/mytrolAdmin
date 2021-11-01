@@ -1,6 +1,6 @@
 <template>
   <div class="page-height">
-    <IPDetail v-if="true" />
+    <IPDetail v-if="!true" />
     <div v-else>
       <div class="header">
         <h4>运营</h4>
@@ -20,13 +20,38 @@
             </div>
             <div class="footer">
               <div class="icons">
-                <icon-svg icon="icon-fuzhiicon" class="icon"></icon-svg>
-                <icon-svg icon="icon-yiyouzhujici"></icon-svg>
+                <a-tooltip>
+                  <template #title>复制链接</template>
+                  <icon-svg icon="icon-fuzhiicon" class="icon"></icon-svg>
+                </a-tooltip>
+                <a-tooltip>
+                  <template #title>下架</template>
+                  <icon-svg icon="icon-yiyouzhujici"></icon-svg>
+                </a-tooltip>
               </div>
-              <div class="serial-number">
+              <a-dropdown class="serial-number">
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item key="1">
+                      1st menu item
+                    </a-menu-item>
+                    <a-menu-item key="2">
+                      2nd menu item
+                    </a-menu-item>
+                    <a-menu-item key="3">
+                      3rd item
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+                <a-button>
+                  <span>序列 1</span>
+                  <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
+                </a-button>
+              </a-dropdown>
+              <!-- <div class="serial-number">
                 <span>序列 1</span>
                 <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>

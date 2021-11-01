@@ -44,6 +44,11 @@ const menu = [
     path: "/operation",
     id: 3,
   },
+  {
+    icon: "icon-icon3",
+    text: "设置",
+    path: "/setting",
+  },
 ];
 export default {
   setup() {

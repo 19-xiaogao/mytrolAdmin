@@ -8,18 +8,43 @@
       </div>
       <div class="title-r">
         <div class="icons">
-          <icon-svg icon="icon-fuzhiicon" class="icon"></icon-svg>
-          <icon-svg icon="icon-yiyouzhujici" class="icon"></icon-svg>
+          <a-tooltip>
+            <template #title>复制链接</template>
+            <icon-svg icon="icon-fuzhiicon" class="icon"></icon-svg>
+          </a-tooltip>
+          <a-tooltip>
+            <template #title>下架</template>
+            <icon-svg icon="icon-yiyouzhujici" class="icon"></icon-svg>
+          </a-tooltip>
         </div>
-        <div class="serial-number">
-          <span>序列 1</span>
-          <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
-        </div>
+        <a-dropdown class="serial-number">
+          <template #overlay>
+            <a-menu>
+              <a-menu-item key="1">
+                1st menu item
+              </a-menu-item>
+              <a-menu-item key="2">
+                2nd menu item
+              </a-menu-item>
+              <a-menu-item key="3">
+                3rd item
+              </a-menu-item>
+            </a-menu>
+          </template>
+          <a-button>
+            <span>序列 1</span>
+            <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
+          </a-button>
+        </a-dropdown>
       </div>
     </div>
     <div class="ip-lists">
-      <div class="card">
-        <div class="img">
+      <div
+        class="card"
+        @mouseover="() => handleMouseover(true)"
+        @mouseout="() => handleMouseover(false)"
+      >
+        <div class="img" ref="imgRef">
           <img src="@assets/images/order-detail-img.jpg" alt="" />
         </div>
         <div class="options">
@@ -46,13 +71,25 @@
             </div>
           </div>
         </div>
+        <div class="mask"></div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import { defineComponent, ref } from "vue";
+export default defineComponent({
+  setup() {
+    const imgRef = ref();
+    const handleMouseover = (bol) => {
+      bol
+        ? (imgRef.value.style.transform = "scale(1.2)")
+        : (imgRef.value.style.transform = "scale(1)");
+    };
+    return { handleMouseover, imgRef };
+  },
+});
 </script>
 
 <style scoped lang="scss">
@@ -148,6 +185,10 @@ export default {};
       .img {
         width: 100%;
         height: 100%;
+        transition: all 0.3s;
+        z-index: 1;
+        cursor: pointer;
+
         img {
           width: 100%;
           height: 100%;
@@ -159,7 +200,7 @@ export default {};
         position: absolute;
         top: 11px;
         right: 14px;
-        // z-index: 1;
+        z-index: 2;
         width: 92px;
         height: 34px;
         background: rgba(0, 0, 0, 0.68);
@@ -187,6 +228,7 @@ export default {};
         align-items: center;
         bottom: 5px;
         left: 18px;
+        z-index: 2;
         .me-t {
           h3 {
             font-size: 14px;
@@ -258,6 +300,17 @@ export default {};
             }
           }
         }
+      }
+      .mask {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        cursor: pointer;
+
+        background: linear-gradient(180deg, rgba(0, 0, 0, 0) 0%, #000000 100%);
+        box-shadow: 0px 2px 6px 0px rgba(53, 53, 53, 0.09);
       }
     }
   }

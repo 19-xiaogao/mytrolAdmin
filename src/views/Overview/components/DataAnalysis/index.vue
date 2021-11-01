@@ -51,7 +51,7 @@ export default defineComponent({
   setup() {
     const pieOption = reactive(
       createPieOption([
-        { value: 735, name: "今日成交量" },
+        { value: 735, name: "总成交量" },
         { value: 1048, name: "昨日成交量" },
       ])
     );
