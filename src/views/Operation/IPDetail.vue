@@ -30,9 +30,21 @@
         <div class="me">
           <div class="me-t">
             <h3>少女懵懂的年少时光</h3>
-            <div></div>
+            <div class="avator-des">
+              <div class="imgs">
+                <img src="@assets/images/avtor.png" alt="" />
+                <img src="@assets/images/v-icon.png" class="icon" alt="" />
+              </div>
+              <span>龙雷雷</span>
+            </div>
           </div>
-          <div class="me-m"></div>
+          <div class="me-m">
+            <div class="manay">$199.9</div>
+            <div class="text">
+              <span>限量</span>
+              <span>1000</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -147,7 +159,7 @@ export default {};
         position: absolute;
         top: 11px;
         right: 14px;
-        z-index: 1;
+        // z-index: 1;
         width: 92px;
         height: 34px;
         background: rgba(0, 0, 0, 0.68);
@@ -170,6 +182,82 @@ export default {};
       }
       .me {
         display: flex;
+        position: absolute;
+        justify-content: space-between;
+        align-items: center;
+        bottom: 5px;
+        left: 18px;
+        .me-t {
+          h3 {
+            font-size: 14px;
+            font-weight: 500;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+          }
+          .avator-des {
+            display: flex;
+            align-items: center;
+            margin-top: 6px;
+            .imgs {
+              position: relative;
+              width: 20px;
+              height: 20px;
+              img:first-child {
+                width: 100%;
+                width: 100%;
+                border-radius: 50%;
+                position: absolute;
+                top: 0;
+                left: 0;
+              }
+              .icon {
+                width: 10px;
+                height: 10px;
+                position: absolute;
+                top: 50%;
+                right: -10px;
+                transform: translateX(-50%);
+              }
+            }
+            span {
+              font-size: 12px;
+              color: #fff;
+              display: inline-block;
+              margin-left: 10px;
+            }
+          }
+        }
+        .me-m {
+          margin-left: 20px;
+          .manay {
+            font-size: 19px;
+            color: #fff;
+            font-weight: 500;
+          }
+          .text {
+            span:first-child {
+              background: #ffbd21;
+              border-radius: 4px;
+              font-size: 8px;
+              color: #000;
+              border-radius: 4px;
+              display: inline-block;
+              padding: 2px;
+            }
+            span:last-child {
+              display: inline-block;
+              box-sizing: border-box;
+              border: #ffbd21 1px solid;
+              border-left-color: transparent;
+              border-radius: 4px;
+              color: #fff;
+              padding: 2px;
+
+              font-size: 8px;
+            }
+          }
+        }
       }
     }
   }
