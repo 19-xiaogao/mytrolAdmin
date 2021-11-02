@@ -49,6 +49,15 @@ const routes = [
           ),
       },
       {
+        path: "/items",
+        name: "item",
+        meta: {
+          title: "作品",
+        },
+        component: () =>
+          import(/*webpackChunkName:'item'*/ "@/views/Item/index.vue"),
+      },
+      {
         path: "/setting",
         name: "setting",
         meta: {

@@ -2,17 +2,13 @@
   <div class="edit-banner">
     <div class="title-menu">
       <h3>首页Banner</h3>
-      <div class="menu">
-        <div
-          v-for="item in menuList"
-          :key="item.type"
-          :class="currentMenu === item.type ? 'act' : ''"
-          @click="handleMenuClick(item.type)"
-        >
-          {{ item.text }}
-        </div>
-      </div>
+      <TabBar
+        v-model:currentIndex="currentMenu"
+        :menuList="menuList"
+        class="tab-bar"
+      />
     </div>
+
     <PCBanner v-if="currentMenu === 1" />
 
     <SwitBanner v-if="currentMenu === 2" :smallProgram="false" />
@@ -24,7 +20,8 @@
 <script>
 import SwitBanner from "./SwitBanner";
 import PCBanner from "./PCBanner.vue";
-import { reactive, ref } from "vue";
+import TabBar from "@/components/TabBar";
+import { ref, reactive } from "vue";
 const menus = [
   {
     text: "PC",
@@ -43,62 +40,25 @@ export default {
   components: {
     SwitBanner,
     PCBanner,
+    TabBar,
   },
   setup() {
-    const menuList = reactive(menus);
     const currentMenu = ref(1);
-    const handleMenuClick = (type) => {
-      currentMenu.value = type;
-    };
+    const menuList = reactive(menus);
+
     return {
-      menuList,
       currentMenu,
-      handleMenuClick,
+      menuList,
     };
   },
 };
 </script>
 
 <style lang="scss" scoped>
-.menu {
-  height: 36px;
-  background: #f1f1f1;
-  border-radius: 8px;
+.tab-bar {
   width: 35%;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  box-sizing: border-box;
-  padding: 0 10px;
-  div {
-    color: #979797;
-    height: 24px;
-    line-height: 20px;
-    width: 100px;
-    border-radius: 6px;
-    font-size: 14px;
-    box-sizing: border-box;
-    padding: 4px;
-    text-align: center;
-    cursor: pointer;
-  }
-  .act {
-    font-size: 14px;
-    color: #000000;
-    background: #ffffff;
-    transition: all 0.3s;
-    animation: slidingText 0.4s linear 0s;
-  }
 }
 
-@keyframes slidingText {
-  from {
-    transform: translateX(-20px);
-  }
-  to {
-    transform: translateX(0px);
-  }
-}
 .edit-banner {
   width: 58%;
   height: 33.11%;

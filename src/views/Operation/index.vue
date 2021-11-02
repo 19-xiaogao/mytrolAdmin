@@ -1,10 +1,11 @@
 <template>
   <div class="page-height">
+    <CreateActivityModal v-model:createVisible="createActivityVisible" />
     <IPDetail v-if="!true" />
     <div v-else>
       <div class="header">
         <h4>运营</h4>
-        <div class="button">
+        <div class="button" @click="handleCreateActivityClick">
           创建IP活动
         </div>
       </div>
@@ -22,7 +23,7 @@
               <div class="icons">
                 <a-tooltip>
                   <template #title>复制链接</template>
-                  <icon-svg icon="icon-fuzhiicon" class="icon"></icon-svg>
+                  <icon-svg icon="icon-a-bianzu10" class="icon"></icon-svg>
                 </a-tooltip>
                 <a-tooltip>
                   <template #title>下架</template>
@@ -48,10 +49,6 @@
                   <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
                 </a-button>
               </a-dropdown>
-              <!-- <div class="serial-number">
-                <span>序列 1</span>
-                <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
-              </div> -->
             </div>
           </div>
         </div>
@@ -61,10 +58,20 @@
 </template>
 
 <script>
+import { ref } from "vue";
 import IPDetail from "./IPDetail";
+import CreateActivityModal from "./CreateActivityModal";
 export default {
   components: {
     IPDetail,
+    CreateActivityModal,
+  },
+  setup() {
+    const createActivityVisible = ref(false);
+    const handleCreateActivityClick = () => {
+      createActivityVisible.value = true;
+    };
+    return { handleCreateActivityClick, createActivityVisible };
   },
 };
 </script>
@@ -103,7 +110,9 @@ export default {
       width: 260px;
       height: 248px;
       background: #ffffff;
-      box-shadow: 0px 0px 12px 0px rgba(106, 106, 106, 0.2);
+      &:hover {
+        box-shadow: 0px 0px 12px 0px rgba(106, 106, 106, 0.2);
+      }
       border-radius: 13px;
       border: 1px solid #e3e3e3;
       padding: 18px 18px 14px 18px;

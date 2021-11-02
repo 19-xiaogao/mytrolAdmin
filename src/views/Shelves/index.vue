@@ -4,7 +4,26 @@
       <UploadNft />
       <div class="user_search">
         <div class="search-title">
-          <input placeholder="给你作品起一个独特的标题" />
+          <input placeholder="在此输入标题" />
+          <a-dropdown class="serial-number">
+            <template #overlay>
+              <a-menu>
+                <a-menu-item key="1">
+                  1st menu item
+                </a-menu-item>
+                <a-menu-item key="2">
+                  2nd menu item
+                </a-menu-item>
+                <a-menu-item key="3">
+                  3rd item
+                </a-menu-item>
+              </a-menu>
+            </template>
+            <a-button>
+              <span>首页</span>
+              <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
+            </a-button>
+          </a-dropdown>
         </div>
         <div class="search-base">
           <div class="avator">
@@ -16,7 +35,7 @@
           </div>
           <div class="price">
             <div>价格</div>
-            <input type="text" placeholder="请输入价格" />
+            <input type="text" placeholder="设定价格" />
           </div>
           <div class="price">
             <div>限量</div>
@@ -24,7 +43,12 @@
           </div>
           <div class="price">
             <div>开售时间</div>
-            <input type="text" placeholder="2021.03.23" />
+            <a-date-picker
+              show-time
+              placeholder="Select Time"
+              class="date-picker"
+            />
+            <!-- <input type="text" placeholder="2021.03.23" /> -->
           </div>
           <!-- <div class="select-headers">
             <div class="header" v-for="item in [1, 2, 3, 4, 5]" :key="item">
@@ -35,12 +59,12 @@
         </div>
         <div class="ups">
           <div class="nft-des">
-            <textarea placeholder="给你的作品来一段介绍吧" />
+            <textarea placeholder="在此输入藏品描述" />
             <h3>NFT介绍</h3>
           </div>
           <div class="upload_collection">
             <div class="titles">
-              <h3>藏品图文介绍</h3>
+              <h3>藏品描述图片</h3>
               <div class="prew">
                 <icon-svg icon="icon-icon4-hover" class="icon"></icon-svg>
                 <span>预览</span>
@@ -49,9 +73,11 @@
             <div class="upload-cot">
               <img src="@assets/images/sheleves-add.png" alt="" />
               <p>
-                点击上传您的藏品图文介绍，建议宽度不超过1080px，大小不超过10M
+                在此添加藏品描述图片
+                <br />
+                (大小不超过10M)
               </p>
-              <input type="file" />
+              <input type="file" alt="" />
             </div>
           </div>
         </div>
@@ -77,6 +103,27 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+.serial-number {
+  width: 87px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid #cacaca;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-sizing: border-box;
+  padding: 10px;
+  cursor: pointer;
+
+  .icon {
+    font-size: 1rem;
+  }
+  span {
+    font-size: 14px;
+    color: #000;
+    font-weight: 400;
+  }
+}
 .shelves {
   box-sizing: border-box;
   padding: 30px 23px;
@@ -96,6 +143,7 @@ export default defineComponent({
         font-size: 24px;
         font-weight: 600;
         color: #2d2d2d;
+        display: flex;
         input {
           display: inline-block;
           width: 100%;
@@ -152,11 +200,36 @@ export default defineComponent({
             font-size: 18px;
             color: #434343;
           }
+          .date-picker {
+            // font-size: 16px;
+            // width: 90%;
+            font-weight: 500;
+            border: none;
+            color: #000000;
+            &::-webkit-input-placeholder {
+              color: #999;
+            }
+
+            // text-indent: 1rem;
+            border-radius: 4px;
+            background-color: #fff;
+
+            display: inline-block;
+          }
           input {
-            font-size: 20px;
+            font-size: 16px;
             width: 90%;
             font-weight: 500;
             color: #000000;
+            &::-webkit-input-placeholder {
+              color: #999;
+            }
+
+            text-indent: 1rem;
+            border-radius: 4px;
+            background-color: #fff;
+
+            display: inline-block;
           }
         }
         .select-headers {

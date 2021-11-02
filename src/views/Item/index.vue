@@ -1,41 +1,11 @@
 <template>
-  <div class="ip-detail">
+  <div class="ip-detail page-height">
     <div class="ip-detail-title">
       <div class="title-l">
-        <span class="icon"></span>
-        <div class="char">飞天东皇系列IP</div>
-        <div class="status">运营中</div>
+        <div class="char">作品</div>
       </div>
       <div class="title-r">
-        <div class="icons">
-          <a-tooltip>
-            <template #title>复制链接</template>
-            <icon-svg icon="icon-a-bianzu10" class="icon"></icon-svg>
-          </a-tooltip>
-          <a-tooltip>
-            <template #title>下架</template>
-            <icon-svg icon="icon-yiyouzhujici" class="icon"></icon-svg>
-          </a-tooltip>
-        </div>
-        <a-dropdown class="serial-number">
-          <template #overlay>
-            <a-menu>
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu>
-          </template>
-          <a-button>
-            <span>序列 1</span>
-            <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
-          </a-button>
-        </a-dropdown>
+        <TabBar :menuList="menuList" v-model:currentIndex="currentMenu" />
       </div>
     </div>
     <div class="ip-lists">
@@ -78,16 +48,36 @@
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import { defineComponent, reactive, ref } from "vue";
+import TabBar from "@/components/TabBar";
+const menus = [
+  {
+    text: "已上架",
+    type: 1,
+  },
+  {
+    text: "审核中",
+    type: 2,
+  },
+  {
+    text: "已下架",
+    type: 3,
+  },
+];
 export default defineComponent({
+  components: {
+    TabBar,
+  },
   setup() {
     const imgRef = ref();
+    const currentMenu = ref(1);
+    const menuList = reactive(menus);
     const handleMouseover = (bol) => {
       bol
         ? (imgRef.value.style.transform = "scale(1.2)")
         : (imgRef.value.style.transform = "scale(1)");
     };
-    return { handleMouseover, imgRef };
+    return { handleMouseover, imgRef, currentMenu, menuList };
   },
 });
 </script>
@@ -133,39 +123,6 @@ export default defineComponent({
           height: 8px;
           background: #2caf71;
           border-radius: 50%;
-        }
-      }
-    }
-    .title-r {
-      display: flex;
-      .icons {
-        font-size: 1.4rem;
-        width: 70px;
-        .icon {
-          cursor: pointer;
-          margin-left: 10px;
-        }
-      }
-
-      .serial-number {
-        width: 87px;
-        height: 34px;
-        border-radius: 6px;
-        border: 1px solid #cacaca;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        box-sizing: border-box;
-        padding: 10px;
-        cursor: pointer;
-        margin-left: 91px;
-        .icon {
-          font-size: 1rem;
-        }
-        span {
-          font-size: 14px;
-          color: #000;
-          font-weight: 400;
         }
       }
     }

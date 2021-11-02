@@ -26,7 +26,7 @@
           <div class="input-title">
             <span class="title-one">标题</span>
             <span class="line"></span>
-            <input type="text" value="朋克世界门票预售" />
+            <input type="text" placeholder="请输入标题" />
           </div>
           <div class="input-title">
             <span class="title-one">描述</span>
@@ -35,7 +35,7 @@
           </div>
         </div>
         <div class="input-url-save">
-          <input type="text" value="https://longjiuwei999.com" />
+          <input type="text" placeholder="请输入图片链接" />
           <div class="save">保存</div>
         </div>
       </div>
@@ -68,7 +68,7 @@ export default {
   display: flex;
   margin-top: 10px;
   overflow: hidden;
-   animation: slidingTBanner 0.4s linear 0s;
+  animation: slidingTBanner 0.4s linear 0s;
 
   .left-box {
     width: 287px;
@@ -129,7 +129,7 @@ export default {
           &::after {
             position: absolute;
             display: inline-block;
-            bottom: 0;
+            bottom: -4px;
             left: 50%;
             transform: translateX(-50%);
             content: "";

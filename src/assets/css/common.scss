@@ -301,11 +301,16 @@
 }
 
 @keyframes slidingTBanner {
-  from {
-    transform: translateX(-50px);
+  0% {
+    transform: translateX(50px);
   }
 
-  to {
+  50% {
+    transform: translateX(20px);
+
+  }
+
+  100% {
     transform: translateX(0px);
   }
 }

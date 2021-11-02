@@ -2,6 +2,7 @@
   <div class="home">
     <Header />
     <Sidebar />
+    <UserSettingModal />
     <div class="body">
       <router-view v-slot="{ Component }">
         <keep-alive>
@@ -15,13 +16,15 @@
 </template>
 
 <script>
-import Header from "../components/Header";
-import Sidebar from "../components/Sidebar";
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import UserSettingModal from "@/components/UserSettingModal";
 export default {
   name: "Home",
   components: {
     Header,
     Sidebar,
+    UserSettingModal,
   },
 };
 </script>

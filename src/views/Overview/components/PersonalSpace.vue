@@ -33,8 +33,7 @@
 
 <script>
 export default {
-  components: {
-  },
+  components: {},
 };
 </script>
 
@@ -112,6 +111,10 @@ export default {
       flex-direction: column;
       justify-content: center;
       align-items: center;
+      width: 96px;
+      height: 96px;
+      text-align: center;
+      cursor: pointer;
       span {
         font-weight: 500;
         color: #000000;
@@ -122,13 +125,10 @@ export default {
       span:nth-child(2) {
         font-size: 14px;
       }
-    }
-    div:nth-child(1) {
-      width: 96px;
-      height: 96px;
-      text-align: center;
-      background: #f1f1f1;
-      border-radius: 8px;
+      &:hover {
+        background: #f1f1f1;
+        border-radius: 8px;
+      }
     }
   }
 }

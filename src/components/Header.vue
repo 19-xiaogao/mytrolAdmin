@@ -2,7 +2,6 @@
   <header>
     <div class="logo" @click="handleRouteClick">
       <img src="@assets/images/mytrolLogo.png" alt="" />
-      <span>后台</span>
     </div>
     <div class="avator-message">
       <div class="avator">

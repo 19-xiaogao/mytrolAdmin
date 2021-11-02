@@ -20,7 +20,7 @@
 const settingList = [
   {
     icon: "icon-setting-icon1",
-    text: "开账户",
+    text: "新增管理员",
   },
   {
     icon: "icon-setting-icon2",

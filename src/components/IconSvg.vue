@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { computed } from "@vue/reactivity";
+import { computed } from "vue";
 export default {
   name: "icon-svg",
   props: {

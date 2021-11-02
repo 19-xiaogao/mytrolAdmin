@@ -3,7 +3,7 @@
     <img src="@assets/images/mytrolLogo.png" class="logo" alt="" />
     <div class="add-logo">
       <img src="@assets/images/sheleves-add.png" alt="" />
-      <p>点击上传你的作品</p>
+      <p>上传创作数字藏品</p>
     </div>
     <input type="file" class="input-file"  />
   </div>
@@ -34,7 +34,7 @@ export default {};
     text-align: center;
     p {
       margin-top: 20px;
-      font-size: 14px;
+      font-size: 20px;
       color: #7d7d7d;
     }
   }

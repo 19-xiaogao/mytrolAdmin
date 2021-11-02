@@ -1,30 +1,32 @@
 <template>
-  <a-modal :visible="createVisible" class="modal" title="新增管理员">
-    <div class="modal-create-header">
-      <div @click="handleClick(1)" :class="isBgClass(1)">创作者账号</div>
-      <div @click="handleClick(2)" :class="isBgClass(2)">运营账号</div>
+  <a-modal :visible="createVisible" class="modal" title="添加运营IP">
+    <div class="upload-img">
+      <div class="upload-box">
+        <div class="upload-btn">
+          <span>上传图片</span>
+          <input type="file" alt="" />
+        </div>
+        <img src="@assets/images/order-detail-img.jpg" alt="" />
+      </div>
+      <p>温馨提示：尺寸为510*324，请按照特定模板的原则产图</p>
     </div>
     <div class="user-input">
       <div class="user">
-        <span>账号</span>
-        <input type="text " placeholder="请输入账号" required />
-      </div>
-      <div class="user">
-        <span>密码</span>
-        <input type="text " placeholder="请输入密码" required />
+        <span>IP系列名称</span>
+        <input type="text " placeholder="请输入IP系列名称" required />
       </div>
     </div>
     <template #closeIcon>
       <div class="close" @click="handleClose">取消</div>
     </template>
     <template #footer>
-      <div class="create-user">生成</div>
+      <div class="create-user">确定</div>
     </template>
   </a-modal>
 </template>
 
 <script>
-import { computed, defineComponent, ref } from "vue";
+import { defineComponent } from "vue";
 export default defineComponent({
   props: {
     createVisible: {
@@ -32,17 +34,10 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    const currentStatus = ref(1);
-    const handleClick = (index) => {
-      currentStatus.value = index;
-    };
-    const isBgClass = computed(() => {
-      return (index) => (currentStatus.value === index ? "bgf" : "");
-    });
     const handleClose = () => {
       emit("update:createVisible", false);
     };
-    return { currentStatus, handleClick, isBgClass, handleClose };
+    return { handleClose };
   },
 });
 </script>
@@ -94,7 +89,6 @@ export default defineComponent({
   }
 }
 .create-user {
-  // width: 490px;
   width: 100%;
   height: 52px;
   background: #2f0088;
@@ -111,5 +105,55 @@ export default defineComponent({
   font-weight: 400;
   color: #bcbcbc;
   cursor: pointer;
+}
+.upload-img {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  p {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 400;
+    color: #2b2b2b;
+  }
+  .upload-box {
+    position: relative;
+    width: 224px;
+    height: 142px;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-right: 10px;
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+    }
+    .upload-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 34px;
+      text-align: center;
+      line-height: 34px;
+      color: #fff;
+      background: linear-gradient(270deg, #ff451d 0%, #ffca2a 100%);
+      border-radius: 6px;
+
+      input {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        opacity: 0;
+        z-index: 1;
+      }
+    }
+  }
 }
 </style>
