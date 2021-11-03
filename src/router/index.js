@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { getStorageToken } from "@/utils";
 import Home from "@/views/Home";
 const routes = [
   {
@@ -77,6 +78,15 @@ const routes = [
     },
     component: import(/* webpackChunkName: 'Login' */ "@/views/Login.vue"),
   },
+  {
+    path: "/:catchAll(.*)",
+    name: "NotFound",
+    meta: {
+      title: "Not Found",
+    },
+    component: () =>
+      import(/* webpackChunkName: 'NotFound' */ "@/views/NotFound"),
+  },
 ];
 
 const router = createRouter({
@@ -85,14 +95,13 @@ const router = createRouter({
 });
 // 前置路由拦截
 router.beforeEach((to, from, next) => {
-  next();
-  // const token = getStorageToken() // null | token
-  // // 去往非登录页且无 token
-  // if (!to.path.includes('login') && !token) {
-  //     next('/login')
-  // } else {
-  //     next()
-  // }
+  const token = getStorageToken(); // null | token
+  // 去往非登录页且无 token
+  if (!to.path.includes("login") && !token) {
+    next("/login");
+  } else {
+    next();
+  }
 });
 
 // 路由后置守卫 由路由信息 设置标签页标题

@@ -1,3 +1,4 @@
+const TOKEN = "TOKEN";
 /**
  * 节流
  * @param fn
@@ -21,3 +22,19 @@ export function throttle(fn, delay = 3000) {
     }
   };
 }
+
+export const setStorageToken = (value) => {
+  localStorage.setItem(TOKEN, value);
+};
+
+export const getStorageToken = () => {
+  const value = localStorage.getItem(TOKEN);
+  if (value !== null && value !== "") {
+    return value;
+  }
+  return null;
+};
+
+export const removeStorageToken = () => {
+  localStorage.removeItem(TOKEN);
+};

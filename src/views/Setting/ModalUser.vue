@@ -7,24 +7,35 @@
     <div class="user-input">
       <div class="user">
         <span>账号</span>
-        <input type="text " placeholder="请输入账号" required />
+        <input
+          type="text "
+          placeholder="请输入账号"
+          required
+          v-model="username"
+        />
       </div>
       <div class="user">
         <span>密码</span>
-        <input type="text " placeholder="请输入密码" required />
+        <input
+          type="password"
+          placeholder="请输入密码"
+          required
+          v-model="password"
+        />
       </div>
     </div>
     <template #closeIcon>
       <div class="close" @click="handleClose">取消</div>
     </template>
     <template #footer>
-      <div class="create-user">生成</div>
+      <div class="create-user" @click="handleAddUserClick">生成</div>
     </template>
   </a-modal>
 </template>
 
 <script>
-import { computed, defineComponent, ref } from "vue";
+import { computed, defineComponent, reactive, ref, toRefs } from "vue";
+import { addUserApi } from "@api";
 export default defineComponent({
   props: {
     createVisible: {
@@ -33,6 +44,9 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const currentStatus = ref(1);
+
+    const addParmas = reactive({ username: "", password: "" });
+
     const handleClick = (index) => {
       currentStatus.value = index;
     };
@@ -42,7 +56,36 @@ export default defineComponent({
     const handleClose = () => {
       emit("update:createVisible", false);
     };
-    return { currentStatus, handleClick, isBgClass, handleClose };
+
+    const handleAddUserClick = async () => {
+      const role = currentStatus.value === 1 ? "maker" : "operator";
+      if (
+        addParmas.username.trim() === "" ||
+        addParmas.password.trim() === ""
+      ) {
+        return window.$message.warning({
+          message: "错误!",
+          description: "账户或者密码不能为空",
+        });
+      }
+      const { err_code } = await addUserApi({ ...addParmas, role });
+      if (err_code === "0") {
+        window.$message.success({
+          message: "提示",
+          description: "创建账户成功",
+        });
+        emit("update:createVisible", false);
+      }
+    };
+
+    return {
+      currentStatus,
+      handleClick,
+      isBgClass,
+      handleClose,
+      handleAddUserClick,
+      ...toRefs(addParmas),
+    };
   },
 });
 </script>

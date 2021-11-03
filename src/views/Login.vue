@@ -17,14 +17,19 @@
       </div>
       <div class="form-item">
         <label class="ipt-item">
-          <input type="text" required autocomplete="off" />
+          <input type="text" required autocomplete="off" v-model="username" />
           <span class="tip-label">Username</span>
           <span class="border-line" />
         </label>
       </div>
       <div class="form-item">
         <label class="ipt-item">
-          <input type="password" autocomplete="off" required />
+          <input
+            type="password"
+            autocomplete="off"
+            required
+            v-model="password"
+          />
           <span class="tip-label">Password</span>
           <span class="border-line" />
         </label>
@@ -46,16 +51,36 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
+import { loginApi } from "@api";
+import { useStore } from "vuex";
+
 export default defineComponent({
   setup() {
     const router = useRouter();
-    const handleLoginBtn = () => {
-      router.push("/");
+    const store = useStore();
+    const loginParms = reactive({ username: "", password: "" });
+
+    const handleLoginBtn = async () => {
+      const response = await loginApi(loginParms);
+      if (response.err_code === "0") {
+        window.$message.success({
+          message: "提示",
+          description: "欢迎回来!",
+        });
+        store.commit("setRole", response.result.role);
+        router.push("/");
+      } else {
+        window.$message.error({
+          message: "提示",
+          description: "账号或者密码错误!",
+        });
+      }
     };
     return {
       handleLoginBtn,
+      ...toRefs(loginParms),
     };
   },
 });

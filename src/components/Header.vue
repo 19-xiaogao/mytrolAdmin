@@ -20,14 +20,21 @@
 <script>
 import { useRouter } from "vue-router";
 import { ref } from "vue";
+import { logoutApi } from "@api";
+import { removeStorageToken } from "@/utils";
 export default {
   setup() {
     const router = useRouter();
+
     const handleRouteClick = () => {
       router.push("/");
     };
-    const handleRouteLogin = () => {
-      router.push("/login");
+    const handleRouteLogin = async () => {
+      const { err_code } = await logoutApi();
+      if (err_code == 0) {
+        router.push("/login");
+        removeStorageToken();
+      }
     };
     return {
       value2: ref("lucy"),

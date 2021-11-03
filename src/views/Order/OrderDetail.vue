@@ -1,14 +1,10 @@
 <template>
   <div class="order-detail" ref="orderDetailRef">
     <div class="header">
-      <img
-        src="@assets/images/order-detail-menu.png"
-        @click="handleHideClick"
-        alt=""
-      />
       <div>
         订单详情
       </div>
+      <icon-svg icon="icon-a-bianzu101" class="icon" @click="handleHideClick"></icon-svg>
     </div>
     <div class="avator">
       <img src="@assets/images/avtor.png" alt="" />
@@ -77,12 +73,14 @@ export default {
   .header {
     display: flex;
     align-items: center;
+    justify-content: space-between;
     div {
       flex: 1;
       font-size: 18px;
       color: #000;
     }
-    img {
+    .icon {
+      font-size: 1.4rem;
       cursor: pointer;
     }
   }

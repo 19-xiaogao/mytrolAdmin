@@ -19,12 +19,20 @@
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import UserSettingModal from "@/components/UserSettingModal";
+import { useStore } from "vuex";
+import { computed } from "vue";
 export default {
   name: "Home",
   components: {
     Header,
     Sidebar,
     UserSettingModal,
+  },
+  setup() {
+    const store = useStore()
+    const roleVux = computed(() => store.state.getRole);
+    console.log(roleVux.value);
+    return {};
   },
 };
 </script>
