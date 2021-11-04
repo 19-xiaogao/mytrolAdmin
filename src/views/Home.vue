@@ -19,8 +19,6 @@
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import UserSettingModal from "@/components/UserSettingModal";
-import { useStore } from "vuex";
-import { computed } from "vue";
 export default {
   name: "Home",
   components: {
@@ -29,9 +27,6 @@ export default {
     UserSettingModal,
   },
   setup() {
-    const store = useStore()
-    const roleVux = computed(() => store.state.getRole);
-    console.log(roleVux.value);
     return {};
   },
 };
@@ -52,7 +47,6 @@ export default {
     width: calc(100% - 60px);
     height: calc(100% - 60px);
     padding: 14px 20px 20px 14px;
-
     box-sizing: border-box;
   }
 }

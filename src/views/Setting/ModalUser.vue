@@ -75,6 +75,11 @@ export default defineComponent({
           description: "创建账户成功",
         });
         emit("update:createVisible", false);
+      } else {
+        window.$message.warn({
+          message: "提示",
+          description: "用户名已经被注册",
+        });
       }
     };
 

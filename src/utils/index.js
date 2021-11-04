@@ -1,4 +1,4 @@
-const TOKEN = "TOKEN";
+const TOKEN = "ROLE";
 /**
  * 节流
  * @param fn
@@ -23,11 +23,12 @@ export function throttle(fn, delay = 3000) {
   };
 }
 
-export const setStorageToken = (value) => {
+//storage func
+export const setStorageRole = (value) => {
   localStorage.setItem(TOKEN, value);
 };
 
-export const getStorageToken = () => {
+export const getStorageRole = () => {
   const value = localStorage.getItem(TOKEN);
   if (value !== null && value !== "") {
     return value;
@@ -35,6 +36,24 @@ export const getStorageToken = () => {
   return null;
 };
 
-export const removeStorageToken = () => {
+export const removeStorageRole = () => {
   localStorage.removeItem(TOKEN);
+};
+
+/*
+ * 将file对象转化为base64编码
+ * file  目标file对象
+ */
+export function previewFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (event) => resolve(event.target.result);
+    reader.onerror = () => reject(reader.error);
+  });
+}
+// splitAllUrl
+
+export const joinPreviewUrl = (hash) => {
+  return process.env.VUE_APP_BASE_IPFS + hash;
 };

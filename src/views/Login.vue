@@ -55,7 +55,7 @@ import { defineComponent, reactive, toRefs } from "vue";
 import { useRouter } from "vue-router";
 import { loginApi } from "@api";
 import { useStore } from "vuex";
-
+import { setStorageRole } from "@/utils";
 export default defineComponent({
   setup() {
     const router = useRouter();
@@ -69,6 +69,7 @@ export default defineComponent({
           message: "提示",
           description: "欢迎回来!",
         });
+        setStorageRole(response.result.role);
         store.commit("setRole", response.result.role);
         router.push("/");
       } else {

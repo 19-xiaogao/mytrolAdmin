@@ -1,21 +1,18 @@
 <template>
   <div class="shelves">
     <div class="top">
-      <UploadNft />
+      <UploadNft v-model:doneImgFile="nft_file" ref="uploadNft" />
       <div class="user_search">
         <div class="search-title">
-          <input placeholder="在此输入标题" />
-          <a-dropdown class="serial-number">
+          <input placeholder="在此输入标题" v-model="name" />
+          <a-dropdown class="serial-number" v-model="series_ip">
             <template #overlay>
               <a-menu>
-                <a-menu-item key="1">
-                  1st menu item
+                <a-menu-item key="">
+                  首页
                 </a-menu-item>
-                <a-menu-item key="2">
-                  2nd menu item
-                </a-menu-item>
-                <a-menu-item key="3">
-                  3rd item
+                <a-menu-item v-for="item in ipList" :key="item">
+                  {{ item.name }}
                 </a-menu-item>
               </a-menu>
             </template>
@@ -31,15 +28,18 @@
               <img src="@assets/images/avtor.png" alt="" />
               <p>Jason</p>
             </div>
-            <div class="icon"></div>
+            <div
+              class="icon"
+              @click="() => handleHeaderSelectClick(true)"
+            ></div>
           </div>
           <div class="price">
             <div>价格</div>
-            <input type="text" placeholder="设定价格" />
+            <input v-model="price" type="number" placeholder="设定价格" />
           </div>
           <div class="price">
             <div>限量</div>
-            <input type="text" placeholder="请输入数量" />
+            <input v-model="number" type="number" placeholder="请输入数量" />
           </div>
           <div class="price">
             <div>开售时间</div>
@@ -47,44 +47,36 @@
               show-time
               placeholder="Select Time"
               class="date-picker"
+              v-model:value="opening_time"
+              :bordered="false"
             />
-            <!-- <input type="text" placeholder="2021.03.23" /> -->
           </div>
-          <!-- <div class="select-headers">
-            <div class="header" v-for="item in [1, 2, 3, 4, 5]" :key="item">
+          <div class="select-headers" v-if="showHeaderSelect">
+            <div
+              class="header"
+              v-for="item in [1, 2, 3, 4, 5]"
+              :key="item"
+              @click="() => handleHeaderSelectClick(false, item)"
+            >
               <img src="@assets/images/avtor.png" alt="" />
               <span>Jason</span>
             </div>
-          </div> -->
+          </div>
         </div>
         <div class="ups">
           <div class="nft-des">
-            <textarea placeholder="在此输入藏品描述" />
+            <textarea placeholder="在此输入藏品描述" v-model="description" />
             <h3>NFT介绍</h3>
           </div>
-          <div class="upload_collection">
-            <div class="titles">
-              <h3>藏品描述图片</h3>
-              <div class="prew">
-                <icon-svg icon="icon-icon4-hover" class="icon"></icon-svg>
-                <span>预览</span>
-              </div>
-            </div>
-            <div class="upload-cot">
-              <img src="@assets/images/sheleves-add.png" alt="" />
-              <p>
-                在此添加藏品描述图片
-                <br />
-                (大小不超过10M)
-              </p>
-              <input type="file" alt="" />
-            </div>
-          </div>
+          <UploadCollection
+            ref="uploadCollection"
+            v-model:nft_background="nft_background"
+          />
         </div>
       </div>
     </div>
     <div class="btns">
-      <div class="btn">
+      <div class="btn" @click="handleUploadNftClick">
         <icon-svg icon="icon-icon4" class="icon"></icon-svg>
         <span>上架</span>
       </div>
@@ -93,11 +85,124 @@
 </template>
 
 <script>
-import { defineComponent } from "@vue/runtime-core";
+import {
+  defineComponent,
+  reactive,
+  ref,
+  toRefs,
+  onMounted,
+  getCurrentInstance,
+} from "vue";
 import UploadNft from "./UploadNft";
+import UploadCollection from "./UploadCollection";
+import { getSerisesIpApi, uploadNftApi } from "@api";
+import dayjs from "dayjs";
+
+let obj = {
+  name: "",
+  description: "",
+  number: "",
+  series_ip: "",
+  price: "",
+  opening_time: "",
+  nft_file: {},
+  nft_background: {},
+};
+
 export default defineComponent({
   components: {
     UploadNft,
+    UploadCollection,
+  },
+  setup() {
+    let uploadParams = reactive(obj);
+    const { proxy } = getCurrentInstance();
+    const ipList = ref([]);
+
+    onMounted(() => {
+      getIpList();
+    });
+
+    const getIpList = async () => {
+      const { err_code, result } = await getSerisesIpApi();
+      if (err_code === "0") {
+        console.log("ipList", result);
+        ipList.value = result;
+      }
+    };
+
+    const showHeaderSelect = ref(false);
+    const handleUploadNftClick = async () => {
+      if (!uploadParams.name.trim())
+        return window.$message.warn({
+          message: "提示",
+          description: "请输入标题",
+        });
+      if (!uploadParams.description.trim())
+        return window.$message.warn({
+          message: "提示",
+          description: "请输入藏品描述",
+        });
+      if (!uploadParams.number)
+        return window.$message.warn({
+          message: "提示",
+          description: "请输入数量",
+        });
+      if (!uploadParams.price)
+        return window.$message.warn({
+          message: "提示",
+          description: "请输入价格",
+        });
+      if (!uploadParams.opening_time)
+        return window.$message.warn({
+          message: "提示",
+          description: "请输入开售时间",
+        });
+      if (!Object.keys(uploadParams.nft_file))
+        return window.$message.warn({
+          message: "提示",
+          description: "请输入数字产品",
+        });
+
+      const temporaryObj = {
+        ...uploadParams,
+        opening_time: `${dayjs(uploadParams.opening_time).unix()}`,
+      };
+      const formData = new FormData();
+
+      for (let key in temporaryObj) {
+        formData.append(key, uploadParams[key]);
+      }
+      const { err_code } = await uploadNftApi(formData, {
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      });
+
+      if (err_code === "0") {
+        uploadParams.name = "";
+        uploadParams.description = "";
+        uploadParams.number = "";
+        uploadParams.series_ip = "";
+        uploadParams.price = "";
+        uploadParams.opening_time = "";
+        uploadParams.nft_file = {};
+        uploadParams.nft_background = {};
+        proxy.$refs.uploadNft.imgSrc = "";
+        proxy.$refs.uploadCollection.imgSrc = "";
+        window.$message.success({ message: "提示", description: "上架成功" });
+      }
+    };
+
+    const handleHeaderSelectClick = (boolan) => {
+      showHeaderSelect.value = boolan;
+    };
+
+    return {
+      ...toRefs(uploadParams),
+      handleUploadNftClick,
+      handleHeaderSelectClick,
+      showHeaderSelect,
+      ipList,
+    };
   },
 });
 </script>
@@ -242,12 +347,14 @@ export default defineComponent({
           padding: 16px;
           box-sizing: border-box;
           display: flex;
+          animation: upShow 0.3s ease-in;
+          z-index: 111;
           .header {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            background: #f7f7f7;
+
             border-radius: 8px;
             box-sizing: border-box;
             width: 70px;
@@ -260,11 +367,34 @@ export default defineComponent({
               height: 34px;
               border-radius: 50%;
             }
+            &:hover {
+              background: #f7f7f7;
+            }
             span {
               color: #000000;
               font-size: 14px;
             }
           }
+        }
+      }
+      @keyframes upShow {
+        0% {
+          transform: translateY(-30px);
+          opacity: 0.4;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      @keyframes dowShow {
+        0% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-30px);
+          opacity: 0.4;
         }
       }
       .ups {
@@ -292,72 +422,6 @@ export default defineComponent({
             font-size: 19px;
             color: #000;
             font-weight: 600;
-          }
-        }
-        .upload_collection {
-          flex: 1;
-          flex-direction: column;
-
-          box-sizing: border-box;
-          border-radius: 8px;
-          border: 1px solid #f3f1f1;
-          margin-left: 10px;
-          padding: 20px;
-          .titles {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            h3 {
-              font-size: 19px;
-              font-weight: 600;
-              color: #000000;
-              padding: 0;
-              margin: 0;
-            }
-            .prew {
-              width: 74px;
-              height: 40px;
-              display: flex;
-              justify-content: center;
-              align-items: center;
-              background: #000000;
-              border-radius: 8px;
-              cursor: pointer;
-              .icon {
-                color: #fff;
-                font-size: 1.4rem;
-              }
-              span {
-                color: #fff;
-              }
-            }
-          }
-
-          .upload-cot {
-            width: 100%;
-            margin-top: 20px;
-            height: calc(100% - 37px - 40px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            p {
-              width: 277px;
-              text-align: center;
-              margin-top: 21px;
-            }
-            input {
-              display: inline-block;
-              width: 100%;
-              position: absolute;
-              height: 100%;
-              top: 0;
-              left: 0;
-              opacity: 0;
-              cursor: pointer;
-            }
           }
         }
       }

@@ -30,31 +30,37 @@ const menu = [
     icon: "icon-a-bianzu4",
     text: "订单",
     path: "/order",
+    id: 2,
+  },
+  {
+    icon: "icon-a-bianzu4",
+    text: "审核",
+    path: "/audit",
     id: 3,
   },
   {
     icon: "icon-icon3",
     text: "上架",
     path: "/shelves",
-    id: 2,
+    id: 4,
   },
   {
     icon: "icon-a-bianzu32",
     text: "运营",
     path: "/operation",
-    id: 3,
+    id: 5,
   },
   {
     icon: "icon-a-bianzu3",
     text: "作品",
     path: "/items",
-    id: 4,
+    id: 6,
   },
   {
     icon: "icon-a-bianzu311",
     text: "设置",
     path: "/setting",
-    id: 5,
+    id: 7,
   },
 ];
 export default {

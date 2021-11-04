@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
-import { getStorageToken } from "@/utils";
+import { getStorageRole } from "@/utils";
 import Home from "@/views/Home";
 const routes = [
   {
@@ -28,6 +28,15 @@ const routes = [
         },
         component: () =>
           import(/* webpackChunkName: 'Order' */ "@/views/Order/index.vue"),
+      },
+      {
+        path: "/audit",
+        name: "audit",
+        meta: {
+          title: "审核",
+        },
+        component: () =>
+          import(/* webpackChunkName: 'Order' */ "@/views/Audit/index.vue"),
       },
       {
         path: "/shelves",
@@ -93,11 +102,11 @@ const router = createRouter({
   history: createWebHistory(),
   routes,
 });
+
 // 前置路由拦截
 router.beforeEach((to, from, next) => {
-  const token = getStorageToken(); // null | token
-  // 去往非登录页且无 token
-  if (!to.path.includes("login") && !token) {
+  const role = getStorageRole();
+  if (!to.path.includes("login") && !role) {
     next("/login");
   } else {
     next();

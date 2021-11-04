@@ -3,6 +3,7 @@ import App from "./App.vue";
 import router from "./router";
 import store from "./store";
 import Antd, { notification } from "ant-design-vue";
+import { joinPreviewUrl } from "./utils";
 import "ant-design-vue/dist/antd.css";
 import IconSvg from "./components/IconSvg";
 const app = createApp(App);
@@ -13,5 +14,8 @@ app.component("icon-svg", IconSvg);
 
 app.config.globalProperties.$message = notification;
 window.$message = notification;
+
+app.config.globalProperties.joinPreviewUrl = joinPreviewUrl;
+window.joinPreviewUrl = joinPreviewUrl;
 
 app.mount("#app");

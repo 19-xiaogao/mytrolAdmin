@@ -21,7 +21,7 @@
 import { useRouter } from "vue-router";
 import { ref } from "vue";
 import { logoutApi } from "@api";
-import { removeStorageToken } from "@/utils";
+import { removeStorageRole } from "@/utils";
 export default {
   setup() {
     const router = useRouter();
@@ -33,7 +33,7 @@ export default {
       const { err_code } = await logoutApi();
       if (err_code == 0) {
         router.push("/login");
-        removeStorageToken();
+        removeStorageRole();
       }
     };
     return {
