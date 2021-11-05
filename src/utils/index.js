@@ -52,7 +52,6 @@ export function previewFile(file) {
     reader.onerror = () => reject(reader.error);
   });
 }
-// splitAllUrl
 
 export const joinPreviewUrl = (hash) => {
   return process.env.VUE_APP_BASE_IPFS + hash;

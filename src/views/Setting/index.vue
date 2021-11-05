@@ -48,8 +48,6 @@ export default defineComponent({
       currentIndex.value = index;
       if (index === 0) {
         createVisible.value = true;
-      } else {
-        // currentIndex.value = false;
       }
     };
     return { isShowActiveClass, handleClick, settingLists, createVisible };

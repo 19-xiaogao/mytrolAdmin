@@ -7,17 +7,17 @@
           <input placeholder="在此输入标题" v-model="name" />
           <a-dropdown class="serial-number" v-model="series_ip">
             <template #overlay>
-              <a-menu>
+              <a-menu @click="handleMenuClick">
                 <a-menu-item key="">
                   首页
                 </a-menu-item>
-                <a-menu-item v-for="item in ipList" :key="item">
+                <a-menu-item v-for="item in ipList" :key="item.name">
                   {{ item.name }}
                 </a-menu-item>
               </a-menu>
             </template>
             <a-button>
-              <span>首页</span>
+              <span>{{ currentIpName }}</span>
               <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
             </a-button>
           </a-dropdown>
@@ -118,7 +118,7 @@ export default defineComponent({
     let uploadParams = reactive(obj);
     const { proxy } = getCurrentInstance();
     const ipList = ref([]);
-
+    const currentIpName = ref("首页");
     onMounted(() => {
       getIpList();
     });
@@ -126,13 +126,20 @@ export default defineComponent({
     const getIpList = async () => {
       const { err_code, result } = await getSerisesIpApi();
       if (err_code === "0") {
-        console.log("ipList", result);
         ipList.value = result;
       }
     };
 
     const showHeaderSelect = ref(false);
     const handleUploadNftClick = async () => {
+      const userSelectTime = dayjs(uploadParams.opening_time).unix();
+      console.log(uploadParams);
+      if (userSelectTime < dayjs(Date.now()).unix() - 60 * 3) {
+        return window.$message.warn({
+          message: "提示",
+          description: "请输入正确的开售时间",
+        });
+      }
       if (!uploadParams.name.trim())
         return window.$message.warn({
           message: "提示",
@@ -164,15 +171,12 @@ export default defineComponent({
           description: "请输入数字产品",
         });
 
-      const temporaryObj = {
-        ...uploadParams,
-        opening_time: `${dayjs(uploadParams.opening_time).unix()}`,
-      };
       const formData = new FormData();
 
-      for (let key in temporaryObj) {
+      for (let key in uploadParams) {
         formData.append(key, uploadParams[key]);
       }
+      formData.set("opening_time", String(userSelectTime));
       const { err_code } = await uploadNftApi(formData, {
         headers: { "content-type": "application/x-www-form-urlencoded" },
       });
@@ -186,6 +190,7 @@ export default defineComponent({
         uploadParams.opening_time = "";
         uploadParams.nft_file = {};
         uploadParams.nft_background = {};
+        currentIpName.value = "首页";
         proxy.$refs.uploadNft.imgSrc = "";
         proxy.$refs.uploadCollection.imgSrc = "";
         window.$message.success({ message: "提示", description: "上架成功" });
@@ -195,13 +200,20 @@ export default defineComponent({
     const handleHeaderSelectClick = (boolan) => {
       showHeaderSelect.value = boolan;
     };
-
+    const handleMenuClick = (e) => {
+      uploadParams.series_ip = e.key;
+      const findName = ipList.value.find((item) => item.name === e.key);
+      currentIpName.value = findName ? findName.name : "首页";
+      console.log(currentIpName.value);
+    };
     return {
       ...toRefs(uploadParams),
       handleUploadNftClick,
       handleHeaderSelectClick,
       showHeaderSelect,
       ipList,
+      handleMenuClick,
+      currentIpName,
     };
   },
 });
@@ -209,7 +221,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .serial-number {
-  width: 87px;
   height: 34px;
   border-radius: 6px;
   border: 1px solid #cacaca;
@@ -222,6 +233,7 @@ export default defineComponent({
 
   .icon {
     font-size: 1rem;
+    margin-left: 4px;
   }
   span {
     font-size: 14px;

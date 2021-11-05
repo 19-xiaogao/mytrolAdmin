@@ -2,16 +2,16 @@
   <div class="person-space">
     <div class="title">
       <h4>个人空间</h4>
-      <span>编辑个人资料</span>
+      <!-- <span>编辑个人资料</span> -->
     </div>
     <div class="avator-message">
       <div class="avator">
-        <img src="@assets/images/avtor.png" alt="" />
+        <img :src="personMessage.avatar" alt="" />
         <img src="@assets/images/card.png" alt="" />
       </div>
       <div class="message">
-        <h4>王晓波</h4>
-        <span>审核组 组长</span>
+        <h4>{{ personMessage.nickname }}</h4>
+        <span>{{ currentRole }}</span>
       </div>
     </div>
     <div class="indicators">
@@ -32,8 +32,25 @@
 </template>
 
 <script>
+import { computed } from "vue";
+import { useStore } from "vuex";
 export default {
-  components: {},
+  setup() {
+    const store = useStore();
+    const personMessage = computed(() => store.getters.getPersonMessage);
+    const currentRole = computed(() => {
+      const role = store.getters.getRole;
+      if (role === "admin") {
+        return "超级管理员";
+      } else if (role === "maker") {
+        return "设计师";
+      } else {
+        return "运营";
+      }
+    });
+    // const
+    return { personMessage, currentRole };
+  },
 };
 </script>
 
@@ -80,6 +97,8 @@ export default {
         height: 100%;
         top: 0;
         left: 0;
+        object-fit: cover;
+        object-position: center center;
       }
       img:nth-child(2) {
         position: absolute;

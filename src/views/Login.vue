@@ -51,15 +51,17 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, toRefs, getCurrentInstance } from "vue";
 import { useRouter } from "vue-router";
-import { loginApi } from "@api";
+import { loginApi, getUserInfoApi } from "@api";
 import { useStore } from "vuex";
 import { setStorageRole } from "@/utils";
+
 export default defineComponent({
   setup() {
     const router = useRouter();
     const store = useStore();
+    const { proxy } = getCurrentInstance();
     const loginParms = reactive({ username: "", password: "" });
 
     const handleLoginBtn = async () => {
@@ -69,9 +71,19 @@ export default defineComponent({
           message: "提示",
           description: "欢迎回来!",
         });
-        setStorageRole(response.result.role);
-        store.commit("setRole", response.result.role);
-        router.push("/");
+
+        getUserInfoApi().then(({ err_code, result }) => {
+          if (err_code === "0") {
+            // 本地存一份，vuex 存一份
+            setStorageRole(response.result.role);
+            store.commit("setRole", response.result.role);
+            store.commit("setPersonMessage", {
+              ...result,
+              avatar: proxy.joinPreviewUrl(result.avatar),
+            });
+            router.push("/");
+          }
+        });
       } else {
         window.$message.error({
           message: "提示",

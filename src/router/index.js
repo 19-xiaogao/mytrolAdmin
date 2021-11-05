@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import { getStorageRole } from "@/utils";
 import Home from "@/views/Home";
+import Login from "@/views/Login";
 const routes = [
   {
     path: "/",
@@ -85,7 +86,8 @@ const routes = [
     meta: {
       title: "登陆",
     },
-    component: import(/* webpackChunkName: 'Login' */ "@/views/Login.vue"),
+    component: Login,
+    // component: import(/* webpackChunkName: 'Login' */ "@/views/Login.vue"),
   },
   {
     path: "/:catchAll(.*)",

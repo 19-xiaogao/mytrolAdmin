@@ -11,7 +11,7 @@
       ></icon-svg>
     </div>
     <div class="avator">
-      <img src="@assets/images/avtor.png" alt="" />
+      <img :src="messageDetail.avatar" alt="" />
       <span>{{ messageDetail.nickname }}</span>
     </div>
     <p class="des">
@@ -20,14 +20,19 @@
     <div class="ikon">
       <img :src="joinPreviewUrl(messageDetail.file)" alt="" />
     </div>
-    <div class="logo">
-      <img src="@assets/images/mytrolLogo.png" alt="" />
+    <div class="ikon">
+      <img :src="joinPreviewUrl(messageDetail.file_background)" alt="" />
+    </div>
+    <div class="audit-box">
+      <div @click="handleAuditClick(true)">通过</div>
+      <div @click="handleAuditClick(false)">不通过</div>
     </div>
   </div>
 </template>
 
 <script>
 import { ref, onUpdated, getCurrentInstance } from "vue";
+import { auditPassedApi } from "@api";
 export default {
   emits: ["clonse"],
   props: {
@@ -45,10 +50,21 @@ export default {
     onUpdated(() => {
       orderDetailRef.value.style.animation = "sliding-show 0.5s linear 0s";
     });
+    const handleAuditClick = (bol) => {
+      const status = bol ? "success" : "failed";
+      auditPassed(props.messageDetail.id, status);
+    };
+    const auditPassed = async (denom_id, status) => {
+      const { err_code } = await auditPassedApi({ denom_id, status });
+      if (err_code === "0") {
+        emit("clonse",'refresh',props.messageDetail.id);
+      }
+    };
     return {
       handleHideClick,
       orderDetailRef,
       joinPreviewUrl: proxy.joinPreviewUrl,
+      handleAuditClick,
     };
   },
 };
@@ -62,6 +78,7 @@ export default {
   width: 390px;
   height: calc(100% - 60px);
   background: #ffffff;
+  overflow-y: auto;
   box-shadow: -6px 0px 18px 0px rgba(107, 107, 107, 0.16);
   border-radius: 12px;
   box-sizing: border-box;
@@ -100,6 +117,8 @@ export default {
     }
   }
   .des {
+    margin: 0;
+    padding: 0;
     margin-top: 10px;
     font-weight: 400;
     color: #434343;
@@ -112,6 +131,7 @@ export default {
     height: 261px;
     overflow: hidden;
     border-radius: 5px;
+    margin-top: 20px;
     img {
       width: 100%;
       height: 100%;
@@ -120,11 +140,25 @@ export default {
     }
   }
 
-  .logo {
-    position: absolute;
-    bottom: 34px;
-    left: 50%;
-    transform: translateX(-50%);
+  .audit-box {
+    position: sticky;
+    bottom: 10px;
+    right: 0;
+    transform: translateX(0);
+    display: flex;
+    justify-content: center;
+    div {
+      width: 60px;
+      height: 60px;
+      text-align: center;
+      line-height: 60px;
+      margin-left: 10px;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+      background: #54a44b;
+      border-radius: 8px;
+    }
   }
 }
 @keyframes sliding-show {

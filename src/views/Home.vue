@@ -2,7 +2,7 @@
   <div class="home">
     <Header />
     <Sidebar />
-    <UserSettingModal />
+    <UserSettingModal v-if="!isShowEditModal" />
     <div class="body">
       <router-view v-slot="{ Component }">
         <keep-alive>
@@ -16,9 +16,13 @@
 </template>
 
 <script>
+import { computed } from "vue";
+
+import { useStore } from "vuex";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import UserSettingModal from "@/components/UserSettingModal";
+
 export default {
   name: "Home",
   components: {
@@ -27,7 +31,10 @@ export default {
     UserSettingModal,
   },
   setup() {
-    return {};
+    const store = useStore();
+    const person = computed(() => store.getters.getPersonMessage);
+    const isShowEditModal = computed(() => !!person.value.nickname);
+    return { isShowEditModal };
   },
 };
 </script>

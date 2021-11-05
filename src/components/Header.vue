@@ -5,11 +5,12 @@
     </div>
     <div class="avator-message">
       <div class="avator">
-        <img src="@assets/images/avtor.png" alt="" />
+        <img :src="personMessage.avatar" alt="" />
       </div>
-      <a-select class="select" v-model:value="value2">
-        <a-select-option value="lucy">Lucy</a-select-option>
-      </a-select>
+      <span class="select">{{ personMessage.nickname }}</span>
+      <!-- <a-select class="select" v-model:value="value2">
+        <a-select-option value="lucy">{{personMessage.nickname}}</a-select-option>
+      </a-select> -->
       <div class="waring">
         <img src="@assets/images/bell.png" @click="handleRouteLogin" alt="" />
       </div>
@@ -18,14 +19,16 @@
 </template>
 
 <script>
+import { computed, ref } from "vue";
+import { useStore } from "vuex";
 import { useRouter } from "vue-router";
-import { ref } from "vue";
 import { logoutApi } from "@api";
 import { removeStorageRole } from "@/utils";
 export default {
   setup() {
     const router = useRouter();
-
+    const store = useStore();
+    const personMessage = computed(() => store.getters.getPersonMessage);
     const handleRouteClick = () => {
       router.push("/");
     };
@@ -40,6 +43,7 @@ export default {
       value2: ref("lucy"),
       handleRouteClick,
       handleRouteLogin,
+      personMessage,
     };
   },
 };
@@ -77,6 +81,7 @@ header {
       background: #eee;
       border-radius: 50%;
       overflow: hidden;
+      cursor: pointer;
       img {
         width: 100%;
         height: 100%;
@@ -84,7 +89,9 @@ header {
     }
     .select {
       margin: 0 10px;
-      width: 80px;
+      cursor: pointer;
+      width: 40px;
+      // width: 80px;
     }
   }
 }

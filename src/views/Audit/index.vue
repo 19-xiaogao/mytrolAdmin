@@ -43,6 +43,7 @@
       class="ant-table-striped"
       :data-source="publishData"
       :position="false"
+      :scroll="{ y: 450 }"
       :row-class-name="
         (_record, index) => (index % 2 === 1 ? 'table-striped' : null)
       "
@@ -63,6 +64,7 @@
 
 <script>
 import { defineComponent, reactive, ref, onMounted, toRefs } from "vue";
+import { joinPreviewUrl } from "@/utils";
 import { getPublishingApi } from "@api";
 import dayjs from "dayjs";
 import AuditDetail from "./AuditDetail";
@@ -84,8 +86,8 @@ const columns = [
   },
   {
     title: "关联IP",
-    dataIndex: "avatar",
-    key: "avatar",
+    dataIndex: "series_ip",
+    key: "series_ip",
   },
   {
     title: "价格",
@@ -125,20 +127,29 @@ export default defineComponent({
     const getPublishingList = async (pagination) => {
       const { err_code, result } = await getPublishingApi(pagination);
       if (err_code === "0") {
-        publishData.value = result.common.map((item) => ({
+        publishData.value = result.map((item) => ({
           ...item,
-          created_at: dayjs(Number(item.created_at)).format("YYYY-MM-DD HH:mm"),
+          created_at: dayjs(Number(item.opening_time)).format(
+            "YYYY-MM-DD HH:mm"
+          ),
+          series_ip: item.series_ip === "common" ? "首页" : item.series_ip,
+          avatar: joinPreviewUrl(item.avatar),
         }));
+        console.log("审核列表", publishData.value);
       }
     };
     const handleOrderDetailClick = (row) => {
       currentDetail.detailMessage = row.record;
       currentDetail.isOrderShow = !currentDetail.isOrderShow;
     };
-    const hanldeCloseClick = () =>{
+    const hanldeCloseClick = (refresh, id) => {
+      if (refresh) {
+        // 由于区块链有延迟，所以删除内存的这个条数据
+        // getPublishingList(pagination);
+        publishData.value = publishData.value.filter((item) => item.id !== id);
+      }
       currentDetail.isOrderShow = !currentDetail.isOrderShow;
-
-    }
+    };
     return {
       columns,
       publishData,

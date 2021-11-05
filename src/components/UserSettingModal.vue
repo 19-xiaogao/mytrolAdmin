@@ -5,12 +5,11 @@
     title="设计师信息"
     :closable="false"
   >
-    <!-- :maskClosable="false" -->
-
     <div class="avator">
-      <div class="upload-avator">
-        <icon-svg icon="icon-a-bianzu12" class="icon"></icon-svg>
-        <input type="file" alt="" />
+      <div class="upload-avator" ref="upload_avator">
+        <icon-svg icon="icon-a-bianzu12" v-if="!imgSrc" class="icon"></icon-svg>
+        <input type="file" alt="" @change="handleUploadFile" />
+        <img :src="imgSrc" class="upload" v-if="imgSrc" alt="" />
       </div>
       <div class="upload-warn">
         <img src="@assets/images/header-per.png" alt="" />
@@ -21,31 +20,78 @@
     </div>
     <div class="user-input">
       <span>创作者名称</span>
-      <input type="text" placeholder="请输入创作者名称" />
+      <input type="text" placeholder="请输入创作者名称" v-model="username" />
     </div>
     <template #footer>
-      <div class="footer">确定</div>
+      <div class="footer" @click="handleSureClick">确定</div>
     </template>
   </a-modal>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import {
+  defineComponent,
+  ref,
+  getCurrentInstance,
+  reactive,
+  toRefs,
+} from "vue";
+import { previewFile } from "@/utils";
+import { editPersonApi } from "@api";
+
 export default defineComponent({
+  props: {
+    user_file: Object,
+  },
   name: "userSettingModal",
-  setup() {
+  setup(props, { emit }) {
     const visible = ref(true);
-    const showModal = () => {
-      visible.value = true;
-    };
-    const handleOk = () => {
-      visible.value = false;
+    const userMessage = reactive({ imgSrc: "", username: "" });
+
+    const { proxy } = getCurrentInstance();
+    const fromData = new FormData();
+
+    fromData.append("nickname", "");
+    fromData.append("file", "");
+    fromData.append("description", "");
+
+    const handleUploadFile = (e) => {
+      let imgFile = e.target.files;
+      if (!imgFile.length) return;
+
+      fromData.set("file", imgFile[0]);
+
+      previewFile(imgFile[0]).then((res) => {
+        userMessage.imgSrc = res;
+        proxy.$refs.upload_avator.style.opacity = "1.0";
+        emit("update:user_file", imgFile[0]);
+        e.target.value = "";
+      });
     };
 
+    const handleSureClick = async () => {
+      if (!userMessage.imgSrc)
+        return window.$message.warn({
+          message: "提示",
+          description: "请上传头像",
+        });
+      if (!userMessage.username)
+        return window.$message.warn({
+          message: "提示",
+          description: "请输入名称",
+        });
+
+      fromData.set("nickname", userMessage.username);
+      const { err_code } = await editPersonApi(fromData);
+      if (err_code === "0") {
+        visible.value = false;
+      }
+    };
     return {
       visible,
-      showModal,
-      handleOk,
+      handleUploadFile,
+      ...toRefs(userMessage),
+      handleSureClick,
     };
   },
 });
@@ -78,6 +124,8 @@ export default defineComponent({
       opacity: 0.39;
       position: relative;
       margin-right: 44px;
+      border-radius: 4px;
+      overflow: hidden;
       .icon {
         position: absolute;
         color: #fff;
@@ -112,6 +160,14 @@ export default defineComponent({
         font-size: 14px;
       }
     }
+  }
+  .upload {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    object-position: top center;
   }
   .user-input {
     display: flex;

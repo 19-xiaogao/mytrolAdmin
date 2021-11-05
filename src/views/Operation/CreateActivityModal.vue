@@ -4,40 +4,78 @@
       <div class="upload-box">
         <div class="upload-btn">
           <span>上传图片</span>
-          <input type="file" alt="" />
+          <input type="file" alt="" @change="handleUploadFile" />
         </div>
-        <img src="@assets/images/order-detail-img.jpg" alt="" />
+        <img :src="imgSrc" alt="" v-if="imgSrc" />
       </div>
       <p>温馨提示：尺寸为510*324，请按照特定模板的原则产图</p>
     </div>
     <div class="user-input">
       <div class="user">
         <span>IP系列名称</span>
-        <input type="text " placeholder="请输入IP系列名称" required />
+        <input
+          type="text "
+          placeholder="请输入IP系列名称"
+          required
+          v-model="name"
+        />
       </div>
     </div>
     <template #closeIcon>
       <div class="close" @click="handleClose">取消</div>
     </template>
     <template #footer>
-      <div class="create-user">确定</div>
+      <div class="create-user" @click="handleSureClick">确定</div>
     </template>
   </a-modal>
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
+import { addUpdateIpApi } from "@api";
+import { previewFile } from "@/utils";
 export default defineComponent({
   props: {
     createVisible: {
       type: Boolean,
     },
+    uploadImg: Object,
   },
   setup(props, { emit }) {
+    const addIpParams = reactive({ imgSrc: "", name: "" });
+    const formData = new FormData();
+    formData.append("status", "off");
+    formData.append("operate", "add");
+    formData.append("name", "");
+    formData.append("number", "");
+    formData.append("file", "");
+
+    const handleUploadFile = (e) => {
+      let imgFile = e.target.files;
+      if (!imgFile.length) return;
+      previewFile(imgFile[0]).then((res) => {
+        addIpParams.imgSrc = res;
+        formData.set("file", imgFile[0]);
+        emit("update:uploadImg", imgFile[0]);
+        e.target.value = "";
+      });
+    };
     const handleClose = () => {
       emit("update:createVisible", false);
     };
-    return { handleClose };
+    const handleSureClick = async () => {
+      formData.set("name", addIpParams.name);
+      const { err_code } = await addUpdateIpApi(formData);
+      if (err_code === "0") {
+        emit("update:createVisible", false);
+      }
+    };
+    return {
+      handleClose,
+      handleUploadFile,
+      ...toRefs(addIpParams),
+      handleSureClick,
+    };
   },
 });
 </script>

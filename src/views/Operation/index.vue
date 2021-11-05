@@ -10,14 +10,16 @@
         </div>
       </div>
       <div class="card-list">
-        <div class="card-box" v-for="item in [1, 2, 3, 4, 5, 6]" :key="item">
+        <div class="card-box" v-for="item in seriessList" :key="item.id">
           <div class="card">
             <div class="header">
-              <p>飞天敦煌系列IP</p>
-              <span>运营中</span>
+              <p>{{ item.name }}</p>
+              <span :class="isShowStatus(item.status) ? 'off-span' : ''">{{
+                isShowStatus(item.status) ? "未运营" : "运营中"
+              }}</span>
             </div>
             <div class="img">
-              <img src="@assets/images/card-img.png" alt="" />
+              <img :src="item.file" alt="" />
             </div>
             <div class="footer">
               <div class="icons">
@@ -26,8 +28,13 @@
                   <icon-svg icon="icon-a-bianzu10" class="icon"></icon-svg>
                 </a-tooltip>
                 <a-tooltip>
-                  <template #title>下架</template>
-                  <icon-svg icon="icon-yiyouzhujici"></icon-svg>
+                  <template #title>{{
+                    isShowStatus(item.status) ? "上架" : "下架"
+                  }}</template>
+                  <icon-svg
+                    icon="icon-yiyouzhujici"
+                    @click="handleStatusClick(item)"
+                  ></icon-svg>
                 </a-tooltip>
               </div>
               <a-dropdown class="serial-number">
@@ -45,7 +52,7 @@
                   </a-menu>
                 </template>
                 <a-button>
-                  <span>序列 1</span>
+                  <span>{{ isShowStatus(item.status) ? "无" : "下架" }}</span>
                   <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
                 </a-button>
               </a-dropdown>
@@ -58,9 +65,11 @@
 </template>
 
 <script>
-import { ref } from "vue";
+import { ref, onMounted, computed } from "vue";
+import { getSeriessApi,addUpdateIpApi } from "@api";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
+import {joinPreviewUrl} from "@/utils"
 export default {
   components: {
     IPDetail,
@@ -68,10 +77,54 @@ export default {
   },
   setup() {
     const createActivityVisible = ref(false);
+    const seriessList = ref([]);
+    let valve = true;
+    const isShowStatus = computed(() => {
+      return (status) => status === "off";
+    });
+    onMounted(() => {
+      getSeriessListApi();
+    });
+    const getSeriessListApi = async () => {
+      const { err_code, result } = await getSeriessApi();
+      if (err_code === "0") {
+        seriessList.value = result.map(item => ({...item,file:joinPreviewUrl(item.file)}));
+      }
+    };
+    const handleStatusClick = async (item) => {
+      if (!valve) {
+        return window.$message.warn({
+          message: "提示",
+          description: "请5秒后重试",
+        });
+      }
+      valve = false;
+      const status = item.status === "off" ? "on" : "off";
+      const formData = new FormData();
+      formData.append("name", item.name);
+      formData.append("status", status);
+      formData.append("number", item.number);
+      formData.append("operate", "update");
+      const { err_code } = await addUpdateIpApi(formData);
+      if (err_code === "0") {
+        window.setTimeout(() => (valve = true), 5000);
+        seriessList.value.forEach((key) => {
+          if (item.id === key.id) {
+            item.status = status;
+          }
+        });
+      }
+    };
     const handleCreateActivityClick = () => {
       createActivityVisible.value = true;
     };
-    return { handleCreateActivityClick, createActivityVisible };
+    return {
+      handleCreateActivityClick,
+      createActivityVisible,
+      seriessList,
+      isShowStatus,
+      handleStatusClick,
+    };
   },
 };
 </script>
@@ -128,6 +181,11 @@ export default {
           padding: 0;
           font-size: 16px;
           font-weight: 500;
+        }
+        .off-span {
+          &::before {
+            background: red !important;
+          }
         }
         span {
           font-size: 14px;
