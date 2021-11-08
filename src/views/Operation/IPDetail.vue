@@ -1,10 +1,14 @@
 <template>
-  <div class="ip-detail">
+  <div class="ip-detail" v-if="visible">
     <div class="ip-detail-title">
       <div class="title-l">
-        <span class="icon"></span>
-        <div class="char">飞天东皇系列IP</div>
-        <div class="status">运营中</div>
+        <span class="icon" @click="handleReturnClick"></span>
+        <div class="char">{{ params.name }}</div>
+        <div
+          :class="isShowStatus(params.status) ? 'off-span status' : 'status'"
+        >
+          {{ isShowStatus(params.status) ? "未运营" : "运营中" }}
+        </div>
       </div>
       <div class="title-r">
         <div class="icons">
@@ -43,57 +47,108 @@
         class="card"
         @mouseover="() => handleMouseover(true)"
         @mouseout="() => handleMouseover(false)"
+        v-for="item in workList"
+        :key="item.id"
       >
         <div class="img" ref="imgRef">
-          <img src="@assets/images/order-detail-img.jpg" alt="" />
+          <img :src="item.file" alt="" />
         </div>
-        <div class="options">
+        <!-- <div class="options">
           <img src="@assets/images/start.png" alt="" />
           <span>入选</span>
           <icon-svg icon="icon-a-bianzu13"></icon-svg>
-        </div>
+        </div> -->
         <div class="me">
           <div class="me-t">
-            <h3>少女懵懂的年少时光</h3>
+            <h3>{{ item.name }}</h3>
             <div class="avator-des">
               <div class="imgs">
-                <img src="@assets/images/avtor.png" alt="" />
+                <img :src="item.avatar" alt="" />
                 <img src="@assets/images/v-icon.png" class="icon" alt="" />
               </div>
-              <span>龙雷雷</span>
+              <span>{{ item.nickname }}</span>
             </div>
           </div>
           <div class="me-m">
-            <div class="manay">$199.9</div>
-            <div class="text">
-              <span>限量</span>
-              <span>1000</span>
+            <div class="manay">${{ item.price }}</div>
+            <div class="_limit">
+              <div class="_t1">限量</div>
+              <div class="_t2">{{ item.number }}</div>
             </div>
           </div>
         </div>
         <div class="mask"></div>
       </div>
     </div>
+    <p class="no-found" v-if="workList.length <= 0">暂无数据</p>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
+import {
+  defineComponent,
+  reactive,
+  ref,
+  watchEffect,
+  computed,
+  getCurrentInstance,
+} from "vue";
+import { getLastestNftApi } from "@api";
 export default defineComponent({
-  setup() {
+  props: {
+    visible: Boolean,
+    params: Object,
+  },
+  setup(props, { emit }) {
+    const { proxy } = getCurrentInstance();
     const imgRef = ref();
+    const pagination = reactive({
+      page: 1,
+      numbers: 10,
+    });
+    const workList = ref([]);
     const handleMouseover = (bol) => {
       bol
         ? (imgRef.value.style.transform = "scale(1.2)")
         : (imgRef.value.style.transform = "scale(1)");
     };
-    return { handleMouseover, imgRef };
+    const handleReturnClick = () => {
+      emit("update:visible", false);
+    };
+
+    const getLastetNftList = async (id, page, numbers) => {
+      const { err_code, result } = await getLastestNftApi(id, page, numbers);
+      if (err_code === "0") {
+        console.log("作品列表", result);
+        workList.value = result.map((item) => ({
+          ...item,
+          avatar: proxy.joinPreviewUrl(item.avatar),
+          file: proxy.joinPreviewUrl(item.file),
+        }));
+      }
+    };
+    watchEffect(() => {
+      getLastetNftList(props.params.id, pagination.page, pagination.numbers);
+    }, [props.params.id]);
+
+    const isShowStatus = computed(() => {
+      return (status) => status === "off";
+    });
+    return {
+      handleMouseover,
+      imgRef,
+      handleReturnClick,
+      isShowStatus,
+      workList,
+    };
   },
 });
 </script>
 
 <style scoped lang="scss">
 .ip-detail {
+  position: relative;
+  height: 98%;
   .ip-detail-title {
     display: flex;
     justify-content: space-between;
@@ -133,6 +188,11 @@ export default defineComponent({
           height: 8px;
           background: #2caf71;
           border-radius: 50%;
+        }
+      }
+      .off-span {
+        &::before {
+          background: red !important;
         }
       }
     }
@@ -224,10 +284,12 @@ export default defineComponent({
       .me {
         display: flex;
         position: absolute;
+        width: calc(100% - 25px);
         justify-content: space-between;
         align-items: center;
-        bottom: 5px;
-        left: 18px;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
         z-index: 2;
         .me-t {
           h3 {
@@ -277,26 +339,34 @@ export default defineComponent({
             color: #fff;
             font-weight: 500;
           }
-          .text {
-            span:first-child {
+          ._limit {
+            height: 20px;
+            border-radius: 6px;
+            border: 1px solid #ffbd21;
+            display: flex;
+            text-align: right;
+            ._t1 {
+              display: block;
+              height: 20px;
+              font-size: 12px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #000000;
+              line-height: 20px;
               background: #ffbd21;
-              border-radius: 4px;
-              font-size: 8px;
-              color: #000;
-              border-radius: 4px;
-              display: inline-block;
-              padding: 2px;
+              padding: 0 4px;
             }
-            span:last-child {
-              display: inline-block;
-              box-sizing: border-box;
-              border: #ffbd21 1px solid;
-              border-left-color: transparent;
-              border-radius: 4px;
-              color: #fff;
-              padding: 2px;
-
-              font-size: 8px;
+            ._t2 {
+              display: block;
+              height: 20px;
+              font-size: 12px;
+              font-family: Roboto-Medium, Roboto;
+              font-weight: 500;
+              color: #ffbd21;
+              line-height: 20px;
+              padding: 0 4px;
+              min-width: 18px;
+              text-align: center;
             }
           }
         }
@@ -313,6 +383,16 @@ export default defineComponent({
         box-shadow: 0px 2px 6px 0px rgba(53, 53, 53, 0.09);
       }
     }
+  }
+  .no-found {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    color: #000;
+    font-size: 20px;
+    margin: 0;
+    padding: 0;
   }
 }
 </style>

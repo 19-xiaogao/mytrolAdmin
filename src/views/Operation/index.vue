@@ -1,8 +1,11 @@
 <template>
   <div class="page-height">
     <CreateActivityModal v-model:createVisible="createActivityVisible" />
-    <IPDetail v-if="!true" />
-    <div v-else>
+    <IPDetail
+      v-model:visible="currentIpMessage.visible"
+      :params="currentIpMessage.params"
+    />
+    <div v-if="!currentIpMessage.visible">
       <div class="header">
         <h4>运营</h4>
         <div class="button" @click="handleCreateActivityClick">
@@ -18,7 +21,7 @@
                 isShowStatus(item.status) ? "未运营" : "运营中"
               }}</span>
             </div>
-            <div class="img">
+            <div class="img" @click="hanleCardClick(item)">
               <img :src="item.file" alt="" />
             </div>
             <div class="footer">
@@ -65,11 +68,11 @@
 </template>
 
 <script>
-import { ref, onMounted, computed } from "vue";
-import { getSeriessApi,addUpdateIpApi } from "@api";
+import { ref, onMounted, computed, reactive } from "vue";
+import { getSeriessApi, addUpdateIpApi } from "@api";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
-import {joinPreviewUrl} from "@/utils"
+import { joinPreviewUrl } from "@/utils";
 export default {
   components: {
     IPDetail,
@@ -78,6 +81,10 @@ export default {
   setup() {
     const createActivityVisible = ref(false);
     const seriessList = ref([]);
+    const currentIpMessage = reactive({
+      visible: false,
+      params: {},
+    });
     let valve = true;
     const isShowStatus = computed(() => {
       return (status) => status === "off";
@@ -88,7 +95,10 @@ export default {
     const getSeriessListApi = async () => {
       const { err_code, result } = await getSeriessApi();
       if (err_code === "0") {
-        seriessList.value = result.map(item => ({...item,file:joinPreviewUrl(item.file)}));
+        seriessList.value = result.map((item) => ({
+          ...item,
+          file: joinPreviewUrl(item.file),
+        }));
       }
     };
     const handleStatusClick = async (item) => {
@@ -115,6 +125,10 @@ export default {
         });
       }
     };
+    const hanleCardClick = (item) => {
+      currentIpMessage.visible = true;
+      currentIpMessage.params = item;
+    };
     const handleCreateActivityClick = () => {
       createActivityVisible.value = true;
     };
@@ -124,6 +138,8 @@ export default {
       seriessList,
       isShowStatus,
       handleStatusClick,
+      hanleCardClick,
+      currentIpMessage,
     };
   },
 };

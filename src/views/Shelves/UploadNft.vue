@@ -5,21 +5,19 @@
       <img src="@assets/images/sheleves-add.png" alt="" />
       <p>上传创作数字藏品</p>
     </div>
-    <input type="file" class="input-file" @change="handleUploadFile" />
-    <a-image
-      class="upload-img"
-      width="100%"
-      height="100%"
-      :visible="visibleImg"
-      v-if="imgSrc"
-      :src="imgSrc"
-    />
+    <img class="upload-img" v-if="imgSrc" :src="imgSrc" />
     <img
       v-if="imgSrc"
       src="@assets/images/expand.png"
       class="icon"
       @click="handleImgVisibleClick"
       alt=""
+    />
+    <input
+      type="file"
+      class="input-file"
+      style="z-index:3;"
+      @change="handleUploadFile"
     />
   </div>
 </template>
@@ -32,12 +30,12 @@ import { previewFile } from "@/utils";
 export default defineComponent({
   props: {
     doneImgFile: Object,
+    previewImgClick: Function,
   },
   setup(props, { emit }) {
     const imgSrc = ref("");
-    const visibleImg = ref(false);
     const handleImgVisibleClick = () => {
-      visibleImg.value = true;
+      emit("previewImgClick", imgSrc);
     };
 
     const handleUploadFile = (e) => {
@@ -48,11 +46,11 @@ export default defineComponent({
         emit("update:doneImgFile", imgFile[0]);
       });
     };
+
     return {
       imgSrc,
       handleUploadFile,
       handleImgVisibleClick,
-      visibleImg,
     };
   },
 });
@@ -65,6 +63,7 @@ export default defineComponent({
   background: #f7f7f7;
   border-radius: 8px;
   position: relative;
+  z-index: 1;
   .logo {
     position: absolute;
     top: 26px;
@@ -88,16 +87,19 @@ export default defineComponent({
     height: calc(100% - 30px);
     opacity: 0;
     cursor: pointer;
-    z-index: 3;
+    z-index: 11;
   }
   .upload-img {
     position: absolute;
+    width: 100%;
+    display: inline-block;
+    height: 100%;
     top: 0;
     left: 0;
     object-fit: cover;
     object-position: 50% 50%;
-    z-index: 2;
     cursor: pointer;
+    z-index: 1;
   }
   .icon {
     z-index: 1;

@@ -3,13 +3,13 @@ import { createStore } from "vuex";
 export default createStore({
   state() {
     return {
-      role: "",
+      user: {},
       personMessage: {},
     };
   },
   mutations: {
-    setRole(state, value) {
-      state.role = value;
+    setUser(state, value) {
+      state.user = value;
     },
     setPersonMessage(state, value) {
       state.personMessage = value;
@@ -17,8 +17,8 @@ export default createStore({
   },
   actions: {},
   getters: {
-    getRole(state) {
-      return state.role;
+    getUser(state) {
+      return state.user;
     },
     getPersonMessage(state) {
       return state.personMessage;

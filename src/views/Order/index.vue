@@ -47,6 +47,10 @@
         (_record, index) => (index % 2 === 1 ? 'table-striped' : null)
       "
     >
+      <template #make>
+       <img src="@assets/images/avtor.png" alt="">
+       <span>小龙</span>
+      </template>
       <template #detail>
         <a-button type="link" @click.stop="handleOrderDetailClick"
           >查看</a-button
@@ -59,12 +63,13 @@
 
 <script>
 import OrderDetail from "./OrderDetail";
-import { defineComponent, reactive, ref } from "vue";
+import { defineComponent, onMounted, reactive, ref } from "vue";
+import { getUserOrderApi } from "@api";
 const columns = [
   {
-    title: "序号",
-    dataIndex: "ID",
-    key: "ID",
+    title: "创造者",
+    key: "make",
+    slots: { customRender: "make" },
   },
   {
     title: "订单号",
@@ -72,14 +77,9 @@ const columns = [
     key: "code",
   },
   {
-    title: "标题",
+    title: "IP主题",
     dataIndex: "title",
     key: "title",
-  },
-  {
-    title: "作者",
-    dataIndex: "author",
-    key: "author",
   },
   {
     title: "买家",
@@ -130,6 +130,16 @@ export default defineComponent({
     const isOrderShow = ref(false);
     const handleOrderDetailClick = () => {
       isOrderShow.value = !isOrderShow.value;
+    };
+    onMounted(() => {
+      getuserOrderList();
+    });
+    const getuserOrderList = async () => {
+      const { err_code, result } = await getUserOrderApi();
+      if(err_code === '0'){
+        console.log(result);
+      }
+      console.log(result);
     };
     return {
       columns,

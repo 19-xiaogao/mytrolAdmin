@@ -13,31 +13,34 @@
         class="card"
         @mouseover="() => handleMouseover(true)"
         @mouseout="() => handleMouseover(false)"
+        v-for="item in renderWorksList"
+        :key="item.id"
       >
         <div class="img" ref="imgRef">
-          <img src="@assets/images/order-detail-img.jpg" alt="" />
+          <img :src="item.file" alt="" />
         </div>
-        <div class="options">
+        <!-- <div class="options">
           <img src="@assets/images/start.png" alt="" />
           <span>入选</span>
           <icon-svg icon="icon-a-bianzu13"></icon-svg>
-        </div>
+        </div> -->
         <div class="me">
           <div class="me-t">
-            <h3>少女懵懂的年少时光</h3>
+            <h3>{{ item.name }}</h3>
             <div class="avator-des">
               <div class="imgs">
-                <img src="@assets/images/avtor.png" alt="" />
+                <img :src="item.author_avatar" alt="" />
                 <img src="@assets/images/v-icon.png" class="icon" alt="" />
               </div>
-              <span>龙雷雷</span>
+              <span>{{ item.author_nickname }}</span>
             </div>
           </div>
           <div class="me-m">
-            <div class="manay">$199.9</div>
-            <div class="text">
-              <span>限量</span>
-              <span>1000</span>
+            <div class="manay">${{ item.price }}</div>
+
+            <div class="_limit">
+              <div class="_t1">限量</div>
+              <div class="_t2">{{ item.number }}</div>
             </div>
           </div>
         </div>
@@ -48,20 +51,35 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref } from "vue";
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  watchEffect,
+  getCurrentInstance,
+} from "vue";
+import { getWorksApi } from "@api";
 import TabBar from "@/components/TabBar";
+import { useStore } from "vuex";
+
+// publishStatusUnPublish = "0"; //查询nft详情，返回0 表示未发布
+// publishStatusPublishing = "1" //发布中，等待审核
+// publishStatusSuccess    = "2" //发布成功
+// publishStatusFailed     = "3" //发布失败
 const menus = [
   {
     text: "已上架",
-    type: 1,
+    type: "2",
   },
   {
     text: "审核中",
-    type: 2,
+    type: "1",
   },
   {
     text: "已下架",
-    type: 3,
+    type: "3",
   },
 ];
 export default defineComponent({
@@ -69,21 +87,50 @@ export default defineComponent({
     TabBar,
   },
   setup() {
+    const { proxy } = getCurrentInstance();
     const imgRef = ref();
-    const currentMenu = ref(1);
+    const currentMenu = ref("2");
     const menuList = reactive(menus);
+    const worksList = ref([]);
+    const renderWorksList = ref();
+    const store = useStore();
+
     const handleMouseover = (bol) => {
       bol
         ? (imgRef.value.style.transform = "scale(1.2)")
         : (imgRef.value.style.transform = "scale(1)");
     };
-    return { handleMouseover, imgRef, currentMenu, menuList };
+    const user = computed(() => store.getters.getUser);
+
+    watchEffect(() => {
+      renderWorksList.value = worksList.value
+        .filter((item) => item.publish === currentMenu.value)
+        .map((item) => ({
+          ...item,
+          file: proxy.joinPreviewUrl(item.file),
+          author_avatar: proxy.joinPreviewUrl(item.author_avatar),
+        }));
+    }, [currentMenu, worksList]);
+
+    onMounted(() => {
+      getWorksList();
+    });
+
+    const getWorksList = async () => {
+      const { err_code, result } = await getWorksApi(user.value.user_id);
+      if (err_code === "0") {
+        worksList.value = result;
+      }
+    };
+
+    return { handleMouseover, imgRef, currentMenu, menuList, renderWorksList };
   },
 });
 </script>
 
 <style scoped lang="scss">
 .ip-detail {
+  // overflow: hidden;
   .ip-detail-title {
     display: flex;
     justify-content: space-between;
@@ -129,6 +176,8 @@ export default defineComponent({
   }
   .ip-lists {
     margin-top: 20px;
+    overflow-y: auto;
+    height: 90%;
     display: flex;
     flex-wrap: wrap;
     .card {
@@ -139,6 +188,8 @@ export default defineComponent({
       border-radius: 8px;
       overflow: hidden;
       position: relative;
+      margin-right: 6px;
+      margin-bottom: 6px;
       .img {
         width: 100%;
         height: 100%;
@@ -181,10 +232,12 @@ export default defineComponent({
       .me {
         display: flex;
         position: absolute;
+        width: calc(100% - 25px);
         justify-content: space-between;
         align-items: center;
-        bottom: 5px;
-        left: 18px;
+        bottom: 15px;
+        left: 50%;
+        transform: translateX(-50%);
         z-index: 2;
         .me-t {
           h3 {
@@ -229,33 +282,64 @@ export default defineComponent({
         }
         .me-m {
           margin-left: 20px;
+
           .manay {
             font-size: 19px;
             color: #fff;
             font-weight: 500;
           }
-          .text {
-            span:first-child {
+          ._limit {
+            height: 20px;
+            border-radius: 6px;
+            border: 1px solid #ffbd21;
+            display: flex;
+            text-align: right;
+            ._t1 {
+              display: block;
+              height: 20px;
+              font-size: 12px;
+              font-family: PingFangSC-Regular, PingFang SC;
+              font-weight: 400;
+              color: #000000;
+              line-height: 20px;
               background: #ffbd21;
-              border-radius: 4px;
-              font-size: 8px;
-              color: #000;
-              border-radius: 4px;
-              display: inline-block;
-              padding: 2px;
+              padding: 0 4px;
             }
-            span:last-child {
-              display: inline-block;
-              box-sizing: border-box;
-              border: #ffbd21 1px solid;
-              border-left-color: transparent;
-              border-radius: 4px;
-              color: #fff;
-              padding: 2px;
-
-              font-size: 8px;
+            ._t2 {
+              display: block;
+              height: 20px;
+              font-size: 12px;
+              font-family: Roboto-Medium, Roboto;
+              font-weight: 500;
+              color: #ffbd21;
+              line-height: 20px;
+              padding: 0 4px;
+              min-width: 18px;
+              text-align: center;
             }
           }
+          // .text {
+          //   span:first-child {
+          //     background: #ffbd21;
+          //     border-radius: 4px;
+          //     font-size: 8px;
+          //     color: #000;
+          //     border-radius: 4px;
+          //     display: inline-block;
+          //     padding: 2px;
+          //   }
+          //   span:last-child {
+          //     display: inline-block;
+          //     box-sizing: border-box;
+          //     border: #ffbd21 1px solid;
+          //     border-left-color: transparent;
+          //     border-radius: 4px;
+          //     color: #fff;
+          //     padding: 2px;
+
+          //     font-size: 8px;
+          //   }
+          // }
         }
       }
       .mask {

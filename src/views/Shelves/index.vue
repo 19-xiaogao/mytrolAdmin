@@ -1,7 +1,11 @@
 <template>
   <div class="shelves">
     <div class="top">
-      <UploadNft v-model:doneImgFile="nft_file" ref="uploadNft" />
+      <UploadNft
+        v-model:doneImgFile="nft_file"
+        ref="uploadNft"
+        @previewImgClick="handleUploadNftPreview"
+      />
       <div class="user_search">
         <div class="search-title">
           <input placeholder="在此输入标题" v-model="name" />
@@ -25,13 +29,13 @@
         <div class="search-base">
           <div class="avator">
             <div class="header">
-              <img src="@assets/images/avtor.png" alt="" />
-              <p>Jason</p>
+              <img :src="personMessage.avatar" alt="" />
+              <p>{{ personMessage.nickname }}</p>
             </div>
-            <div
+            <!-- <div
               class="icon"
               @click="() => handleHeaderSelectClick(true)"
-            ></div>
+            ></div> -->
           </div>
           <div class="price">
             <div>价格</div>
@@ -59,7 +63,7 @@
               @click="() => handleHeaderSelectClick(false, item)"
             >
               <img src="@assets/images/avtor.png" alt="" />
-              <span>Jason</span>
+              <span>JOSN</span>
             </div>
           </div>
         </div>
@@ -71,16 +75,24 @@
           <UploadCollection
             ref="uploadCollection"
             v-model:nft_background="nft_background"
+            @previewImgClick="handleUploadNftPreview"
           />
         </div>
       </div>
     </div>
     <div class="btns">
-      <div class="btn" @click="handleUploadNftClick">
-        <icon-svg icon="icon-icon4" class="icon"></icon-svg>
+      <a-button class="btn" @click="handleUploadNftClick">
+        <template #icon>
+          <icon-svg icon="icon-icon4" class="icon"></icon-svg
+        ></template>
         <span>上架</span>
-      </div>
+      </a-button>
     </div>
+
+    <PreviewImg
+      :imgUrl="privewImgComponentParmas.imgUrl"
+      v-model:visible="privewImgComponentParmas.visible"
+    />
   </div>
 </template>
 
@@ -92,11 +104,14 @@ import {
   toRefs,
   onMounted,
   getCurrentInstance,
+  computed,
 } from "vue";
-import UploadNft from "./UploadNft";
-import UploadCollection from "./UploadCollection";
+import { useStore } from "vuex";
 import { getSerisesIpApi, uploadNftApi } from "@api";
 import dayjs from "dayjs";
+import UploadNft from "./UploadNft";
+import UploadCollection from "./UploadCollection";
+import PreviewImg from "@/components/PreviewImg";
 
 let obj = {
   name: "",
@@ -113,16 +128,26 @@ export default defineComponent({
   components: {
     UploadNft,
     UploadCollection,
+    PreviewImg,
   },
   setup() {
-    let uploadParams = reactive(obj);
     const { proxy } = getCurrentInstance();
+    const store = useStore();
+    let uploadParams = reactive(obj);
     const ipList = ref([]);
     const currentIpName = ref("首页");
+    const privewImgComponentParmas = reactive({
+      imgUrl: "",
+      visible: false,
+    });
     onMounted(() => {
       getIpList();
     });
-
+    const handleUploadNftPreview = (imgSrc) => {
+      privewImgComponentParmas.imgUrl = imgSrc;
+      privewImgComponentParmas.visible = true;
+    };
+    const personMessage = computed(() => store.getters.getPersonMessage);
     const getIpList = async () => {
       const { err_code, result } = await getSerisesIpApi();
       if (err_code === "0") {
@@ -133,7 +158,6 @@ export default defineComponent({
     const showHeaderSelect = ref(false);
     const handleUploadNftClick = async () => {
       const userSelectTime = dayjs(uploadParams.opening_time).unix();
-      console.log(uploadParams);
       if (userSelectTime < dayjs(Date.now()).unix() - 60 * 3) {
         return window.$message.warn({
           message: "提示",
@@ -214,6 +238,9 @@ export default defineComponent({
       ipList,
       handleMenuClick,
       currentIpName,
+      personMessage,
+      handleUploadNftPreview,
+      privewImgComponentParmas,
     };
   },
 });

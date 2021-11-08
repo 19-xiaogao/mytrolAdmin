@@ -9,11 +9,11 @@
       />
     </div>
 
-    <PCBanner v-if="currentMenu === 1" />
+    <PCBanner v-if="currentMenu === '1'" />
 
-    <SwitBanner v-if="currentMenu === 2" :smallProgram="false" />
+    <SwitBanner v-if="currentMenu === '2'" :smallProgram="false" />
 
-    <SwitBanner v-if="currentMenu === 3" :smallProgram="true" />
+    <SwitBanner v-if="currentMenu === '3'" :smallProgram="true" />
   </div>
 </template>
 
@@ -25,15 +25,15 @@ import { ref, reactive } from "vue";
 const menus = [
   {
     text: "PC",
-    type: 1,
+    type: "1",
   },
   {
     text: "小程序",
-    type: 2,
+    type: "2",
   },
   {
     text: "运营",
-    type: 3,
+    type: "3",
   },
 ];
 export default {
@@ -43,7 +43,7 @@ export default {
     TabBar,
   },
   setup() {
-    const currentMenu = ref(1);
+    const currentMenu = ref("1");
     const menuList = reactive(menus);
 
     return {

@@ -18,9 +18,6 @@ export const uploadNftApi = (data) =>
 // 获取运营IP
 export const getSerisesIpApi = () => server.get("/backend/get_serises_ip");
 
-//
-export const getOrderNumberApi = () => server.get("/user_nft_order_number");
-
 // 审核列表
 export const getPublishingApi = (params) =>
   server.get("/publishing/" + params.page + "/" + params.numbers);
@@ -47,4 +44,17 @@ export const addUpdateIpApi = (data) =>
 export const getSeriessApi = () => server.get("/backend/get_serises_ip");
 
 // 查看自己的作品
-export const getWorksApi = (id) => server.get("/nfts_of_user_make/all/", id);
+export const getWorksApi = (id) => server.get("/nfts_of_user_make/all/" + id);
+
+//用户订单列表
+export const getUserOrderApi = () => server.get("/user_purchase_order");
+
+//用户nft数量
+export const getUserNftNumberApi = (id) => server.get("/user_nft_number/" + id);
+
+//获取交易量
+export const getTradeDataCountApi = () => server.get("/get_trade_data");
+
+//查看IP系列
+export const getLastestNftApi = (ip, page, numbers) =>
+  server.get("/lastest_nft/" + ip + "/" + page + "/" + numbers);

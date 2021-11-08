@@ -71,12 +71,11 @@ export default defineComponent({
           message: "提示",
           description: "欢迎回来!",
         });
-
         getUserInfoApi().then(({ err_code, result }) => {
           if (err_code === "0") {
             // 本地存一份，vuex 存一份
             setStorageRole(response.result.role);
-            store.commit("setRole", response.result.role);
+            store.commit("setUser", response.result);
             store.commit("setPersonMessage", {
               ...result,
               avatar: proxy.joinPreviewUrl(result.avatar),

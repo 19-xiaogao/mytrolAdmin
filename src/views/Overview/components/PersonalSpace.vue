@@ -39,10 +39,10 @@ export default {
     const store = useStore();
     const personMessage = computed(() => store.getters.getPersonMessage);
     const currentRole = computed(() => {
-      const role = store.getters.getRole;
-      if (role === "admin") {
+      const user = store.getters.getUser;
+      if (user.role === "admin") {
         return "超级管理员";
-      } else if (role === "maker") {
+      } else if (user.role === "maker") {
         return "设计师";
       } else {
         return "运营";

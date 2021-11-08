@@ -1,9 +1,7 @@
 <template>
   <div class="order-detail" ref="orderDetailRef">
     <div class="header">
-      <div>
-        审核详情
-      </div>
+      <img src="@assets/images/mytrolLogo.png" alt="" class="mytrolLogo" />
       <icon-svg
         icon="icon-a-bianzu101"
         class="icon"
@@ -15,17 +13,28 @@
       <span>{{ messageDetail.nickname }}</span>
     </div>
     <p class="des">
-      {{ messageDetail.description }}
+      {{ messageDetail.name }}
     </p>
     <div class="ikon">
       <img :src="joinPreviewUrl(messageDetail.file)" alt="" />
     </div>
+    <div class="works-desc">
+      <h3>作品介绍</h3>
+      <p>Introduction of works</p>
+    </div>
+    <p class="des">{{ messageDetail.description }}</p>
     <div class="ikon">
       <img :src="joinPreviewUrl(messageDetail.file_background)" alt="" />
     </div>
     <div class="audit-box">
-      <div @click="handleAuditClick(true)">通过</div>
-      <div @click="handleAuditClick(false)">不通过</div>
+      <div @click="handleAuditClick(true)">
+        <icon-svg icon="icon-a-bianzu33" class="icon"></icon-svg>
+        <span>通过</span>
+      </div>
+      <div @click="handleAuditClick(false)">
+        <icon-svg icon="icon-x-circle-bold" class="icon"></icon-svg>
+        <span>不通过</span>
+      </div>
     </div>
   </div>
 </template>
@@ -57,7 +66,8 @@ export default {
     const auditPassed = async (denom_id, status) => {
       const { err_code } = await auditPassedApi({ denom_id, status });
       if (err_code === "0") {
-        emit("clonse",'refresh',props.messageDetail.id);
+        emit("clonse", "refresh", props.messageDetail.id);
+
       }
     };
     return {
@@ -69,8 +79,7 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
+<style lang="scss" scoped>
 .order-detail {
   position: absolute;
   right: 10px;
@@ -87,11 +96,9 @@ export default {
   .header {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    div {
-      flex: 1;
-      font-size: 18px;
-      color: #000;
+    justify-content: flex-end !important;
+    .mytrolLogo {
+      margin-right: 80px;
     }
     .icon {
       font-size: 1.4rem;
@@ -131,7 +138,7 @@ export default {
     height: 261px;
     overflow: hidden;
     border-radius: 5px;
-    margin-top: 20px;
+    margin-top: 10px;
     img {
       width: 100%;
       height: 100%;
@@ -139,25 +146,55 @@ export default {
       object-position: 50% 50%;
     }
   }
-
+  .works-desc {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 22px;
+    h3 {
+      color: #434343;
+      font-weight: 600;
+      font-size: 20px;
+    }
+    p {
+      margin: 0;
+      padding: 0;
+      font-weight: 600;
+      color: #434343;
+      font-size: 15px;
+    }
+  }
   .audit-box {
     position: sticky;
-    bottom: 10px;
+    bottom: 5px;
     right: 0;
     transform: translateX(0);
     display: flex;
     justify-content: center;
     div {
-      width: 60px;
-      height: 60px;
+      width: 154px;
+      height: 48px;
+      background: #54a44b;
+      border-radius: 8px;
       text-align: center;
-      line-height: 60px;
-      margin-left: 10px;
+      line-height: 48px;
+      margin-left: 12px;
       color: #fff;
       border: none;
       cursor: pointer;
-      background: #54a44b;
+      color: #ffffff;
       border-radius: 8px;
+      .icon {
+        font-size: 1.2rem;
+        margin-right: 10px;
+      }
+      &:first-child {
+        background-color: #54a44b;
+      }
+      &:last-child {
+        background-color: #ff451d;
+      }
     }
   }
 }

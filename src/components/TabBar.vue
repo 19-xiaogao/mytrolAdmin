@@ -16,7 +16,7 @@ import { computed } from "vue";
 
 export default {
   props: {
-    currentIndex: Number,
+    currentIndex: String,
     menuList: Array,
   },
   setup(props, { emit }) {

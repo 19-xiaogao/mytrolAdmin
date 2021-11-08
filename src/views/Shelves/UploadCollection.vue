@@ -1,8 +1,8 @@
 <template>
-  <div class="upload_collection" >
+  <div class="upload_collection">
     <div class="titles">
       <h3>藏品描述图片</h3>
-      <div class="prew">
+      <div class="prew" @click="hanldePrewClick">
         <icon-svg icon="icon-icon4-hover" class="icon"></icon-svg>
         <span>预览</span>
       </div>
@@ -28,7 +28,7 @@ export default defineComponent({
   name: "uploadCollection",
   props: {
     nft_background: Object,
-    cleanImg: Function,
+    previewImgClick: Function,
   },
   setup(props, { emit }) {
     const imgSrc = ref("");
@@ -40,9 +40,14 @@ export default defineComponent({
         emit("update:nft_background", imgFile[0]);
       });
     };
+    const hanldePrewClick = () => {
+      emit("previewImgClick", imgSrc);
+    };
+
     return {
       imgSrc,
       handleUploadFile,
+      hanldePrewClick,
     };
   },
 });
@@ -112,6 +117,7 @@ export default defineComponent({
       left: 0;
       opacity: 0;
       cursor: pointer;
+      z-index: 1;
     }
     .upload {
       position: absolute;
