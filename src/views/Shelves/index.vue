@@ -8,8 +8,8 @@
       />
       <div class="user_search">
         <div class="search-title">
-          <input placeholder="在此输入标题" v-model="name" />
-          <a-dropdown class="serial-number" v-model="series_ip">
+          <a-input placeholder="在此输入标题" v-model:value="name" />
+          <a-dropdown class="serial-number">
             <template #overlay>
               <a-menu @click="handleMenuClick">
                 <a-menu-item key="">
@@ -39,17 +39,27 @@
           </div>
           <div class="price">
             <div>价格</div>
-            <input v-model="price" type="number" placeholder="设定价格" />
+            <a-input-number
+              v-model:value="price"
+              type="number"
+              style="width:150px;"
+              placeholder="设定价格"
+            />
           </div>
           <div class="price">
             <div>限量</div>
-            <input v-model="number" type="number" placeholder="请输入数量" />
+            <a-input-number
+              v-model:value="number"
+              type="number"
+              style="width:150px;"
+              placeholder="请输入数量"
+            />
           </div>
           <div class="price">
             <div>开售时间</div>
             <a-date-picker
               show-time
-              placeholder="Select Time"
+              placeholder="请选择时间"
               class="date-picker"
               v-model:value="opening_time"
               :bordered="false"
@@ -69,8 +79,8 @@
         </div>
         <div class="ups">
           <div class="nft-des">
+            <p>NFT介绍</p>
             <textarea placeholder="在此输入藏品描述" v-model="description" />
-            <h3>NFT介绍</h3>
           </div>
           <UploadCollection
             ref="uploadCollection"
@@ -123,7 +133,12 @@ let obj = {
   nft_file: {},
   nft_background: {},
 };
-
+function warningNotify(description) {
+  window.$message.warning({
+    message: "抱歉~",
+    description,
+  });
+}
 export default defineComponent({
   components: {
     UploadNft,
@@ -154,46 +169,20 @@ export default defineComponent({
         ipList.value = result;
       }
     };
-
     const showHeaderSelect = ref(false);
+
     const handleUploadNftClick = async () => {
       const userSelectTime = dayjs(uploadParams.opening_time).unix();
       if (userSelectTime < dayjs(Date.now()).unix() - 60 * 3) {
-        return window.$message.warn({
-          message: "提示",
-          description: "请输入正确的开售时间",
-        });
+        return warningNotify("请选择正确的开售时间");
       }
-      if (!uploadParams.name.trim())
-        return window.$message.warn({
-          message: "提示",
-          description: "请输入标题",
-        });
-      if (!uploadParams.description.trim())
-        return window.$message.warn({
-          message: "提示",
-          description: "请输入藏品描述",
-        });
-      if (!uploadParams.number)
-        return window.$message.warn({
-          message: "提示",
-          description: "请输入数量",
-        });
-      if (!uploadParams.price)
-        return window.$message.warn({
-          message: "提示",
-          description: "请输入价格",
-        });
-      if (!uploadParams.opening_time)
-        return window.$message.warn({
-          message: "提示",
-          description: "请输入开售时间",
-        });
+      if (!uploadParams.name.trim()) return warningNotify("请输入标题");
+      if (!uploadParams.description.trim()) return warningNotify("请输入描述");
+      if (!uploadParams.number) return warningNotify("请输入输入数量");
+      if (!uploadParams.price) return warningNotify("请输入价格");
+      if (!uploadParams.opening_time) return warningNotify("请选择上架时间");
       if (!Object.keys(uploadParams.nft_file))
-        return window.$message.warn({
-          message: "提示",
-          description: "请输入数字产品",
-        });
+        return warningNotify("请上传数字藏品");
 
       const formData = new FormData();
 
@@ -291,6 +280,12 @@ export default defineComponent({
         input {
           display: inline-block;
           width: 100%;
+          border: 1px solid #eee;
+          border-radius: 10px;
+          margin-right: 10px;
+          padding: 10px;
+          box-sizing: border-box;
+          font-size: 16px;
         }
       }
       .search-base {
@@ -339,8 +334,9 @@ export default defineComponent({
         .price {
           display: flex;
           flex-direction: column;
+          padding-right: 20px;
           div {
-            padding-left: 40px;
+            text-align: center;
             font-size: 18px;
             color: #434343;
           }
@@ -363,7 +359,7 @@ export default defineComponent({
           input {
             font-size: 16px;
             width: 90%;
-            font-weight: 500;
+            // font-weight: 500;
             color: #000000;
             &::-webkit-input-placeholder {
               color: #999;
@@ -446,21 +442,22 @@ export default defineComponent({
           height: calc(470px - 16px - 118px - 5px - 34px);
           position: relative;
           textarea {
-            padding: 20px;
-            padding-top: 44px;
+            padding: 5px 5px 5px 20px;
             display: inline-block;
             width: 100%;
-            height: 100%;
+            height: calc(100% - 50px);
             font-size: 16px;
             color: #000000;
+            box-sizing: border-box;
           }
-          h3 {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+          p {
+            margin: 0;
+            padding: 0;
             font-size: 19px;
             color: #000;
             font-weight: 600;
+            margin-left: 20px;
+            margin-top: 10px;
           }
         }
       }

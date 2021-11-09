@@ -101,8 +101,8 @@ const columns = [
   },
   {
     title: "上架时间",
-    dataIndex: "created_at",
-    key: "created_at",
+    dataIndex: "opening_time",
+    key: "opening_time",
   },
   {
     title: "详情",
@@ -129,7 +129,7 @@ export default defineComponent({
       if (err_code === "0") {
         publishData.value = result.map((item) => ({
           ...item,
-          created_at: dayjs(Number(item.opening_time)).format(
+          opening_time: dayjs(Number(item.opening_time) * 1000).format(
             "YYYY-MM-DD HH:mm"
           ),
           series_ip: item.series_ip === "common" ? "首页" : item.series_ip,

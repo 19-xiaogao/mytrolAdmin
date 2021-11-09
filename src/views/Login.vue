@@ -11,9 +11,9 @@
       <span class="circle" />
       <div class="form-item login-header d-flex">
         <span class="avatar flex-center">
-          <!-- <img src="@assets/images/avatar.png" alt="author" /> -->
+          <img src="@assets/images/mytrolLogo.png" alt="author" />
         </span>
-        <h1 class="island">Mytrol</h1>
+        <!-- <h1 class="island">Mytrol</h1> -->
       </div>
       <div class="form-item">
         <label class="ipt-item">
@@ -55,8 +55,7 @@ import { defineComponent, reactive, toRefs, getCurrentInstance } from "vue";
 import { useRouter } from "vue-router";
 import { loginApi, getUserInfoApi } from "@api";
 import { useStore } from "vuex";
-import { setStorageRole } from "@/utils";
-
+import { setStorageRole, notify } from "@/utils";
 export default defineComponent({
   setup() {
     const router = useRouter();
@@ -65,28 +64,30 @@ export default defineComponent({
     const loginParms = reactive({ username: "", password: "" });
 
     const handleLoginBtn = async () => {
+      if (loginParms.username.trim() === "") {
+        return notify("提示", "请输入用户名", "warning");
+      } else if (loginParms.password.trim() === "") {
+        return notify("提示", "请输入密码", "warning");
+      }
       const response = await loginApi(loginParms);
       if (response.err_code === "0") {
-        window.$message.success({
-          message: "提示",
-          description: "欢迎回来!",
-        });
+        notify("提示", "欢迎回来", "success");
         getUserInfoApi().then(({ err_code, result }) => {
           if (err_code === "0") {
             // 本地存一份，vuex 存一份
-            setStorageRole(response.result.role);
-            store.commit("setUser", response.result);
-            store.commit("setPersonMessage", {
+            const setPersonMessage = {
               ...result,
               avatar: proxy.joinPreviewUrl(result.avatar),
-            });
+            };
+            setStorageRole(JSON.stringify(response.result));
+            store.commit("setUser", response.result);
+            store.commit("setPersonMessage", setPersonMessage);
+            localStorage.setItem(
+              "personMessage",
+              JSON.stringify(setPersonMessage)
+            );
             router.push("/");
           }
-        });
-      } else {
-        window.$message.error({
-          message: "提示",
-          description: "账号或者密码错误!",
         });
       }
     };

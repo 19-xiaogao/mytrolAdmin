@@ -74,7 +74,7 @@ $b-bg: #00d2ff;
       }
 
       &:nth-child(2) {
-        // filter: hue-rotate(70deg);
+        filter: hue-rotate(70deg);
         filter: drop-shadow(10px 10px 10px var(--error)) invert(25%);
         animation-delay: -1s;
         top: 150px;
@@ -85,7 +85,7 @@ $b-bg: #00d2ff;
       }
 
       &:nth-child(3) {
-        // filter: hue-rotate(140deg);
+        filter: hue-rotate(140deg);
         filter: drop-shadow(10px 10px 10px var(--error)) invert(50%);
         animation-delay: -2s;
         bottom: 50px;
@@ -97,7 +97,7 @@ $b-bg: #00d2ff;
       }
 
       &:nth-child(4) {
-        // filter: hue-rotate(210deg);
+        filter: hue-rotate(210deg);
         filter: drop-shadow(10px 10px 10px var(--error)) invert(75%);
         animation-delay: -3s;
         bottom: -80px;
@@ -124,13 +124,11 @@ $b-bg: #00d2ff;
       // font-size: 20px;
       // color: var(--primary);
       .avatar {
-        width: 50px;
         transform: translateX(-10px);
-        overflow: hidden;
+        cursor: pointer;
 
         img {
           width: 100%;
-          border-radius: 50%;
         }
       }
 

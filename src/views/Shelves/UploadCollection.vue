@@ -12,7 +12,7 @@
       <p>
         在此添加藏品描述图片
         <br />
-        (大小不超过10M)
+        (大小不超过500KB)
       </p>
       <input type="file" alt="" @change="handleUploadFile" />
       <img :src="imgSrc" class="upload" v-if="imgSrc" alt="" />
@@ -62,7 +62,7 @@ export default defineComponent({
   border-radius: 8px;
   border: 1px solid #f3f1f1;
   margin-left: 10px;
-  padding: 20px;
+  padding: 10px;
   .titles {
     display: flex;
     justify-content: space-between;

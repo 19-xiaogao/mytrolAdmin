@@ -1,3 +1,4 @@
+import { notification } from "ant-design-vue";
 const TOKEN = "ROLE";
 /**
  * 节流
@@ -56,3 +57,35 @@ export function previewFile(file) {
 export const joinPreviewUrl = (hash) => {
   return process.env.VUE_APP_BASE_IPFS + hash;
 };
+
+export function notify(message, description, type = "info", duration = 4.5) {
+  notification[type]({ message, description, duration });
+}
+
+export function infoNotify(description) {
+  notification.info({
+    message: "Notice~",
+    description,
+  });
+}
+
+export function successNotify(description) {
+  notification.success({
+    message: "Congratulations~",
+    description,
+  });
+}
+
+export function warningNotify(description) {
+  notification.warning({
+    message: "提示~",
+    description,
+  });
+}
+
+export function errorNotify(description, message = "Something wrong~") {
+  notification.error({
+    message,
+    description,
+  });
+}

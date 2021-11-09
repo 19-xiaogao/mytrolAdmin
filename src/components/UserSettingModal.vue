@@ -3,6 +3,7 @@
     class="modal"
     v-model:visible="visible"
     title="设计师信息"
+    :maskClosable="false"
     :closable="false"
   >
     <div class="avator">
@@ -37,8 +38,8 @@ import {
   toRefs,
 } from "vue";
 import { previewFile } from "@/utils";
-import { editPersonApi } from "@api";
-
+import { editPersonApi, getUserInfoApi } from "@api";
+import { useStore } from "vuex";
 export default defineComponent({
   props: {
     user_file: Object,
@@ -47,7 +48,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const visible = ref(true);
     const userMessage = reactive({ imgSrc: "", username: "" });
-
+    const store = useStore();
     const { proxy } = getCurrentInstance();
     const fromData = new FormData();
 
@@ -85,6 +86,20 @@ export default defineComponent({
       const { err_code } = await editPersonApi(fromData);
       if (err_code === "0") {
         visible.value = false;
+        getUserInfoApi().then(({ err_code, result }) => {
+          if (err_code === "0") {
+            // 本地存一份，vuex 存一份
+            const setPersonMessage = {
+              ...result,
+              avatar: proxy.joinPreviewUrl(result.avatar),
+            };
+            store.commit("setPersonMessage", setPersonMessage);
+            localStorage.setItem(
+              "personMessage",
+              JSON.stringify(setPersonMessage)
+            );
+          }
+        });
       }
     };
     return {

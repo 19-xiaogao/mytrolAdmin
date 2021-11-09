@@ -3,18 +3,22 @@
     <div class="logo" @click="handleRouteClick">
       <img src="@assets/images/mytrolLogo.png" alt="" />
     </div>
-    <div class="avator-message">
-      <div class="avator">
-        <img :src="personMessage.avatar" alt="" />
+    <a-dropdown>
+      <div class="avator-message">
+        <div class="avator">
+          <img :src="personMessage.avatar" alt="" />
+        </div>
+        <span class="select">{{ personMessage.nickname }} </span>
       </div>
-      <span class="select">{{ personMessage.nickname }}</span>
-      <!-- <a-select class="select" v-model:value="value2">
-        <a-select-option value="lucy">{{personMessage.nickname}}</a-select-option>
-      </a-select> -->
-      <div class="waring">
-        <img src="@assets/images/bell.png" @click="handleRouteLogin" alt="" />
-      </div>
-    </div>
+
+      <template #overlay>
+        <a-menu>
+          <a-menu-item @click="handleRouteLogin">
+            <span>退出登录</span>
+          </a-menu-item>
+        </a-menu>
+      </template>
+    </a-dropdown>
   </header>
 </template>
 
@@ -23,7 +27,6 @@ import { computed, ref } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { logoutApi } from "@api";
-import { removeStorageRole } from "@/utils";
 export default {
   setup() {
     const router = useRouter();
@@ -36,7 +39,7 @@ export default {
       const { err_code } = await logoutApi();
       if (err_code == 0) {
         router.push("/login");
-        removeStorageRole();
+        localStorage.clear();
       }
     };
     return {
@@ -90,9 +93,10 @@ header {
     .select {
       margin: 0 10px;
       cursor: pointer;
-      width: 40px;
-      // width: 80px;
     }
+  }
+  .waring {
+    cursor: pointer;
   }
 }
 </style>

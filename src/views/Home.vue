@@ -4,37 +4,50 @@
     <Sidebar />
     <UserSettingModal v-if="!isShowEditModal" />
     <div class="body">
-      <router-view v-slot="{ Component }">
-        <keep-alive>
-          <transition name="fadeRightIn">
-            <component :is="Component" />
-          </transition>
-        </keep-alive>
-      </router-view>
+      <Loading v-if="loading" />
+      <a-config-provider :locale="locale">
+        <router-view v-slot="{ Component }">
+          <keep-alive>
+            <transition name="fadeRightIn">
+              <component :is="Component" />
+            </transition>
+          </keep-alive>
+        </router-view>
+      </a-config-provider>
     </div>
   </div>
 </template>
 
 <script>
 import { computed } from "vue";
-
 import { useStore } from "vuex";
+import zhCN from "ant-design-vue/es/locale/zh_CN";
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import UserSettingModal from "@/components/UserSettingModal";
-
+import Loading from "@/components/Loading";
+import { getStorageRole } from "@/utils";
 export default {
   name: "Home",
   components: {
     Header,
     Sidebar,
     UserSettingModal,
+    Loading,
   },
   setup() {
     const store = useStore();
+    // 解决刷新 store没有数据的问题。
+    store.commit(
+      "setPersonMessage",
+      JSON.parse(localStorage.getItem("personMessage"))
+    );
+    store.commit("setUser", JSON.parse(getStorageRole()));
+
     const person = computed(() => store.getters.getPersonMessage);
     const isShowEditModal = computed(() => !!person.value.nickname);
-    return { isShowEditModal };
+    const loading = computed(() => store.getters.getLoading);
+    return { isShowEditModal, locale: zhCN, loading };
   },
 };
 </script>

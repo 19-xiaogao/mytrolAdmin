@@ -5,6 +5,7 @@ export default createStore({
     return {
       user: {},
       personMessage: {},
+      loading: false,
     };
   },
   mutations: {
@@ -14,6 +15,9 @@ export default createStore({
     setPersonMessage(state, value) {
       state.personMessage = value;
     },
+    setLoading(state, value) {
+      state.loading = value;
+    },
   },
   actions: {},
   getters: {
@@ -22,6 +26,9 @@ export default createStore({
     },
     getPersonMessage(state) {
       return state.personMessage;
+    },
+    getLoading(state) {
+      return state.loading;
     },
   },
   modules: {},

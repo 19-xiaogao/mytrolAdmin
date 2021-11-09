@@ -17,9 +17,10 @@
 </template>
 
 <script>
-import { computed, reactive } from "vue";
+import { useStore } from "vuex";
+import { computed } from "vue";
 import { useRoute } from "vue-router";
-const menu = [
+const adminMenu = [
   {
     icon: "icon-icon2-hover1",
     text: "总揽",
@@ -63,17 +64,86 @@ const menu = [
     id: 7,
   },
 ];
+const makeMenu = [
+  {
+    icon: "icon-icon2-hover1",
+    text: "总揽",
+    id: 1,
+    path: "/overview",
+  },
+  {
+    icon: "icon-a-bianzu4",
+    text: "订单",
+    path: "/order",
+    id: 2,
+  },
+  {
+    icon: "icon-icon3",
+    text: "上架",
+    path: "/shelves",
+    id: 4,
+  },
+  {
+    icon: "icon-a-bianzu3",
+    text: "作品",
+    path: "/items",
+    id: 6,
+  },
+];
+const operationMenu = [
+  {
+    icon: "icon-icon2-hover1",
+    text: "总揽",
+    id: 1,
+    path: "/overview",
+  },
+  {
+    icon: "icon-a-bianzu4",
+    text: "订单",
+    path: "/order",
+    id: 2,
+  },
+  {
+    icon: "icon-icon3",
+    text: "上架",
+    path: "/shelves",
+    id: 4,
+  },
+  {
+    icon: "icon-a-bianzu32",
+    text: "运营",
+    path: "/operation",
+    id: 5,
+  },
+  {
+    icon: "icon-a-bianzu3",
+    text: "作品",
+    path: "/items",
+    id: 6,
+  },
+];
 export default {
   setup() {
     const route = useRoute();
+    const store = useStore();
     const currentPath = computed(() => route.path);
+    const user = computed(() => store.getters.getUser);
+    const menus = computed(() => {
+      if (user.value.role === "admin") {
+        return adminMenu;
+      } else if (user.value.role === "maker") {
+        return makeMenu;
+      } else {
+        return operationMenu;
+      }
+    });
     const isOpacity = computed(() => (path) =>
       path === currentPath.value ? "" : "opacity"
     );
     const isColor = computed(() => (path) =>
       path === currentPath.value ? "color:#ED6637" : ""
     );
-    const menus = reactive(menu);
+    // const menus = reactive(adminMenu);
     return { menus, isOpacity, isColor };
   },
 };
