@@ -11,12 +11,12 @@
     <div class="ip-lists">
       <div
         class="card"
-        @mouseover="() => handleMouseover(true)"
-        @mouseout="() => handleMouseover(false)"
+        @mouseover="() => handleMouseover(true, item.id)"
+        @mouseout="() => handleMouseover(false, item.id)"
         v-for="item in renderWorksList"
         :key="item.id"
       >
-        <div class="img" ref="imgRef">
+        <div class="img" :ref="item.id">
           <img :src="item.file" alt="" />
         </div>
         <!-- <div class="options">
@@ -46,6 +46,7 @@
         </div>
         <div class="mask"></div>
       </div>
+      <p class="no-found" v-if="renderWorksList.length <= 0">暂无作品</p>
     </div>
   </div>
 </template>
@@ -88,17 +89,17 @@ export default defineComponent({
   },
   setup() {
     const { proxy } = getCurrentInstance();
-    const imgRef = ref();
+    // const imgRef = ref();
     const currentMenu = ref("2");
     const menuList = reactive(menus);
     const worksList = ref([]);
     const renderWorksList = ref();
     const store = useStore();
 
-    const handleMouseover = (bol) => {
+    const handleMouseover = (bol, id) => {
       bol
-        ? (imgRef.value.style.transform = "scale(1.2)")
-        : (imgRef.value.style.transform = "scale(1)");
+        ? (proxy.$refs[id].style.transform = "scale(1.2)")
+        : (proxy.$refs[id].style.transform = "scale(1)");
     };
     const user = computed(() => store.getters.getUser);
 
@@ -123,7 +124,7 @@ export default defineComponent({
       }
     };
 
-    return { handleMouseover, imgRef, currentMenu, menuList, renderWorksList };
+    return { handleMouseover, currentMenu, menuList, renderWorksList };
   },
 });
 </script>
@@ -180,6 +181,17 @@ export default defineComponent({
     height: 90%;
     display: flex;
     flex-wrap: wrap;
+    position: relative;
+    justify-content: space-around;
+    align-content: flex-start;
+    .no-found {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      margin: 0;
+      padding: 0;
+    }
     .card {
       width: 242px;
       height: 242px;
@@ -190,6 +202,7 @@ export default defineComponent({
       position: relative;
       margin-right: 6px;
       margin-bottom: 6px;
+     
       .img {
         width: 100%;
         height: 100%;
@@ -296,7 +309,6 @@ export default defineComponent({
             text-align: right;
             ._t1 {
               display: block;
-              height: 20px;
               font-size: 12px;
               font-family: PingFangSC-Regular, PingFang SC;
               font-weight: 400;

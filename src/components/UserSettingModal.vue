@@ -2,14 +2,19 @@
   <a-modal
     class="modal"
     v-model:visible="visible"
-    title="设计师信息"
+    title="个人信息设置"
     :maskClosable="false"
     :closable="false"
   >
     <div class="avator">
       <div class="upload-avator" ref="upload_avator">
         <icon-svg icon="icon-a-bianzu12" v-if="!imgSrc" class="icon"></icon-svg>
-        <input type="file" alt="" @change="handleUploadFile" />
+        <input
+          type="file"
+          alt=""
+          @change="handleUploadFile"
+          accept=".png,.jpg"
+        />
         <img :src="imgSrc" class="upload" v-if="imgSrc" alt="" />
       </div>
       <div class="upload-warn">
@@ -20,7 +25,7 @@
       </div>
     </div>
     <div class="user-input">
-      <span>创作者名称</span>
+      <span>名称</span>
       <input type="text" placeholder="请输入创作者名称" v-model="username" />
     </div>
     <template #footer>
@@ -37,9 +42,9 @@ import {
   reactive,
   toRefs,
 } from "vue";
-import { previewFile } from "@/utils";
-import { editPersonApi, getUserInfoApi } from "@api";
 import { useStore } from "vuex";
+import { previewFile, warningNotify } from "@/utils";
+import { editPersonApi } from "@api";
 export default defineComponent({
   props: {
     user_file: Object,
@@ -59,7 +64,9 @@ export default defineComponent({
     const handleUploadFile = (e) => {
       let imgFile = e.target.files;
       if (!imgFile.length) return;
-
+      if (imgFile[0].size > 1024 * 50) {
+        return warningNotify("请上传50KB以内的头像");
+      }
       fromData.set("file", imgFile[0]);
 
       previewFile(imgFile[0]).then((res) => {
@@ -71,35 +78,26 @@ export default defineComponent({
     };
 
     const handleSureClick = async () => {
-      if (!userMessage.imgSrc)
-        return window.$message.warn({
-          message: "提示",
-          description: "请上传头像",
-        });
-      if (!userMessage.username)
-        return window.$message.warn({
-          message: "提示",
-          description: "请输入名称",
-        });
+      if (!userMessage.imgSrc) return warningNotify("请上传头像");
+      if (!userMessage.username) return warningNotify("请输入名称");
+      if (userMessage.username.trim().length >= 20) {
+        return warningNotify("名字太长，20个字以内");
+      }
 
       fromData.set("nickname", userMessage.username);
-      const { err_code } = await editPersonApi(fromData);
+      const { err_code, result } = await editPersonApi(fromData);
       if (err_code === "0") {
+        // 本地存一份，vuex 存一份
+        const setPersonMessage = {
+          ...result,
+          address: "",
+          my_code: "",
+          token: "",
+          avatar: proxy.joinPreviewUrl(result.cid),
+        };
+        store.commit("setPersonMessage", setPersonMessage);
+        localStorage.setItem("personMessage", JSON.stringify(setPersonMessage));
         visible.value = false;
-        getUserInfoApi().then(({ err_code, result }) => {
-          if (err_code === "0") {
-            // 本地存一份，vuex 存一份
-            const setPersonMessage = {
-              ...result,
-              avatar: proxy.joinPreviewUrl(result.avatar),
-            };
-            store.commit("setPersonMessage", setPersonMessage);
-            localStorage.setItem(
-              "personMessage",
-              JSON.stringify(setPersonMessage)
-            );
-          }
-        });
       }
     };
     return {

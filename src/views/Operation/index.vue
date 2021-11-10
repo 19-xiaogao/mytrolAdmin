@@ -43,7 +43,7 @@
               <a-dropdown class="serial-number">
                 <template #overlay>
                   <a-menu>
-                    <a-menu-item key="1">
+                    <!-- <a-menu-item key="1">
                       1st menu item
                     </a-menu-item>
                     <a-menu-item key="2">
@@ -51,7 +51,7 @@
                     </a-menu-item>
                     <a-menu-item key="3">
                       3rd item
-                    </a-menu-item>
+                    </a-menu-item> -->
                   </a-menu>
                 </template>
                 <a-button>

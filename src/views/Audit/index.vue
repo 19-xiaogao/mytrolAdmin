@@ -5,33 +5,25 @@
       <div class="search-box">
         <div class="dropdown">
           <div class="current-option">
-            <!-- <div class="text">编码</div> -->
             <a-dropdown class="text">
               <template #overlay>
-                <a-menu>
-                  <a-menu-item key="1">
-                    1st menu item
-                  </a-menu-item>
-                  <a-menu-item key="2">
-                    2nd menu item
-                  </a-menu-item>
-                  <a-menu-item key="3">
-                    3rd item
+                <a-menu @click="handleSelectClick">
+                  <a-menu-item v-for="item in queryParams" :key="item.key">
+                    {{ item.title }}
                   </a-menu-item>
                 </a-menu>
               </template>
               <a-button>
-                <span class="span">编码</span>
+                <span class="span">{{ currentQueryParams.title }}</span>
                 <div class="icon"></div>
-                <!-- <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg> -->
               </a-button>
             </a-dropdown>
           </div>
         </div>
         <div class="search">
           <span class="line"></span>
-          <input type="text" class="input" />
-          <span class="icon">
+          <input type="text" class="input" v-model="queryValue" />
+          <span class="icon" @click="handleSearchClick">
             <img src="@assets/images/search.png" alt="" />
           </span>
         </div>
@@ -40,10 +32,11 @@
     <a-table
       :columns="columns"
       :row-key="(item) => item.id"
-      class="ant-table-striped"
       :data-source="publishData"
+      v-model:pagination="pagination"
       :position="false"
-      :scroll="{ y: 450 }"
+      @change="handlePagitionChange"
+      :scroll="{ y: scrollHeight }"
       :row-class-name="
         (_record, index) => (index % 2 === 1 ? 'table-striped' : null)
       "
@@ -63,7 +56,14 @@
 </template>
 
 <script>
-import { defineComponent, reactive, ref, onMounted, toRefs } from "vue";
+import {
+  defineComponent,
+  reactive,
+  ref,
+  onMounted,
+  onUnmounted,
+  toRefs,
+} from "vue";
 import { joinPreviewUrl } from "@/utils";
 import { getPublishingApi } from "@api";
 import dayjs from "dayjs";
@@ -111,6 +111,33 @@ const columns = [
     slots: { customRender: "detail" },
   },
 ];
+const queryList = [
+  {
+    title: "全部",
+    key: "all",
+  },
+  {
+    title: "名称",
+    key: "nickname",
+  },
+  {
+    title: "标题",
+    key: "name",
+  },
+  {
+    title: "关联IP",
+    key: "series_ip",
+  },
+  {
+    title: "价格",
+    key: "price",
+  },
+  {
+    title: "数量",
+    key: "number",
+  },
+];
+
 export default defineComponent({
   name: "order",
   components: {
@@ -119,15 +146,49 @@ export default defineComponent({
 
   setup() {
     let publishData = ref([]);
-    let pagination = reactive({ page: 1, numbers: 10 });
-    let currentDetail = reactive({ isOrderShow: false, detailMessage: {} });
+    let pagination = reactive({
+      current: 1,
+      numbers: 10,
+      total: 0,
+      defaultPageSize: 10,
+      showTotal: (total) => `一共 ${total} 条`,
+    });
+
+    let currentItemDetail = reactive({ isOrderShow: false, detailMessage: {} });
+
+    const queryParams = ref(queryList);
+    const currentQueryParams = ref(queryList[0]);
+
+    const queryValue = ref();
+    const scrollHeight = ref();
+
+    const handleSelectClick = ({ key }) => {
+      currentQueryParams.value = queryList.find((item) => item.key === key);
+    };
+    const handlePagitionChange = ({ current }) => {
+      pagination.current = current;
+      getPublishingList(pagination);
+    };
+    const handleSearchClick = () => {
+      if (currentQueryParams.value.key === "all") {
+        return getPublishingList(pagination);
+      }
+    };
+    const calculateScroll = function() {
+      scrollHeight.value = document.body.clientWidth <= 1440 ? 470 : 700;
+    };
     onMounted(() => {
       getPublishingList(pagination);
+      window.addEventListener("resize", calculateScroll);
+    });
+    onUnmounted(() => {
+      window.removeEventListener("resize", calculateScroll);
     });
     const getPublishingList = async (pagination) => {
       const { err_code, result } = await getPublishingApi(pagination);
       if (err_code === "0") {
-        publishData.value = result.map((item) => ({
+        pagination.total = result.total;
+        publishData.value = result.list.map((item) => ({
           ...item,
           opening_time: dayjs(Number(item.opening_time) * 1000).format(
             "YYYY-MM-DD HH:mm"
@@ -139,8 +200,8 @@ export default defineComponent({
       }
     };
     const handleOrderDetailClick = (row) => {
-      currentDetail.detailMessage = row.record;
-      currentDetail.isOrderShow = !currentDetail.isOrderShow;
+      currentItemDetail.detailMessage = row.record;
+      currentItemDetail.isOrderShow = !currentItemDetail.isOrderShow;
     };
     const hanldeCloseClick = (refresh, id) => {
       if (refresh) {
@@ -148,14 +209,22 @@ export default defineComponent({
         // getPublishingList(pagination);
         publishData.value = publishData.value.filter((item) => item.id !== id);
       }
-      currentDetail.isOrderShow = !currentDetail.isOrderShow;
+      currentItemDetail.isOrderShow = !currentItemDetail.isOrderShow;
     };
     return {
       columns,
       publishData,
       handleOrderDetailClick,
       hanldeCloseClick,
-      ...toRefs(currentDetail),
+      queryParams,
+      currentQueryParams,
+      handleSelectClick,
+      handleSearchClick,
+      queryValue,
+      scrollHeight,
+      pagination,
+      ...toRefs(currentItemDetail),
+      handlePagitionChange,
     };
   },
 });

@@ -67,7 +67,7 @@ import { defineComponent, onMounted, reactive, ref } from "vue";
 import { getUserOrderApi } from "@api";
 const columns = [
   {
-    title: "创造者",
+    title: "创作者",
     key: "make",
     slots: { customRender: "make" },
   },
@@ -109,16 +109,16 @@ const columns = [
   },
 ];
 const datas = [
-  {
-    ID: 1,
-    code: "asfadsfafs",
-    title: "标题",
-    author: "小龙",
-    buyers: "小攻",
-    money: "100元",
-    time: "2021-10.12",
-    status: "交易成功",
-  },
+  // {
+  //   ID: 1,
+  //   code: "asfadsfafs",
+  //   title: "标题",
+  //   author: "小龙",
+  //   buyers: "小攻",
+  //   money: "100元",
+  //   time: "2021-10.12",
+  //   status: "交易成功",
+  // },
 ];
 export default defineComponent({
   name: "order",

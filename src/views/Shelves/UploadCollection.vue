@@ -12,9 +12,9 @@
       <p>
         在此添加藏品描述图片
         <br />
-        (大小不超过500KB)
+        <!-- (大小不超过500KB) -->
       </p>
-      <input type="file" alt="" @change="handleUploadFile" />
+      <input type="file" alt="" @change="handleUploadFile" accept=".png,.jpg" />
       <img :src="imgSrc" class="upload" v-if="imgSrc" alt="" />
     </div>
   </div>
@@ -22,7 +22,7 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import { previewFile } from "@/utils";
+import { previewFile, notify } from "@/utils";
 
 export default defineComponent({
   name: "uploadCollection",
@@ -34,10 +34,15 @@ export default defineComponent({
     const imgSrc = ref("");
     const handleUploadFile = (e) => {
       let imgFile = e.target.files;
-      if (!imgFile.length) return (e.target.value = "");
+      if (!imgFile.length) return;
+      if (imgFile[0].size > 1024 * 1024 * 10) {
+        return notify("请上传10M以内的图片");
+      }
+
       previewFile(imgFile[0]).then((res) => {
         imgSrc.value = res;
         emit("update:nft_background", imgFile[0]);
+        e.target.value = "";
       });
     };
     const hanldePrewClick = () => {

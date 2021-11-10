@@ -20,7 +20,7 @@ export const getSerisesIpApi = () => server.get("/backend/get_serises_ip");
 
 // 审核列表
 export const getPublishingApi = (params) =>
-  server.get("/publishing/" + params.page + "/" + params.numbers);
+  server.get("/publishing/" + params.current + "/" + params.numbers);
 
 // 通过审核
 export const auditPassedApi = (data) => server.post("/review", data);

@@ -8,7 +8,7 @@
       />
       <div class="user_search">
         <div class="search-title">
-          <a-input placeholder="在此输入标题" v-model:value="name" />
+          <a-input placeholder="在此输入作品名称" v-model:value="name" />
           <a-dropdown class="serial-number">
             <template #overlay>
               <a-menu @click="handleMenuClick">
@@ -80,7 +80,10 @@
         <div class="ups">
           <div class="nft-des">
             <p>NFT介绍</p>
-            <textarea placeholder="在此输入藏品描述" v-model="description" />
+            <textarea
+              placeholder="在此输入藏品描述(建议200字以内)"
+              v-model="description"
+            />
           </div>
           <UploadCollection
             ref="uploadCollection"
@@ -91,7 +94,11 @@
       </div>
     </div>
     <div class="btns">
-      <a-button class="btn" @click="handleUploadNftClick">
+      <a-button
+        class="btn"
+        @click="handleUploadNftClick"
+        :btnDisabled="btnDisabled"
+      >
         <template #icon>
           <icon-svg icon="icon-icon4" class="icon"></icon-svg
         ></template>
@@ -115,6 +122,7 @@ import {
   onMounted,
   getCurrentInstance,
   computed,
+  onUnmounted,
 } from "vue";
 import { useStore } from "vuex";
 import { getSerisesIpApi, uploadNftApi } from "@api";
@@ -122,7 +130,7 @@ import dayjs from "dayjs";
 import UploadNft from "./UploadNft";
 import UploadCollection from "./UploadCollection";
 import PreviewImg from "@/components/PreviewImg";
-
+import { warningNotify } from "@/utils";
 let obj = {
   name: "",
   description: "",
@@ -133,12 +141,6 @@ let obj = {
   nft_file: {},
   nft_background: {},
 };
-function warningNotify(description) {
-  window.$message.warning({
-    message: "抱歉~",
-    description,
-  });
-}
 export default defineComponent({
   components: {
     UploadNft,
@@ -151,12 +153,17 @@ export default defineComponent({
     let uploadParams = reactive(obj);
     const ipList = ref([]);
     const currentIpName = ref("首页");
+    const showHeaderSelect = ref(false);
     const privewImgComponentParmas = reactive({
       imgUrl: "",
       visible: false,
     });
+    const btnDisabled = ref(false);
     onMounted(() => {
       getIpList();
+    });
+    onUnmounted(() => {
+      initParams();
     });
     const handleUploadNftPreview = (imgSrc) => {
       privewImgComponentParmas.imgUrl = imgSrc;
@@ -169,44 +176,86 @@ export default defineComponent({
         ipList.value = result;
       }
     };
-    const showHeaderSelect = ref(false);
+    const initParams = () => {
+      uploadParams.name = "";
+      uploadParams.description = "";
+      uploadParams.number = "";
+      uploadParams.series_ip = "";
+      uploadParams.price = "";
+      uploadParams.opening_time = "";
+      uploadParams.nft_file = {};
+      uploadParams.nft_background = {};
+      currentIpName.value = "首页";
+
+      btnDisabled.value = false;
+    };
 
     const handleUploadNftClick = async () => {
+      btnDisabled.value = true;
       const userSelectTime = dayjs(uploadParams.opening_time).unix();
-      if (userSelectTime < dayjs(Date.now()).unix() - 60 * 3) {
+      if (userSelectTime < dayjs(Date.now()).unix()) {
         return warningNotify("请选择正确的开售时间");
       }
-      if (!uploadParams.name.trim()) return warningNotify("请输入标题");
-      if (!uploadParams.description.trim()) return warningNotify("请输入描述");
-      if (!uploadParams.number) return warningNotify("请输入输入数量");
-      if (!uploadParams.price) return warningNotify("请输入价格");
-      if (!uploadParams.opening_time) return warningNotify("请选择上架时间");
-      if (!Object.keys(uploadParams.nft_file))
-        return warningNotify("请上传数字藏品");
-
+      if (!uploadParams.name.trim()) {
+        warningNotify("请输入作品名称");
+        return (btnDisabled.value = false);
+      }
+      if (!uploadParams.name.trim().length > 20) {
+        warningNotify("作品名称过长,20字以内");
+        return (btnDisabled.value = false);
+      }
+      if (!uploadParams.description.trim()) {
+        warningNotify("请输入描述");
+        return (btnDisabled.value = false);
+      }
+      if (!uploadParams.number) {
+        warningNotify("请输入输入数量");
+        return (btnDisabled.value = false);
+      }
+      if (!uploadParams.number <= 0) {
+        warningNotify("数量不能小于或等于0");
+        return (btnDisabled.value = false);
+      }
+      if (!uploadParams.price) {
+        warningNotify("请输入价格");
+        return (btnDisabled.value = false);
+      }
+      if (!uploadParams.price < 0) {
+        warningNotify("价格不能小于0");
+        return (btnDisabled.value = false);
+      }
+      if (!uploadParams.opening_time) {
+        warningNotify("请选择上架时间");
+        return (btnDisabled.value = false);
+      }
+      if (!uploadParams.nft_file.size) {
+        warningNotify("请上传数字藏品");
+        return (btnDisabled.value = false);
+      }
+      if (!uploadParams.nft_background.size) {
+        warningNotify("请上传藏品描述图片");
+        return (btnDisabled.value = false);
+      }
       const formData = new FormData();
 
       for (let key in uploadParams) {
         formData.append(key, uploadParams[key]);
       }
+      if (!uploadParams.nft_background.size) {
+        formData.set("nft_background", "");
+      }
       formData.set("opening_time", String(userSelectTime));
       const { err_code } = await uploadNftApi(formData, {
         headers: { "content-type": "application/x-www-form-urlencoded" },
       });
-
       if (err_code === "0") {
-        uploadParams.name = "";
-        uploadParams.description = "";
-        uploadParams.number = "";
-        uploadParams.series_ip = "";
-        uploadParams.price = "";
-        uploadParams.opening_time = "";
-        uploadParams.nft_file = {};
-        uploadParams.nft_background = {};
-        currentIpName.value = "首页";
+        initParams();
         proxy.$refs.uploadNft.imgSrc = "";
         proxy.$refs.uploadCollection.imgSrc = "";
-        window.$message.success({ message: "提示", description: "上架成功" });
+        window.$message.success({
+          message: "提示",
+          description: "上架成功，请等待审核通过。",
+        });
       }
     };
 
@@ -217,7 +266,6 @@ export default defineComponent({
       uploadParams.series_ip = e.key;
       const findName = ipList.value.find((item) => item.name === e.key);
       currentIpName.value = findName ? findName.name : "首页";
-      console.log(currentIpName.value);
     };
     return {
       ...toRefs(uploadParams),
@@ -230,6 +278,7 @@ export default defineComponent({
       personMessage,
       handleUploadNftPreview,
       privewImgComponentParmas,
+      btnDisabled,
     };
   },
 });

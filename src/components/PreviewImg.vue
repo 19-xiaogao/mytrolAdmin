@@ -1,5 +1,11 @@
 <template>
-  <a-modal :visible="visible" class="modal" @cancel="hanldeClick" :footer="null">
+  <a-modal
+    :visible="visible"
+    class="modal"
+    @cancel="hanldeClick"
+    :centered="true"
+    :footer="null"
+  >
     <img :src="imgUrl" class="img" />
   </a-modal>
 </template>

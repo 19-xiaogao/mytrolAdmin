@@ -6,7 +6,6 @@ import { onMounted, onUnmounted } from "vue";
 export default {
   setup() {
     onMounted(() => {
-      console.log("11");
       document.querySelector("body").style.cursor = "not-allowed";
     });
     onUnmounted(() => {

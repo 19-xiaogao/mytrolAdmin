@@ -4,6 +4,7 @@
     <div class="add-logo">
       <img src="@assets/images/sheleves-add.png" alt="" />
       <p>上传创作数字藏品</p>
+      <span>建议大小10M以内</span>
     </div>
     <img class="upload-img" v-if="imgSrc" :src="imgSrc" />
     <img
@@ -17,6 +18,7 @@
       type="file"
       class="input-file"
       style="z-index:3;"
+      accept=".png,.jpg"
       @change="handleUploadFile"
     />
   </div>
@@ -24,7 +26,7 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import { previewFile } from "@/utils";
+import { previewFile, notify } from "@/utils";
 
 // 这里实现上传的逻辑
 export default defineComponent({
@@ -40,10 +42,14 @@ export default defineComponent({
 
     const handleUploadFile = (e) => {
       let imgFile = e.target.files;
-      if (!imgFile.length) return (e.target.value = "");
+      if (!imgFile.length) return;
+      if (imgFile[0].size > 1024 * 1024 * 10) {
+        return notify("请上传10M以内的图片");
+      }
       previewFile(imgFile[0]).then((res) => {
         imgSrc.value = res;
         emit("update:doneImgFile", imgFile[0]);
+        e.target.value = "";
       });
     };
 
@@ -76,8 +82,12 @@ export default defineComponent({
     transform: translate(-50%, -50%);
     text-align: center;
     p {
-      margin-top: 20px;
+      padding: 0;
+      margin: 20px 0 5px;
       font-size: 20px;
+      color: #7d7d7d;
+    }
+    span {
       color: #7d7d7d;
     }
   }

@@ -23,7 +23,7 @@
         </div>
         <a-dropdown class="serial-number">
           <template #overlay>
-            <a-menu>
+            <!-- <a-menu>
               <a-menu-item key="1">
                 1st menu item
               </a-menu-item>
@@ -33,7 +33,7 @@
               <a-menu-item key="3">
                 3rd item
               </a-menu-item>
-            </a-menu>
+            </a-menu> -->
           </template>
           <a-button>
             <span>序列 1</span>
@@ -45,12 +45,12 @@
     <div class="ip-lists">
       <div
         class="card"
-        @mouseover="() => handleMouseover(true)"
-        @mouseout="() => handleMouseover(false)"
+        @mouseover="() => handleMouseover(true, item.id)"
+        @mouseout="() => handleMouseover(false, item.id)"
         v-for="item in workList"
         :key="item.id"
       >
-        <div class="img" ref="imgRef">
+        <div class="img" :ref="item.id">
           <img :src="item.file" alt="" />
         </div>
         <!-- <div class="options">
@@ -101,17 +101,17 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const { proxy } = getCurrentInstance();
-    const imgRef = ref();
     const pagination = reactive({
       page: 1,
       numbers: 10,
     });
     const workList = ref([]);
-    const handleMouseover = (bol) => {
+    const handleMouseover = (bol, id) => {
       bol
-        ? (imgRef.value.style.transform = "scale(1.2)")
-        : (imgRef.value.style.transform = "scale(1)");
+        ? (proxy.$refs[id].style.transform = "scale(1.2)")
+        : (proxy.$refs[id].style.transform = "scale(1)");
     };
+
     const handleReturnClick = () => {
       emit("update:visible", false);
     };
@@ -136,7 +136,6 @@ export default defineComponent({
     });
     return {
       handleMouseover,
-      imgRef,
       handleReturnClick,
       isShowStatus,
       workList,
@@ -242,6 +241,8 @@ export default defineComponent({
       border-radius: 8px;
       overflow: hidden;
       position: relative;
+      margin-right: 6px;
+      margin-bottom: 6px;
       .img {
         width: 100%;
         height: 100%;
@@ -347,7 +348,6 @@ export default defineComponent({
             text-align: right;
             ._t1 {
               display: block;
-              height: 20px;
               font-size: 12px;
               font-family: PingFangSC-Regular, PingFang SC;
               font-weight: 400;
@@ -389,8 +389,6 @@ export default defineComponent({
     top: 50%;
     left: 50%;
     transform: translate(-50%, 50%);
-    color: #000;
-    font-size: 20px;
     margin: 0;
     padding: 0;
   }

@@ -4,19 +4,19 @@
       <PersonSpace />
       <EditBanner />
     </div>
-    <!-- <DetaAnalysis /> -->
+    <DetaAnalysis />
   </div>
 </template>
 
 <script>
 import PersonSpace from "./components/PersonalSpace";
 import EditBanner from "./components/EditBanner/index.vue";
-// import DetaAnalysis from "./components/DataAnalysis";
+import DetaAnalysis from "./components/DataAnalysis";
 export default {
   components: {
     PersonSpace,
     EditBanner,
-    // DetaAnalysis,
+    DetaAnalysis,
   },
 };
 </script>

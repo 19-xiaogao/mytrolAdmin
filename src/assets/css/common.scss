@@ -546,19 +546,19 @@ span.ant-input-affix-wrapper {
 }
 
 .ant-table {
+  height: 100%;
   tr {
     text-align: center;
   }
 
   .ant-table-thead th {
     text-align: center;
-    border-bottom: 2px solid var(--primary);
   }
 
   .action .iconfont {
     margin: 0 5px;
     padding: 5px;
-    color: var(--tipColor);
+    // color: var(--tipColor);
   }
 }
 

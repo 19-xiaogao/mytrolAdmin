@@ -67,7 +67,6 @@ export const adminRule = [
 ];
 
 // 创造人员
-
 export const makeRule = [
   {
     path: "/overview",
@@ -145,3 +144,13 @@ export const operationRule = [
       import(/*webpackChunkName:'Operation'*/ "@/views/Operation/index.vue"),
   },
 ];
+
+export default function(role) {
+  if (role === "admin") {
+    return adminRule;
+  } else if (role === "make") {
+    return makeRule;
+  } else {
+    return operationRule;
+  }
+}

@@ -4,7 +4,8 @@
       <h4>数据</h4>
       <div class="data-detail">
         <div class="title">
-          <h3>{{ statisticDatas.user_number }}</h3>
+          <!-- <h3>{{ statisticDatas.user_number }}</h3> -->
+          <h3>0</h3>
           <span>用户注册量</span>
         </div>
         <div class="echart">
@@ -13,7 +14,8 @@
       </div>
       <div class="data-detail">
         <div class="title">
-          <h3>{{ statisticDatas.nft_number }}</h3>
+          <!-- <h3>{{ statisticDatas.nft_number }}</h3> -->
+          <h3>0</h3>
           <span>NFT创作量</span>
         </div>
         <div class="echart">
@@ -44,7 +46,7 @@
 import VueEcharts from "@/components/VueEcharts/index.vue";
 import { defineComponent, onMounted, reactive, ref } from "vue";
 import { createPieOption, createLineOption } from "./useDataAnalysis";
-import { getTradeDataCountApi } from "@api";
+// import { getTradeDataCountApi } from "@api";
 export default defineComponent({
   components: {
     "v-chart": VueEcharts,
@@ -58,15 +60,15 @@ export default defineComponent({
       ])
     );
     onMounted(() => {
-      getTradeDataCount();
+      // getTradeDataCount();
     });
 
-    const getTradeDataCount = async () => {
-      const { err_code, result } = await getTradeDataCountApi();
-      if (err_code === "0") {
-        statisticDatas.value = result;
-      }
-    };
+    // const getTradeDataCount = async () => {
+    //   const { err_code, result } = await getTradeDataCountApi();
+    //   if (err_code === "0") {
+    //     statisticDatas.value = result;
+    //   }
+    // };
     const lineOption = reactive(createLineOption([10, 20, 5, 20]));
     return {
       pieOption,
