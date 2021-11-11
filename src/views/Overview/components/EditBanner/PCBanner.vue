@@ -19,7 +19,7 @@
           <input
             class="txt-overflow"
             type="text"
-            value="https://dribbble.com/shots/16624485-Raaaaaaaaaaa"
+            value="https://baidu.com"
           />
           <button>上传图片</button>
         </div>
