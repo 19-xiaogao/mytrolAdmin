@@ -34,7 +34,7 @@ export default {
 .loader {
   z-index: 100;
   background-color: #333;
-  opacity: 0.3;
+  opacity: 0.6;
   width: calc(100vw - 60px);
   height: calc(100vw - 60px);
   position: fixed;
@@ -51,7 +51,7 @@ export default {
     font-size: 17px;
   }
   .loading {
-    margin-top: calc(50vh - 60px);
+    margin-top: calc(50vh );
     span {
       display: inline-block;
       width: 20px;

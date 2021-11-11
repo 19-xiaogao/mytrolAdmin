@@ -18,7 +18,7 @@
         <span>密码</span>
         <input
           type="password"
-          placeholder="请输入密码"
+          placeholder="请输入密码(6字符以上)"
           required
           v-model="password"
         />
@@ -65,6 +65,9 @@ export default defineComponent({
         addParmas.password.trim() === ""
       ) {
         return warningNotify("账户或者密码不能为空");
+      }
+      if (addParmas.password.trim().length < 6) {
+        return warningNotify("请输入6个字符以上的密码");
       }
       const { err_code } = await addUserApi({ ...addParmas, role });
       if (err_code === "0") {

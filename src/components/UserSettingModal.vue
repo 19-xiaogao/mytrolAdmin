@@ -26,7 +26,7 @@
     </div>
     <div class="user-input">
       <span>名称</span>
-      <input type="text" placeholder="请输入创作者名称" v-model="username" />
+      <input type="text" placeholder="请输入创作者名称(10个字符以内)" v-model="username" />
     </div>
     <template #footer>
       <div class="footer" @click="handleSureClick">确定</div>

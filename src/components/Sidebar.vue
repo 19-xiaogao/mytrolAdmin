@@ -29,27 +29,28 @@ const adminMenu = [
   },
   {
     icon: "icon-a-bianzu4",
-    text: "订单",
-    path: "/order",
-    id: 2,
-  },
-  {
-    icon: "icon-a-bianzu4",
     text: "审核",
     path: "/audit",
     id: 3,
   },
   {
-    icon: "icon-icon3",
-    text: "上架",
-    path: "/shelves",
-    id: 4,
+    icon: "icon-a-bianzu311",
+    text: "新增",
+    path: "/setting",
+    id: 7,
   },
+
   {
     icon: "icon-a-bianzu32",
     text: "运营",
     path: "/operation",
     id: 5,
+  },
+  {
+    icon: "icon-icon3",
+    text: "创作",
+    path: "/shelves",
+    id: 4,
   },
   {
     icon: "icon-a-bianzu3",
@@ -58,10 +59,10 @@ const adminMenu = [
     id: 6,
   },
   {
-    icon: "icon-a-bianzu311",
-    text: "设置",
-    path: "/setting",
-    id: 7,
+    icon: "icon-a-bianzu4",
+    text: "订单",
+    path: "/order",
+    id: 2,
   },
 ];
 const makeMenu = [
@@ -72,14 +73,8 @@ const makeMenu = [
     path: "/overview",
   },
   {
-    icon: "icon-a-bianzu4",
-    text: "订单",
-    path: "/order",
-    id: 2,
-  },
-  {
     icon: "icon-icon3",
-    text: "上架",
+    text: "创作",
     path: "/shelves",
     id: 4,
   },
@@ -88,6 +83,12 @@ const makeMenu = [
     text: "作品",
     path: "/items",
     id: 6,
+  },
+  {
+    icon: "icon-a-bianzu4",
+    text: "订单",
+    path: "/order",
+    id: 2,
   },
 ];
 const operationMenu = [
@@ -98,14 +99,8 @@ const operationMenu = [
     path: "/overview",
   },
   {
-    icon: "icon-a-bianzu4",
-    text: "订单",
-    path: "/order",
-    id: 2,
-  },
-  {
     icon: "icon-icon3",
-    text: "上架",
+    text: "创作",
     path: "/shelves",
     id: 4,
   },
@@ -120,6 +115,12 @@ const operationMenu = [
     text: "作品",
     path: "/items",
     id: 6,
+  },
+  {
+    icon: "icon-a-bianzu4",
+    text: "订单",
+    path: "/order",
+    id: 2,
   },
 ];
 export default {

@@ -5,7 +5,7 @@
       <div class="data-detail">
         <div class="title">
           <!-- <h3>{{ statisticDatas.user_number }}</h3> -->
-          <h3>0</h3>
+          <h3>-</h3>
           <span>用户注册量</span>
         </div>
         <div class="echart">
@@ -15,7 +15,7 @@
       <div class="data-detail">
         <div class="title">
           <!-- <h3>{{ statisticDatas.nft_number }}</h3> -->
-          <h3>0</h3>
+          <h3>-</h3>
           <span>NFT创作量</span>
         </div>
         <div class="echart">
@@ -24,7 +24,7 @@
       </div>
       <div class="data-detail">
         <div class="title">
-          <h3>3123</h3>
+          <h3>-</h3>
           <span>已成交NFT量</span>
         </div>
         <div class="echart">
@@ -35,7 +35,7 @@
     <div class="analysis">
       <div class="title">
         <h4>成交金额</h4>
-        <span>总成交：319141212CNY </span>
+        <span>总成交：-CNY </span>
       </div>
       <v-chart :options="pieOption" />
     </div>

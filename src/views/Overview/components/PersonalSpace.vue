@@ -16,15 +16,15 @@
     </div>
     <div class="indicators">
       <div>
-        <span><em>20</em></span>
+        <span><em>-</em></span>
         <span>昨日审核</span>
       </div>
       <div>
-        <span><em>100</em></span>
+        <span><em>-</em></span>
         <span>待我审核</span>
       </div>
       <div>
-        <span><em>15</em></span>
+        <span><em>-</em></span>
         <span>已审核</span>
       </div>
     </div>
@@ -43,7 +43,7 @@ export default {
       if (user.role === "admin") {
         return "超级管理员";
       } else if (user.role === "maker") {
-        return "设计师";
+        return "创作者";
       } else {
         return "运营";
       }
