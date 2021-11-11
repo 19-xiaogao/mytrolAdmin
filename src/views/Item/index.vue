@@ -182,7 +182,7 @@ export default defineComponent({
     display: flex;
     flex-wrap: wrap;
     position: relative;
-    justify-content: space-around;
+    // justify-content: space-around;
     align-content: flex-start;
     .no-found {
       position: absolute;

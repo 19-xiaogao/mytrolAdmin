@@ -130,7 +130,7 @@ import dayjs from "dayjs";
 import UploadNft from "./UploadNft";
 import UploadCollection from "./UploadCollection";
 import PreviewImg from "@/components/PreviewImg";
-import { warningNotify } from "@/utils";
+import { warningNotify, successNotify } from "@/utils";
 let obj = {
   name: "",
   description: "",
@@ -212,7 +212,7 @@ export default defineComponent({
         warningNotify("请输入输入数量");
         return (btnDisabled.value = false);
       }
-      if (!uploadParams.number <= 0) {
+      if (Number(uploadParams.number) <= 0) {
         warningNotify("数量不能小于或等于0");
         return (btnDisabled.value = false);
       }
@@ -220,7 +220,7 @@ export default defineComponent({
         warningNotify("请输入价格");
         return (btnDisabled.value = false);
       }
-      if (!uploadParams.price < 0) {
+      if (Number(uploadParams.price) < 0) {
         warningNotify("价格不能小于0");
         return (btnDisabled.value = false);
       }
@@ -252,10 +252,7 @@ export default defineComponent({
         initParams();
         proxy.$refs.uploadNft.imgSrc = "";
         proxy.$refs.uploadCollection.imgSrc = "";
-        window.$message.success({
-          message: "提示",
-          description: "上架成功，请等待审核通过。",
-        });
+        successNotify("上架成功，请等待审核通过");
       }
     };
 

@@ -71,7 +71,7 @@ export function infoNotify(description) {
 
 export function successNotify(description) {
   notification.success({
-    message: "Congratulations~",
+    message: "提示~",
     description,
   });
 }
@@ -83,7 +83,7 @@ export function warningNotify(description) {
   });
 }
 
-export function errorNotify(description, message = "Something wrong~") {
+export function errorNotify(description, message = "有些错误~") {
   notification.error({
     message,
     description,

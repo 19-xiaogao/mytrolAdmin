@@ -6,10 +6,6 @@
       </div>
       <icon-svg icon="icon-a-bianzu101" class="icon" @click="handleHideClick"></icon-svg>
     </div>
-    <!-- <div class="avator">
-      <img src="@assets/images/avtor.png" alt="" />
-      <span>尹渊</span>
-    </div> -->
     <p class="des">
       山舞银河，原驰蜡象，欲与天公试比高
     </p>

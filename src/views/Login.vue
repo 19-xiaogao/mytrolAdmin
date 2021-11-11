@@ -29,6 +29,7 @@
             autocomplete="off"
             required
             v-model="password"
+            @keydown.enter="handleLoginBtn"
           />
           <span class="tip-label">Password</span>
           <span class="border-line" />

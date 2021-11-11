@@ -43,19 +43,23 @@
               <a-dropdown class="serial-number">
                 <template #overlay>
                   <a-menu>
-                    <!-- <a-menu-item key="1">
-                      1st menu item
+                    <a-menu-item
+                      v-for="(k, index) in seriessList"
+                      :key="index"
+                      @click="handleDropdownIdClick(index + 1, item)"
+                    >
+                      序号{{ index + 1 }}
                     </a-menu-item>
-                    <a-menu-item key="2">
-                      2nd menu item
-                    </a-menu-item>
-                    <a-menu-item key="3">
-                      3rd item
-                    </a-menu-item> -->
                   </a-menu>
                 </template>
                 <a-button>
-                  <span>{{ isShowStatus(item.status) ? "无" : "下架" }}</span>
+                  <span>{{
+                    isShowStatus(item.status)
+                      ? "未运营"
+                      : !item.number
+                      ? "选择序号"
+                      : "序号" + item.number
+                  }}</span>
                   <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
                 </a-button>
               </a-dropdown>
@@ -72,7 +76,7 @@ import { ref, onMounted, computed, reactive } from "vue";
 import { getSeriessApi, addUpdateIpApi } from "@api";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
-import { joinPreviewUrl } from "@/utils";
+import { joinPreviewUrl, warningNotify } from "@/utils";
 export default {
   components: {
     IPDetail,
@@ -103,19 +107,17 @@ export default {
     };
     const handleStatusClick = async (item) => {
       if (!valve) {
-        return window.$message.warn({
-          message: "提示",
-          description: "请5秒后重试",
-        });
+        return warningNotify("请5秒后重试");
       }
       valve = false;
       const status = item.status === "off" ? "on" : "off";
-      const formData = new FormData();
-      formData.append("name", item.name);
-      formData.append("status", status);
-      formData.append("number", item.number);
-      formData.append("operate", "update");
-      const { err_code } = await addUpdateIpApi(formData);
+      let paramsObj = {
+        name: item.name,
+        status: status,
+        number: item.number,
+        operate: "update",
+      };
+      const { err_code } = await funcAddupdateIpApi(paramsObj);
       if (err_code === "0") {
         window.setTimeout(() => (valve = true), 5000);
         seriessList.value.forEach((key) => {
@@ -125,12 +127,35 @@ export default {
         });
       }
     };
+
+    const funcAddupdateIpApi = (obj) => {
+      const formData = new FormData();
+      for (let key in obj) {
+        formData.append(key, obj[key]);
+      }
+      return addUpdateIpApi(formData);
+    };
     const hanleCardClick = (item) => {
       currentIpMessage.visible = true;
       currentIpMessage.params = item;
     };
     const handleCreateActivityClick = () => {
       createActivityVisible.value = true;
+    };
+    const handleDropdownIdClick = async (key, item) => {
+      const { err_code } = await funcAddupdateIpApi({
+        name: item.name,
+        status: item.status,
+        number: key,
+        operate: "update",
+      });
+      if (err_code === "0") {
+        seriessList.value.forEach((keys) => {
+          if (item.id === keys.id) {
+            keys.number = key;
+          }
+        });
+      }
     };
     return {
       handleCreateActivityClick,
@@ -140,6 +165,7 @@ export default {
       handleStatusClick,
       hanleCardClick,
       currentIpMessage,
+      handleDropdownIdClick,
     };
   },
 };
@@ -224,6 +250,7 @@ export default {
       .img {
         width: 224px;
         height: 142px;
+        border-radius: 4px;
         overflow: hidden;
         cursor: pointer;
         img {

@@ -1,7 +1,9 @@
 import axios from "axios";
 import { Modal } from "ant-design-vue";
+import {errorNotify} from '@/utils'
 import router from "@/router";
 import store from "@/store";
+
 const server = axios.create({
   baseURL: "/relay/dbchain/oracle/nft",
   timeout: 9000,
@@ -14,12 +16,6 @@ server.interceptors.request.use(
   },
   (err) => Promise.reject(err)
 );
-export function errorNotify(description, message = "有些错误~") {
-  window.$message.error({
-    message,
-    description,
-  });
-}
 const handleError = (err) => {
   if (err.code === "ECONNABORTED" && err.message.includes("timeout")) {
     errorNotify("请求超时，请等待稍后重试...", "超时");

@@ -9,6 +9,7 @@
           <img :src="personMessage.avatar" alt="" />
         </div>
         <span class="select">{{ personMessage.nickname }} </span>
+        <icon-svg icon="icon-xiangxia1"></icon-svg>
       </div>
 
       <template #overlay>
@@ -71,7 +72,7 @@ header {
   .avator-message {
     display: flex;
     align-items: center;
-    margin-right: 10px;
+    margin-right: 30px;
     ::v-deep .ant-select-selector {
       border: none !important;
     }

@@ -11,7 +11,7 @@
         </div>
       </div>
       <div class="title-r">
-        <div class="icons">
+        <!-- <div class="icons">
           <a-tooltip>
             <template #title>复制链接</template>
             <icon-svg icon="icon-a-bianzu10" class="icon"></icon-svg>
@@ -20,7 +20,7 @@
             <template #title>下架</template>
             <icon-svg icon="icon-yiyouzhujici" class="icon"></icon-svg>
           </a-tooltip>
-        </div>
+        </div> -->
         <a-dropdown class="serial-number">
           <template #overlay>
             <!-- <a-menu>

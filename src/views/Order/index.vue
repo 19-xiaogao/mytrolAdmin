@@ -8,7 +8,7 @@
             <!-- <div class="text">编码</div> -->
             <a-dropdown class="text">
               <template #overlay>
-                <a-menu>
+                <!-- <a-menu>
                   <a-menu-item key="1">
                     1st menu item
                   </a-menu-item>
@@ -18,10 +18,10 @@
                   <a-menu-item key="3">
                     3rd item
                   </a-menu-item>
-                </a-menu>
+                </a-menu> -->
               </template>
               <a-button>
-                <span class="span">编码</span>
+                <span class="span">状态</span>
                 <div class="icon"></div>
                 <!-- <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg> -->
               </a-button>
@@ -48,8 +48,8 @@
       "
     >
       <template #make>
-       <img src="@assets/images/avtor.png" alt="">
-       <span>小龙</span>
+        <img src="@assets/images/avtor.png" alt="" />
+        <span>小龙</span>
       </template>
       <template #detail>
         <a-button type="link" @click.stop="handleOrderDetailClick"
@@ -136,7 +136,7 @@ export default defineComponent({
     });
     const getuserOrderList = async () => {
       const { err_code, result } = await getUserOrderApi();
-      if(err_code === '0'){
+      if (err_code === "0") {
         console.log(result);
       }
       console.log(result);

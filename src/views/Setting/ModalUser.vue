@@ -36,6 +36,7 @@
 <script>
 import { computed, defineComponent, reactive, ref, toRefs } from "vue";
 import { addUserApi } from "@api";
+import { warningNotify, successNotify } from "@/utils";
 export default defineComponent({
   props: {
     createVisible: {
@@ -63,23 +64,14 @@ export default defineComponent({
         addParmas.username.trim() === "" ||
         addParmas.password.trim() === ""
       ) {
-        return window.$message.warning({
-          message: "错误!",
-          description: "账户或者密码不能为空",
-        });
+        return warningNotify("账户或者密码不能为空");
       }
       const { err_code } = await addUserApi({ ...addParmas, role });
       if (err_code === "0") {
-        window.$message.success({
-          message: "提示",
-          description: "创建账户成功",
-        });
+        successNotify("创建账户成功");
         emit("update:createVisible", false);
       } else {
-        window.$message.warn({
-          message: "提示",
-          description: "用户名已经被注册",
-        });
+        warningNotify("用户名已经被注册");
       }
     };
 
@@ -138,6 +130,9 @@ export default defineComponent({
       box-sizing: border-box;
       padding-left: 10px;
       font-size: 14px;
+      &:focus {
+        border: 1px solid #eee;
+      }
     }
   }
 }
