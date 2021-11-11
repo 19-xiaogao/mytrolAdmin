@@ -17,6 +17,7 @@ server.interceptors.request.use(
   (err) => Promise.reject(err)
 );
 const handleError = (err) => {
+  store.commit("setLoading", false);
   if (!err.code) {
     errorNotify("请求超时，请等待稍后重试...", "超时");
     return Promise.reject(err);
