@@ -73,10 +73,10 @@ header {
     display: flex;
     align-items: center;
     margin-right: 30px;
-    ::v-deep .ant-select-selector {
+    :deep .ant-select-selector {
       border: none !important;
     }
-    ::v-deep .ant-select-selection-item {
+    :deep .ant-select-selection-item {
       color: #000 !important;
     }
     .avator {

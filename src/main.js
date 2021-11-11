@@ -2,20 +2,14 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import Antd from "ant-design-vue";
+import mountComponent from "@/utils/mountCom";
 import { joinPreviewUrl } from "./utils";
-
 import "ant-design-vue/dist/antd.css";
-import IconSvg from "./components/IconSvg";
 
 const app = createApp(App);
-
 app.use(store);
 app.use(router);
-app.use(Antd);
-app.component("icon-svg", IconSvg);
-
+mountComponent(app);
 app.config.globalProperties.joinPreviewUrl = joinPreviewUrl;
-window.joinPreviewUrl = joinPreviewUrl;
 
 app.mount("#app");
