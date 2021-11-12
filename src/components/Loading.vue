@@ -40,7 +40,7 @@ export default {
   position: fixed;
   top: 60px;
   left: 60px;
-  z-index: 11;
+  z-index: 1111;
   cursor: not-allowed !important;
   display: flex;
   flex-direction: column;

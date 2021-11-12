@@ -194,7 +194,7 @@ export default defineComponent({
       btnDisabled.value = true;
       const userSelectTime = dayjs(uploadParams.opening_time).unix();
       if (userSelectTime < dayjs(Date.now()).unix()) {
-        return warningNotify("请选择正确的开售时间");
+        return warningNotify("请选择正确的开售时间，当前你选择的时间已过。");
       }
       if (!uploadParams.name.trim()) {
         warningNotify("请输入作品名称");

@@ -13,6 +13,7 @@ module.exports = {
       .set("@assets", resolve("./src/assets"))
       .set("@api", resolve("./src/api/api.js"));
 
+      // 压缩img
     config.module
       .rule("images")
       .test(/\.(png|jpe?g|gif)(\?.*)?$/)

@@ -1,6 +1,9 @@
 <template>
   <div class="page-height">
-    <CreateActivityModal v-model:createVisible="createActivityVisible" />
+    <CreateActivityModal
+      v-model:createVisible="createActivityVisible"
+      @ok="handleAddIpClick"
+    />
     <IPDetail
       v-model:visible="currentIpMessage.visible"
       :params="currentIpMessage.params"
@@ -8,9 +11,7 @@
     <div v-if="!currentIpMessage.visible">
       <div class="header">
         <h4>运营</h4>
-        <div class="button" @click="handleCreateActivityClick">
-          创建IP活动
-        </div>
+        <div class="button" @click="handleCreateActivityClick">创建IP活动</div>
       </div>
       <div class="card-list">
         <div class="card-box" v-for="item in seriessList" :key="item.id">
@@ -105,6 +106,11 @@ export default {
         }));
       }
     };
+
+    const handleAddIpClick = () => {
+      getSeriessListApi();
+    };
+
     const handleStatusClick = async (item) => {
       if (!valve) {
         return warningNotify("请5秒后重试");
@@ -166,6 +172,7 @@ export default {
       hanleCardClick,
       currentIpMessage,
       handleDropdownIdClick,
+      handleAddIpClick
     };
   },
 };

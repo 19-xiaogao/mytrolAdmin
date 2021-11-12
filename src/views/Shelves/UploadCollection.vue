@@ -8,8 +8,8 @@
       </div>
     </div>
     <div class="upload-cot">
-      <img src="@assets/images/sheleves-add.png" alt="" />
-      <p>
+      <img src="@assets/images/sheleves-add.png" alt="" v-if="!imgSrc" />
+      <p v-if="!imgSrc">
         在此添加藏品描述图片
         <br />
         <!-- (大小不超过500KB) -->
