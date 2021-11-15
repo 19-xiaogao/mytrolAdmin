@@ -42,6 +42,7 @@
 <script>
 import { ref, onUpdated, getCurrentInstance } from "vue";
 import { auditPassedApi } from "@api";
+import { successNotify, errorNotify } from "@/utils";
 export default {
   emits: ["clonse"],
   props: {
@@ -66,8 +67,10 @@ export default {
     const auditPassed = async (denom_id, status) => {
       const { err_code } = await auditPassedApi({ denom_id, status });
       if (err_code === "0") {
+        successNotify("审核成功");
         emit("clonse", "refresh", props.messageDetail.id);
-
+      } else {
+        errorNotify("审核失败");
       }
     };
     return {
@@ -91,12 +94,18 @@ export default {
   box-shadow: -6px 0px 18px 0px rgba(107, 107, 107, 0.16);
   border-radius: 12px;
   box-sizing: border-box;
-  padding: 21px;
+  padding: 0 21px;
   animation: sliding-show 0.5s linear 0s;
   .header {
     display: flex;
     align-items: center;
     justify-content: flex-end !important;
+    position: sticky;
+    top: 0;
+    left: 0;
+    background: #fff;
+    height: 50px;
+    width: 105%;
     .mytrolLogo {
       margin-right: 80px;
     }

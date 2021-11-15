@@ -11,7 +11,7 @@
     <div v-if="!currentIpMessage.visible">
       <div class="header">
         <h4>运营</h4>
-        <div class="button" @click="handleCreateActivityClick">创建IP活动</div>
+        <div class="button" @click="handleCreateActivityClick">创建IP主题</div>
       </div>
       <div class="card-list">
         <div class="card-box" v-for="item in seriessList" :key="item.id">

@@ -1,20 +1,32 @@
 <template>
   <div class="shelves">
     <div class="top">
-      <UploadNft
-        v-model:doneImgFile="nft_file"
-        ref="uploadNft"
-        @previewImgClick="handleUploadNftPreview"
-      />
+      <div class="upload-img-box">
+        <UploadNft
+          v-model:doneImgFile="nft_file"
+          ref="uploadNftRef"
+          type="originalImage"
+          @previewImgClick="handleUploadNftPreview"
+        />
+        <UploadNft
+          v-model:doneImgFile="nft_thumbnail"
+          ref="nftThumbnailRef"
+          style="margin-top: 10px"
+          type="thumbnail"
+          @previewImgClick="handleUploadNftPreview"
+        />
+      </div>
+
       <div class="user_search">
         <div class="search-title">
-          <a-input placeholder="在此输入作品名称(20字以内)" v-model:value="name" />
+          <a-input
+            placeholder="在此输入作品名称(14字以内)"
+            v-model:value="name"
+          />
           <a-dropdown class="serial-number">
             <template #overlay>
               <a-menu @click="handleMenuClick">
-                <a-menu-item key="">
-                  首页
-                </a-menu-item>
+                <a-menu-item key=""> 首页 </a-menu-item>
                 <a-menu-item v-for="item in ipList" :key="item.name">
                   {{ item.name }}
                 </a-menu-item>
@@ -42,7 +54,7 @@
             <a-input-number
               v-model:value="price"
               type="number"
-              style="width:150px;"
+              style="width: 150px"
               placeholder="设定价格"
             />
           </div>
@@ -51,7 +63,7 @@
             <a-input-number
               v-model:value="number"
               type="number"
-              style="width:150px;"
+              style="width: 150px"
               placeholder="请输入数量"
             />
           </div>
@@ -102,7 +114,7 @@
         <template #icon>
           <icon-svg icon="icon-icon4" class="icon"></icon-svg
         ></template>
-        <span>上架</span>
+        <span>创作</span>
       </a-button>
     </div>
 
@@ -140,6 +152,7 @@ let obj = {
   opening_time: "",
   nft_file: {},
   nft_background: {},
+  nft_thumbnail: {},
 };
 export default defineComponent({
   components: {
@@ -185,6 +198,7 @@ export default defineComponent({
       uploadParams.opening_time = "";
       uploadParams.nft_file = {};
       uploadParams.nft_background = {};
+      uploadParams.nft_thumbnail = {};
       currentIpName.value = "首页";
 
       btnDisabled.value = false;
@@ -200,8 +214,8 @@ export default defineComponent({
         warningNotify("请输入作品名称");
         return (btnDisabled.value = false);
       }
-      if (uploadParams.name.trim().length >= 20) {
-        warningNotify("作品名称过长,20字以内");
+      if (uploadParams.name.trim().length >= 14) {
+        warningNotify("作品名称过长,14字以内");
         return (btnDisabled.value = false);
       }
       if (!uploadParams.description.trim()) {
@@ -236,6 +250,10 @@ export default defineComponent({
         warningNotify("请上传藏品描述图片");
         return (btnDisabled.value = false);
       }
+      if (!uploadParams.nft_thumbnail.size) {
+        warningNotify("请上传缩略图");
+        return (btnDisabled.value = false);
+      }
       const formData = new FormData();
 
       for (let key in uploadParams) {
@@ -250,9 +268,10 @@ export default defineComponent({
       });
       if (err_code === "0") {
         initParams();
-        proxy.$refs.uploadNft.imgSrc = "";
+        proxy.$refs.uploadNftRef.imgSrc = "";
         proxy.$refs.uploadCollection.imgSrc = "";
-        successNotify("上架成功，请等待审核通过");
+        proxy.$refs.nftThumbnailRef.imgSrc = "";
+        successNotify("创作成功，请等待审核通过");
       }
     };
 

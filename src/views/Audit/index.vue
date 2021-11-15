@@ -174,11 +174,13 @@ export default defineComponent({
         return getPublishingList(pagination);
       }
     };
-    const calculateScroll = function() {
+    const calculateScroll = function () {
       scrollHeight.value = document.body.clientWidth <= 1440 ? 470 : 700;
     };
+
     onMounted(() => {
       getPublishingList(pagination);
+      calculateScroll();
       window.addEventListener("resize", calculateScroll);
     });
     onUnmounted(() => {

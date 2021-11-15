@@ -3,7 +3,6 @@ import store from "@/store";
 import { getStorageRole } from "@/utils";
 import { adminRule } from "./roleArray";
 import Home from "@/views/Home";
-// 这里还有个需求
 const routes = [
   {
     path: "/",

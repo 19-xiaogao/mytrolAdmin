@@ -12,7 +12,7 @@
       <p v-if="!imgSrc">
         在此添加藏品描述图片
         <br />
-        <!-- (大小不超过500KB) -->
+        (建议大小500KB以内,宽度1200px)
       </p>
       <input type="file" alt="" @change="handleUploadFile" accept=".png,.jpg" />
       <img :src="imgSrc" class="upload" v-if="imgSrc" alt="" />
@@ -22,7 +22,7 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-import { previewFile, notify } from "@/utils";
+import { previewFile, warningNotify } from "@/utils";
 
 export default defineComponent({
   name: "uploadCollection",
@@ -35,8 +35,8 @@ export default defineComponent({
     const handleUploadFile = (e) => {
       let imgFile = e.target.files;
       if (!imgFile.length) return;
-      if (imgFile[0].size > 1024 * 1024 * 10) {
-        return notify("请上传10M以内的图片");
+      if (imgFile[0].size > 1024 * 500) {
+        return warningNotify("请上传500KB以内的图片");
       }
 
       previewFile(imgFile[0]).then((res) => {
