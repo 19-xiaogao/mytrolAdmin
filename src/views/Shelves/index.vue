@@ -200,7 +200,6 @@ export default defineComponent({
       uploadParams.nft_background = {};
       uploadParams.nft_thumbnail = {};
       currentIpName.value = "首页";
-
       btnDisabled.value = false;
     };
 

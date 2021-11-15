@@ -1,18 +1,26 @@
 <template>
   <div class="box">
     <div class="left-box">
-      <img src="@assets/images/order-detail-img.jpg" alt="" />
+      <img
+        :src="currentSelectObj.imgFile"
+        alt=""
+        v-show="currentSelectObj.imgFile"
+      />
       <div class="upload-btn">
         <span>上传图片</span>
-        <input type="file" alt="" />
+        <input type="file" alt="" @change="handleUploadChange" />
       </div>
     </div>
     <div class="right-box">
       <div class="select-box">
         <div class="select-branner">
-          <span class="select-hover">Banner1</span>
-          <span>Banner2</span>
-          <span>Banner3</span>
+          <span
+            :class="isSelctHoverClass(item.key)"
+            @click="handleTabClick(item)"
+            v-for="item in tabObj"
+            :key="item.key"
+            >Banner{{ item.key }}</span
+          >
         </div>
         <icon-svg icon="icon-bannerAdd" class="icon-add"></icon-svg>
       </div>
@@ -26,16 +34,28 @@
           <div class="input-title">
             <span class="title-one">标题</span>
             <span class="line"></span>
-            <input type="text" placeholder="请输入标题" />
+            <input
+              type="text"
+              placeholder="请输入标题"
+              v-model="currentSelectObj.title"
+            />
           </div>
           <div class="input-title">
             <span class="title-one">描述</span>
             <span class="line"></span>
-            <input type="text" placeholder="请输入描述" />
+            <input
+              type="text"
+              placeholder="请输入描述"
+              v-model="currentSelectObj.decs"
+            />
           </div>
         </div>
         <div class="input-url-save">
-          <input type="text" placeholder="请输入图片链接" />
+          <input
+            type="text"
+            placeholder="请输入图片链接"
+            v-model="currentSelectObj.imgUrl"
+          />
           <div class="save">保存</div>
         </div>
       </div>
@@ -44,7 +64,35 @@
 </template>
 
 <script>
-import { computed } from "vue";
+import { computed, ref, getCurrentInstance } from "vue";
+import { previewFile } from "@/utils";
+const defaultTabObj = [
+  {
+    name: "Banner1",
+    key: 1,
+    imgFile: "",
+    title: "",
+    decs: "",
+    imgUrl: "",
+  },
+  {
+    name: "Banner2",
+    key: 2,
+    imgFile: "",
+    title: "",
+    decs: "",
+    imgUrl: "",
+  },
+  {
+    name: "Banner3",
+    key: 3,
+    imgFile: "",
+    title: "",
+    decs: "",
+    imgUrl: "",
+  },
+];
+
 export default {
   props: {
     smallProgram: {
@@ -55,9 +103,32 @@ export default {
     },
   },
   setup(props) {
+    const { proxy } = getCurrentInstance();
+    console.log(proxy);
+    const currentSelectObj = ref(defaultTabObj[0]);
+    const tabObj = ref(defaultTabObj);
+
+    const isSelctHoverClass = computed(
+      () => (index) =>
+        index === currentSelectObj.value.key ? "select-hover" : ""
+    );
+
+    const handleTabClick = (item) => {
+      currentSelectObj.value = item;
+    };
     const showIpDom = computed(() => props.smallProgram);
+    const handleUploadChange = async (e) => {
+      const files = e.target.files[0];
+      currentSelectObj.value.imgFile = await previewFile(files);
+      console.log(currentSelectObj.value.imgFile);
+    };
     return {
       showIpDom,
+      currentSelectObj,
+      isSelctHoverClass,
+      handleTabClick,
+      tabObj,
+      handleUploadChange,
     };
   },
 };

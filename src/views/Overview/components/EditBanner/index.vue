@@ -14,6 +14,7 @@
     <SwitBanner v-if="currentMenu === '2'" :smallProgram="false" />
 
     <SwitBanner v-if="currentMenu === '3'" :smallProgram="true" />
+
   </div>
 </template>
 
