@@ -22,7 +22,7 @@
             >Banner{{ item.key }}</span
           >
         </div>
-        <icon-svg icon="icon-bannerAdd" class="icon-add"></icon-svg>
+        <!-- <icon-svg icon="icon-bannerAdd" class="icon-add"></icon-svg> -->
       </div>
       <div class="small-program" v-if="showIpDom">
         <p>小程序跳转链接</p>
@@ -86,6 +86,22 @@ const defaultTabObj = [
   {
     name: "Banner3",
     key: 3,
+    imgFile: "",
+    title: "",
+    decs: "",
+    imgUrl: "",
+  },
+   {
+    name: "Banner4",
+    key: 4,
+    imgFile: "",
+    title: "",
+    decs: "",
+    imgUrl: "",
+  },
+   {
+    name: "Banner5",
+    key: 5,
     imgFile: "",
     title: "",
     decs: "",
