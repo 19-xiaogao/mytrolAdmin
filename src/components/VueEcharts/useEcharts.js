@@ -1,6 +1,29 @@
 import { watch, onMounted, onBeforeUnmount, getCurrentInstance } from "vue";
-import * as echarts from "echarts";
+import * as echarts from "echarts/core";
+
 import { throttle } from "../../utils";
+import { LineChart, PieChart } from "echarts/charts";
+//动态导入
+import {
+  TooltipComponent,
+  GridComponent,
+  TransformComponent,
+  LegendComponent,
+} from "echarts/components";
+import { LabelLayout, UniversalTransition } from "echarts/features";
+import { CanvasRenderer } from "echarts/renderers";
+
+echarts.use([
+  TooltipComponent,
+  GridComponent,
+  TransformComponent,
+  LegendComponent,
+  LabelLayout,
+  UniversalTransition,
+  CanvasRenderer,
+  LineChart,
+  PieChart,
+]);
 
 export default function useEcharts(props) {
   let vm;

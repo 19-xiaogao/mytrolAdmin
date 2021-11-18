@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "@/store";
 import { getStorageRole } from "@/utils";
-// import { adminRule } from "./roleArray";
+
 import Home from "@/views/Home";
 const routes = [
   {
