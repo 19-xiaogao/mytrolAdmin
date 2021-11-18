@@ -186,7 +186,7 @@ export default defineComponent({
     const getIpList = async () => {
       const { err_code, result } = await getSerisesIpApi();
       if (err_code === "0") {
-        ipList.value = result;
+        ipList.value = result.filter((item) => item.status === "on");
       }
     };
     const initParams = () => {
@@ -227,6 +227,11 @@ export default defineComponent({
       }
       if (Number(uploadParams.number) <= 0) {
         warningNotify("数量不能小于或等于0");
+        return (btnDisabled.value = false);
+      }
+      // nft 创作的数量小于10张
+      if (Number(uploadParams.number) >= 100000) {
+        warningNotify("创作的数量应小于10万张");
         return (btnDisabled.value = false);
       }
       if (!uploadParams.price) {

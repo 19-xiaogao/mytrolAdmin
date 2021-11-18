@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import store from "@/store";
 import { getStorageRole } from "@/utils";
-import { adminRule } from "./roleArray";
+// import { adminRule } from "./roleArray";
 import Home from "@/views/Home";
 const routes = [
   {
@@ -9,7 +9,76 @@ const routes = [
     name: "Mytrol",
     redirect: "/overview",
     component: Home,
-    children: adminRule,
+    children: [
+      {
+        path: "/overview",
+        name: "overview",
+        meta: {
+          title: "总揽",
+        },
+        component: () =>
+          import(
+            /* webpackChunkName: 'overview' */ "@/views/Overview/index.vue"
+          ),
+      },
+      {
+        path: "/order",
+        name: "order",
+        meta: {
+          title: "订单",
+        },
+        component: () =>
+          import(/* webpackChunkName: 'Order' */ "@/views/Order/index.vue"),
+      },
+      {
+        path: "/audit",
+        name: "audit",
+        meta: {
+          title: "审核",
+        },
+        component: () =>
+          import(/* webpackChunkName: 'Audit' */ "@/views/Audit/index.vue"),
+      },
+      {
+        path: "/shelves",
+        name: "shelves",
+        meta: {
+          title: "上架",
+        },
+        component: () =>
+          import(/* webpackChunkName: 'Shelves' */ "@/views/Shelves/index.vue"),
+      },
+      {
+        path: "/operation",
+        name: "operation",
+        meta: {
+          title: "运营",
+        },
+        component: () =>
+          import(
+            /*webpackChunkName:'Operation'*/ "@/views/Operation/index.vue"
+          ),
+      },
+      {
+        path: "/items",
+        name: "item",
+        meta: {
+          title: "作品",
+        },
+        component: () =>
+          import(/*webpackChunkName:'item'*/ "@/views/Item/index.vue"),
+      },
+      {
+        path: "/setting",
+        name: "setting",
+        meta: {
+          title: "设置",
+        },
+        component: () =>
+          import(/*webpackChunkName:'Setting'*/ "@/views/Setting/index.vue"),
+        children: [],
+      },
+    ],
   },
   {
     path: "/login",
