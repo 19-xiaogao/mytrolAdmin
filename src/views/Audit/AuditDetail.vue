@@ -42,7 +42,7 @@
 <script>
 import { ref, onUpdated, getCurrentInstance } from "vue";
 import { auditPassedApi } from "@api";
-import { successNotify, errorNotify } from "@/utils";
+import { errorNotify } from "@/utils";
 export default {
   emits: ["clonse"],
   props: {
@@ -67,10 +67,9 @@ export default {
     const auditPassed = async (denom_id, status) => {
       const { err_code } = await auditPassedApi({ denom_id, status });
       if (err_code === "0") {
-        successNotify("审核成功");
         emit("clonse", "refresh", props.messageDetail.id);
       } else {
-        errorNotify("审核失败");
+        errorNotify("审核失败,区块上链中...");
       }
     };
     return {

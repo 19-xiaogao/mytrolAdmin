@@ -33,7 +33,8 @@
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
 import { addUpdateIpApi } from "@api";
-import { previewFile, successNotify } from "@/utils";
+import { previewFile } from "@/utils";
+
 export default defineComponent({
   props: {
     createVisible: {
@@ -69,7 +70,8 @@ export default defineComponent({
       if (err_code === "0") {
         emit("update:createVisible", false);
         emit("ok");
-        successNotify("创建IP成功");
+        addIpParams.imgSrc = "";
+        addIpParams.name = "";
       }
     };
     return {

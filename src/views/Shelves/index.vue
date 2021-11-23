@@ -186,6 +186,7 @@ export default defineComponent({
     const getIpList = async () => {
       const { err_code, result } = await getSerisesIpApi();
       if (err_code === "0") {
+        if (!result) return;
         ipList.value = result.filter((item) => item.status === "on");
       }
     };
@@ -275,7 +276,7 @@ export default defineComponent({
         proxy.$refs.uploadNftRef.imgSrc = "";
         proxy.$refs.uploadCollection.imgSrc = "";
         proxy.$refs.nftThumbnailRef.imgSrc = "";
-        successNotify("创作成功，请等待审核通过");
+        successNotify("创作成功，请等待审核通过。区块上链中...");
       }
     };
 

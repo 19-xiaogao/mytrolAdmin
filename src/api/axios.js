@@ -87,3 +87,19 @@ server.interceptors.response.use((config) => {
 }, handleError);
 
 export default server;
+
+// 轮询的axios拦截器
+export const pollingServer = axios.create({
+  baseURL: baseUrl,
+  timeout: 9000,
+});
+
+pollingServer.interceptors.request.use(
+  (config) => config,
+  (err) => Promise.reject(err)
+);
+
+pollingServer.interceptors.response.use(
+  (config) => config.data,
+  (err) => Promise.reject(err)
+);

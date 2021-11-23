@@ -75,9 +75,15 @@
 <script>
 import { ref, onMounted, computed, reactive } from "vue";
 import { getSeriessApi, addUpdateIpApi } from "@api";
+import {
+  pollingGetSerisesIpApi,
+  pollingAddUpdateIpApi,
+  pollingUpdateNumberApi,
+} from "@/api/pllingApi";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
-import { joinPreviewUrl, warningNotify } from "@/utils";
+import { joinPreviewUrl, successNotify, warningNotify } from "@/utils";
+import { Modal } from "ant-design-vue";
 export default {
   components: {
     IPDetail,
@@ -90,32 +96,35 @@ export default {
       visible: false,
       params: {},
     });
-    let valve = true;
     const isShowStatus = computed(() => {
       return (status) => status === "off";
     });
     onMounted(() => {
       getSeriessListApi();
     });
+    const assignmentFunc = (result) => {
+      seriessList.value = result.map((item) => ({
+        ...item,
+        file: joinPreviewUrl(item.file),
+      }));
+    };
     const getSeriessListApi = async () => {
       const { err_code, result } = await getSeriessApi();
       if (err_code === "0") {
-        seriessList.value = result.map((item) => ({
-          ...item,
-          file: joinPreviewUrl(item.file),
-        }));
+        if (!Array.isArray(result)) return;
+        assignmentFunc(result);
       }
     };
 
     const handleAddIpClick = () => {
       getSeriessListApi();
+      pollingGetSerisesIpApi(seriessList.value.length, (result) => {
+        assignmentFunc(result);
+        successNotify("创建IP成功。");
+      });
     };
 
     const handleStatusClick = async (item) => {
-      if (!valve) {
-        return warningNotify("请5秒后重试");
-      }
-      valve = false;
       const status = item.status === "off" ? "on" : "off";
       let paramsObj = {
         name: item.name,
@@ -123,13 +132,27 @@ export default {
         number: item.number,
         operate: "update",
       };
+      if (status === "off") {
+        Modal.confirm({
+          title: "提示",
+          content: "下架后所有作品将不复存在,需要重新上传。",
+          maskClosable: false,
+          okText: "确定",
+          onOk() {
+            uploadStatus(item, paramsObj);
+          },
+        });
+      } else {
+        uploadStatus(item, paramsObj);
+      }
+    };
+
+    const uploadStatus = async (item, paramsObj) => {
       const { err_code } = await funcAddupdateIpApi(paramsObj);
       if (err_code === "0") {
-        window.setTimeout(() => (valve = true), 5000);
-        seriessList.value.forEach((key) => {
-          if (item.id === key.id) {
-            item.status = status;
-          }
+        pollingAddUpdateIpApi(item, (result) => {
+          assignmentFunc(result);
+          successNotify("更新状态成功。");
         });
       }
     };
@@ -148,7 +171,14 @@ export default {
     const handleCreateActivityClick = () => {
       createActivityVisible.value = true;
     };
+
     const handleDropdownIdClick = async (key, item) => {
+      if (item.status === "off") {
+        return warningNotify("请先将IP上架");
+      }
+
+      
+
       const { err_code } = await funcAddupdateIpApi({
         name: item.name,
         status: item.status,
@@ -156,10 +186,9 @@ export default {
         operate: "update",
       });
       if (err_code === "0") {
-        seriessList.value.forEach((keys) => {
-          if (item.id === keys.id) {
-            keys.number = key;
-          }
+        pollingUpdateNumberApi({ name: item.name, number: key }, (result) => {
+          assignmentFunc(result);
+          successNotify("更新序号成功。");
         });
       }
     };
@@ -172,7 +201,7 @@ export default {
       hanleCardClick,
       currentIpMessage,
       handleDropdownIdClick,
-      handleAddIpClick
+      handleAddIpClick,
     };
   },
 };

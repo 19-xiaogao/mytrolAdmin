@@ -64,9 +64,11 @@ import {
   onUnmounted,
   toRefs,
 } from "vue";
-import { joinPreviewUrl } from "@/utils";
-import { getPublishingApi } from "@api";
 import dayjs from "dayjs";
+
+import { joinPreviewUrl, successNotify } from "@/utils";
+import { getPublishingApi } from "@api";
+import { pollingQueryPublishingApi } from "@/api/pllingApi";
 import AuditDetail from "./AuditDetail";
 const columns = [
   {
@@ -186,30 +188,37 @@ export default defineComponent({
     onUnmounted(() => {
       window.removeEventListener("resize", calculateScroll);
     });
+    const assignmentFunc = (result) => {
+      pagination.total = result.total;
+      publishData.value = result.list.map((item) => ({
+        ...item,
+        opening_time: dayjs(Number(item.opening_time) * 1000).format(
+          "YYYY-MM-DD HH:mm"
+        ),
+        series_ip: item.series_ip === "common" ? "首页" : item.series_ip,
+        avatar: joinPreviewUrl(item.avatar),
+      }));
+    };
     const getPublishingList = async (pagination) => {
       const { err_code, result } = await getPublishingApi(pagination);
       if (err_code === "0") {
-        pagination.total = result.total;
-        publishData.value = result.list.map((item) => ({
-          ...item,
-          opening_time: dayjs(Number(item.opening_time) * 1000).format(
-            "YYYY-MM-DD HH:mm"
-          ),
-          series_ip: item.series_ip === "common" ? "首页" : item.series_ip,
-          avatar: joinPreviewUrl(item.avatar),
-        }));
-        console.log("审核列表", publishData.value);
+        assignmentFunc(result);
       }
     };
     const handleOrderDetailClick = (row) => {
       currentItemDetail.detailMessage = row.record;
       currentItemDetail.isOrderShow = !currentItemDetail.isOrderShow;
     };
-    const hanldeCloseClick = (refresh, id) => {
+    const hanldeCloseClick = async (refresh, id) => {
       if (refresh) {
         // 由于区块链有延迟，所以删除内存的这个条数据
-        // getPublishingList(pagination);
-        publishData.value = publishData.value.filter((item) => item.id !== id);
+        // publishData.value = publishData.value.filter((item) => item.id !== id);
+
+        // 由于区块链有延迟,所以递归查询数据
+        pollingQueryPublishingApi(pagination, id, (result) => {
+          assignmentFunc(result);
+          successNotify("审核成功。");
+        });
       }
       currentItemDetail.isOrderShow = !currentItemDetail.isOrderShow;
     };
