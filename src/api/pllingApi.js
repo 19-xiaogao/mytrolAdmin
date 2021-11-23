@@ -1,5 +1,8 @@
 import { pollingServer } from "./axios";
 import store from "@/store";
+
+const ASeconds = 1000;
+
 // 轮询审核列表数据
 export const pollingQueryPublishingApi = async (params, id, fc) => {
   store.commit("setLoading", true);
@@ -11,7 +14,7 @@ export const pollingQueryPublishingApi = async (params, id, fc) => {
     store.commit("setLoading", false);
     return fc && fc(result);
   }
-  setTimeout(() => pollingQueryPublishingApi(params, id, fc), 500);
+  setTimeout(() => pollingQueryPublishingApi(params, id, fc), ASeconds);
 };
 
 // 轮询运营列表
@@ -22,7 +25,7 @@ export const pollingGetSerisesIpApi = async (length, fc) => {
     store.commit("setLoading", false);
     return fc && fc(result);
   }
-  setTimeout(() => pollingGetSerisesIpApi(length, fc), 500);
+  setTimeout(() => pollingGetSerisesIpApi(length, fc), ASeconds);
 };
 // 查询name
 export const pollingAddUpdateIpApi = async (diffParams, fc) => {
@@ -33,7 +36,7 @@ export const pollingAddUpdateIpApi = async (diffParams, fc) => {
     store.commit("setLoading", false);
     return fc && fc(result);
   }
-  setTimeout(() => pollingAddUpdateIpApi(diffParams, fc), 500);
+  setTimeout(() => pollingAddUpdateIpApi(diffParams, fc), ASeconds);
 };
 // 查询status
 export const pollingUpdateNumberApi = async (diffParams, fc) => {
@@ -44,5 +47,5 @@ export const pollingUpdateNumberApi = async (diffParams, fc) => {
     store.commit("setLoading", false);
     return fc && fc(result);
   }
-  setTimeout(() => pollingUpdateNumberApi(diffParams, fc), 500);
+  setTimeout(() => pollingUpdateNumberApi(diffParams, fc), ASeconds);
 };
