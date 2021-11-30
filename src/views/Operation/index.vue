@@ -103,10 +103,12 @@ export default {
       getSeriessListApi();
     });
     const assignmentFunc = (result) => {
-      seriessList.value = result.map((item) => ({
-        ...item,
-        file: joinPreviewUrl(item.file),
-      }));
+      seriessList.value = result
+        .map((item) => ({
+          ...item,
+          file: joinPreviewUrl(item.file),
+        }))
+        .reverse();
     };
     const getSeriessListApi = async () => {
       const { err_code, result } = await getSeriessApi();
@@ -177,7 +179,13 @@ export default {
         return warningNotify("请先将IP上架");
       }
 
-      
+      const isFindKey = seriessList.value
+        .filter((item) => item.status === "on")
+        .find((item) => item.number == key);
+
+      if (isFindKey) {
+        return warningNotify("序列号已被占用。");
+      }
 
       const { err_code } = await funcAddupdateIpApi({
         name: item.name,
