@@ -22,13 +22,13 @@ const routes = [
           ),
       },
       {
-        path: "/order",
-        name: "order",
+        path: "/record",
+        name: "record",
         meta: {
-          title: "订单",
+          title: "记录",
         },
         component: () =>
-          import(/* webpackChunkName: 'Order' */ "@/views/Order/index.vue"),
+          import(/* webpackChunkName: 'record' */ "@/views/Record/index.vue"),
       },
       {
         path: "/audit",

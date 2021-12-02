@@ -60,8 +60,8 @@ const adminMenu = [
   },
   {
     icon: "icon-a-bianzu4",
-    text: "订单",
-    path: "/order",
+    text: "记录",
+    path: "/record",
     id: 2,
   },
 ];
@@ -86,8 +86,8 @@ const makeMenu = [
   },
   {
     icon: "icon-a-bianzu4",
-    text: "订单",
-    path: "/order",
+    text: "记录",
+    path: "/record",
     id: 2,
   },
 ];
@@ -118,8 +118,8 @@ const operationMenu = [
   },
   {
     icon: "icon-a-bianzu4",
-    text: "订单",
-    path: "/order",
+    text: "记录",
+    path: "/record",
     id: 2,
   },
 ];

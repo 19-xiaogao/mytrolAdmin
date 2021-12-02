@@ -1,29 +1,22 @@
 <template>
   <div class="order page-height">
     <div class="header">
-      <h4>订单</h4>
+      <div class="switch-table">
+        <h4 @click="handleSwitchTableClick(0)" :class="renderCurrentActive(0)">
+          订单
+        </h4>
+        <h4 @click="handleSwitchTableClick(1)" :class="renderCurrentActive(1)">
+          分析记录
+        </h4>
+      </div>
       <div class="search-box">
         <div class="dropdown">
           <div class="current-option">
-            <!-- <div class="text">编码</div> -->
             <a-dropdown class="text">
-              <template #overlay>
-                <!-- <a-menu>
-                  <a-menu-item key="1">
-                    1st menu item
-                  </a-menu-item>
-                  <a-menu-item key="2">
-                    2nd menu item
-                  </a-menu-item>
-                  <a-menu-item key="3">
-                    3rd item
-                  </a-menu-item>
-                </a-menu> -->
-              </template>
+              <template #overlay> </template>
               <a-button>
                 <span class="span">状态</span>
                 <div class="icon"></div>
-                <!-- <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg> -->
               </a-button>
             </a-dropdown>
           </div>
@@ -37,115 +30,41 @@
         </div>
       </div>
     </div>
-    <a-table
-      :columns="columns"
-      :row-key="(item) => item.ID"
-      class="ant-table-striped"
-      :data-source="data"
-      :position="false"
-      :row-class-name="
-        (_record, index) => (index % 2 === 1 ? 'table-striped' : null)
-      "
-    >
-      <template #make>
-        <img src="@assets/images/avtor.png" alt="" />
-        <span>小龙</span>
-      </template>
-      <template #detail>
-        <a-button type="link" @click.stop="handleOrderDetailClick"
-          >查看</a-button
-        >
-      </template>
-    </a-table>
+    <Order v-show="currentTableIndex === 0" />
+    <ShareRecord v-show="currentTableIndex === 1" />
     <OrderDetail v-show="isOrderShow" @clonse="handleOrderDetailClick" />
   </div>
 </template>
 
 <script>
 import OrderDetail from "./OrderDetail";
-import { defineComponent, onMounted, reactive, ref } from "vue";
-import { getUserOrderApi } from "@api";
-const columns = [
-  {
-    title: "创作者",
-    key: "make",
-    slots: { customRender: "make" },
-  },
-  {
-    title: "订单号",
-    dataIndex: "code",
-    key: "code",
-  },
-  {
-    title: "IP主题",
-    dataIndex: "title",
-    key: "title",
-  },
-  {
-    title: "买家",
-    dataIndex: "buyers",
-    key: "buyers",
-  },
-  {
-    title: "金额",
-    dataIndex: "money",
-    key: "money",
-  },
-  {
-    title: "成交时间",
-    dataIndex: "time",
-    key: "time",
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    key: "status",
-  },
-  {
-    title: "详情",
-    dataIndex: "detail",
-    key: "detail",
-    slots: { customRender: "detail" },
-  },
-];
-const datas = [
-  // {
-  //   ID: 1,
-  //   code: "asfadsfafs",
-  //   title: "标题",
-  //   author: "小龙",
-  //   buyers: "小攻",
-  //   money: "100元",
-  //   time: "2021-10.12",
-  //   status: "交易成功",
-  // },
-];
+import Order from "./Order";
+import ShareRecord from "./ShareRecord";
+import { computed, defineComponent, onMounted, ref } from "vue";
 export default defineComponent({
-  name: "order",
+  name: "record",
   components: {
     OrderDetail,
+    Order,
+    ShareRecord,
   },
   setup() {
-    const data = reactive(datas);
+    const currentTableIndex = ref(0);
     const isOrderShow = ref(false);
     const handleOrderDetailClick = () => {
       isOrderShow.value = !isOrderShow.value;
     };
-    onMounted(() => {
-      getuserOrderList();
-    });
-    const getuserOrderList = async () => {
-      const { err_code, result } = await getUserOrderApi();
-      if (err_code === "0") {
-        console.log(result);
-      }
-      console.log(result);
-    };
+    onMounted(() => {});
+    const renderCurrentActive = computed(
+      () => (index) => index === currentTableIndex.value ? "active" : ""
+    );
+    const handleSwitchTableClick = (index) => (currentTableIndex.value = index);
     return {
-      columns,
-      data,
       handleOrderDetailClick,
       isOrderShow,
+      renderCurrentActive,
+      handleSwitchTableClick,
+      currentTableIndex,
     };
   },
 });
@@ -223,6 +142,27 @@ export default defineComponent({
         .icon {
           cursor: pointer;
         }
+      }
+    }
+    .switch-table {
+      display: flex;
+      justify-content: space-between;
+      h4 {
+        font-size: 16px;
+        font-weight: 500;
+        color: #7e7e7e;
+        // width: 70px;
+        height: 100%;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        margin-right: 40px;
+        cursor: pointer;
+      }
+      .active {
+        font-weight: 500;
+        border-bottom: 2px solid #ff451d;
+        color: #151515;
       }
     }
   }
