@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mytrol</title>
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+    <div class="table">
+        <div class="table-item">
+            <span> 首页</span>
+            <div class="active"></div>
+        </div>
+        <div class="table-item">
+            <span> NFT市场</span>
+            <div class="active"></div>
+        </div>
+    </div>
+    <div class="mytrol">
+        <div class="website">
+            <div class="title">
+                <img src="./images/mytrolLogo.png" alt="">
+                <h3>国内首家NFT平台</h3>
+                <p>多位知名艺术家加盟，发挥你的想象 给你的想象赋予价值</p>
+            </div>
+            <div class="qr-code">
+                <img src="./images/qrCode.png" alt="">
+            </div>
+        </div>
+        <div class="bg">
+            <img src="./images/bg.png" alt="">
+        </div>
+    </div>
+</body>
+<script>
+    const tableItem = document.querySelectorAll('.table-item')
+    const actives = document.querySelectorAll('.active')
+    actives[1].style.opacity = '0'
+    tableItem.forEach(item => {
+        item.addEventListener('click', () => {
+            actives.forEach(i => {
+                i.style.opacity = '0'
+            })
+            item.children[1].style.opacity = '1'
+        })
+    })
+</script>
+
+</html>

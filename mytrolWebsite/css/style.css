@@ -1,0 +1,80 @@
+.table {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    height: 70px;
+    margin-right: 61px;
+    z-index: 1;
+    position: relative;
+}
+
+.table .table-item {
+    min-width: 60px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.table-item span {
+    display: inline-block;
+    font-size: 16px;
+    font-weight: 500;
+    color: #6A6A6A;
+    height: 30px;
+
+}
+
+.active {
+    width: 80%;
+    height: 6px;
+    background: linear-gradient(270deg, #FF451D 0%, #FFCA2A 100%);
+    border-radius: 3px;
+}
+
+.mytrol {
+    display: flex;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.website {
+    flex: 1;
+    padding-top: 17vh;
+    padding-left: 7.9vw;
+}
+
+.bg {
+    height: 100%;
+    overflow: hidden;
+    width: 60vw;
+}
+
+.bg img {
+    width: 50.63vw;
+    height: 100%;
+}
+
+.title h3 {
+    font-size: 34px;
+    margin: 0;
+    padding: 0;
+    margin-top: 20px;
+    color: 000000;
+    font-weight: 600;
+}
+
+.title p {
+    margin: 0;
+    padding: 0;
+    margin-top: 28px;
+}
+
+.qr-code {
+    margin-top: 113px;
+}
