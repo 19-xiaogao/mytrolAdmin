@@ -4,7 +4,8 @@ import router from "./router";
 import store from "./store";
 import mountComponent from "@/utils/mountCom";
 import { joinPreviewUrl } from "./utils";
-import "@assets/js/iconfont.js";
+// import "@assets/js/iconfont.js";
+
 import "ant-design-vue/dist/antd.css";
 
 const app = createApp(App);

@@ -103,6 +103,14 @@
             @previewImgClick="handleUploadNftPreview"
           />
         </div>
+        <div class="ope-act-b-l">
+          <div class="opeAct-button" @click="handleShowOperationActivityClick">
+            <icon-svg icon="icon-qizi" class="icon"></icon-svg>
+            运营活动
+          </div>
+          <div class="ope-tag" v-if="free_number">限量免费</div>
+          <div class="ope-tag" v-if="private_sale">私人发售</div>
+        </div>
       </div>
     </div>
     <div class="btns">
@@ -122,6 +130,11 @@
       :imgUrl="privewImgComponentParmas.imgUrl"
       v-model:visible="privewImgComponentParmas.visible"
     />
+    <OperationActivity
+      v-show="isOperationActivity"
+      :nftNumber="number"
+      @close="handleOperationActivityClick"
+    />
   </div>
 </template>
 
@@ -140,9 +153,11 @@ import { useStore } from "vuex";
 import { getSerisesIpApi, uploadNftApi } from "@api";
 import dayjs from "dayjs";
 import UploadNft from "./UploadNft";
+import { warningNotify, successNotify } from "@/utils";
 import UploadCollection from "./UploadCollection";
 import PreviewImg from "@/components/PreviewImg";
-import { warningNotify, successNotify } from "@/utils";
+import OperationActivity from "./OperationActivity";
+
 let obj = {
   name: "",
   description: "",
@@ -153,12 +168,15 @@ let obj = {
   nft_file: {},
   nft_background: {},
   nft_thumbnail: {},
+  free_number: "",
+  private_sale: "",
 };
 export default defineComponent({
   components: {
     UploadNft,
     UploadCollection,
     PreviewImg,
+    OperationActivity,
   },
   setup() {
     const { proxy } = getCurrentInstance();
@@ -172,6 +190,7 @@ export default defineComponent({
       visible: false,
     });
     const btnDisabled = ref(false);
+    const isOperationActivity = ref(false);
     onMounted(() => {
       getIpList();
     });
@@ -200,6 +219,8 @@ export default defineComponent({
       uploadParams.nft_file = {};
       uploadParams.nft_background = {};
       uploadParams.nft_thumbnail = {};
+      uploadParams.free_number = "";
+      uploadParams.private_sale = "";
       currentIpName.value = "首页";
       btnDisabled.value = false;
     };
@@ -288,6 +309,16 @@ export default defineComponent({
       const findName = ipList.value.find((item) => item.name === e.key);
       currentIpName.value = findName ? findName.name : "首页";
     };
+    const handleOperationActivityClick = (item) => {
+      isOperationActivity.value = false;
+      if (item) {
+        uploadParams.free_number = item.free_number;
+        uploadParams.private_sale = item.private_sale;
+      }
+    };
+    const handleShowOperationActivityClick = () => {
+      isOperationActivity.value = true;
+    };
     return {
       ...toRefs(uploadParams),
       handleUploadNftClick,
@@ -300,6 +331,9 @@ export default defineComponent({
       handleUploadNftPreview,
       privewImgComponentParmas,
       btnDisabled,
+      isOperationActivity,
+      handleOperationActivityClick,
+      handleShowOperationActivityClick,
     };
   },
 });
@@ -530,6 +564,41 @@ export default defineComponent({
             margin-top: 10px;
           }
         }
+      }
+      .ope-act-b-l {
+        display: flex;
+        margin-top: 24px;
+      }
+      .opeAct-button {
+        width: 134px;
+        height: 40px;
+        background: linear-gradient(270deg, #ff451d 0%, #ffca2a 100%);
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 500;
+        color: #ffffff;
+        text-align: center;
+        line-height: 40px;
+
+        cursor: pointer;
+        .icon {
+          background: #fff;
+          color: #eba030;
+          border-radius: 40%;
+          font-weight: 800;
+        }
+      }
+      .ope-tag {
+        width: 106px;
+        height: 40px;
+        border-radius: 8px;
+        border: 1px dashed #979797;
+        font-size: 16px;
+        font-weight: 500;
+        color: #434343;
+        text-align: center;
+        line-height: 40px;
+        margin: 0 10px;
       }
     }
   }

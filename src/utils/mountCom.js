@@ -10,11 +10,12 @@ import {
   Input,
   InputNumber,
   DatePicker,
+  Switch,
 } from "ant-design-vue";
 import IconSvg from "@/components/IconSvg";
 const { Item: MenuItem } = Menu;
 
-export default function(app) {
+export default function (app) {
   app.component("icon-svg", IconSvg);
   app.component("a-dropdown", Dropdown);
   app.component("a-menu", Menu);
@@ -28,4 +29,5 @@ export default function(app) {
   app.component("a-input", Input);
   app.component("a-input-number", InputNumber);
   app.component("a-date-picker", DatePicker);
+  app.component("a-switch", Switch);
 }
