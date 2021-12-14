@@ -9,6 +9,10 @@ export const pollingQueryPublishingApi = async (params, id, fc) => {
   const { result } = await pollingServer.get(
     "/publishing/" + params.current + "/" + params.numbers
   );
+  if (Array.isArray(result) && result.length === 0) {
+    store.commit("setLoading", false);
+    return fc && fc(result);
+  }
   const isFindId = result.list.find((item) => item.id === id);
   if (!isFindId) {
     store.commit("setLoading", false);

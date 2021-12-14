@@ -264,6 +264,10 @@ export default defineComponent({
         warningNotify("价格不能小于0");
         return (btnDisabled.value = false);
       }
+       if (Number(uploadParams.price) < 0.01) {
+        warningNotify("价格不能小于一分钱");
+        return (btnDisabled.value = false);
+      }
       if (!uploadParams.opening_time) {
         warningNotify("请选择上架时间");
         return (btnDisabled.value = false);

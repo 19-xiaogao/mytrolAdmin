@@ -189,6 +189,9 @@ export default defineComponent({
       window.removeEventListener("resize", calculateScroll);
     });
     const assignmentFunc = (result) => {
+      if (Array.isArray(result)) {
+        return;
+      }
       pagination.total = result.total;
       publishData.value = result.list.map((item) => ({
         ...item,

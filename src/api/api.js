@@ -58,3 +58,14 @@ export const getTradeDataCountApi = () => server.get("/get_trade_data");
 //查看IP系列
 export const getLastestNftApi = (ip, page, numbers) =>
   server.get("/lastest_nft/" + ip + "/" + page + "/" + numbers);
+
+// 下架作品
+export const shelvesNftApi = (id) =>
+  server.post("/nft_withdraw", { denom_id: id });
+
+// 查看兑换码
+export const redeemCodeApi = (id) => server.get("/redeem_code/" + id);
+
+//生成二维码
+export const genteratorRedeemCodeApi = (id, redeemCode) =>
+  server.get("/nft_redeem/" + id + "/" + redeemCode);

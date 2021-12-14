@@ -19,11 +19,23 @@
         <div class="img" :ref="item.id">
           <img :src="item.file" alt="" />
         </div>
-        <!-- <div class="options">
-          <img src="@assets/images/start.png" alt="" />
-          <span>入选</span>
-          <icon-svg icon="icon-a-bianzu13"></icon-svg>
-        </div> -->
+        <a-dropdown class="options">
+          <p>
+            <span class="text">设置</span>
+            <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
+          </p>
+          <template #overlay>
+            <a-menu>
+              <a-menu-item @click="handleShelvesClick(item.id)">
+                <span>下架</span>
+              </a-menu-item>
+              <a-menu-item>
+                <span>二维码</span>
+              </a-menu-item>
+            </a-menu>
+          </template>
+        </a-dropdown>
+
         <div class="me">
           <div class="me-t">
             <h3>{{ item.name }}</h3>
@@ -61,12 +73,12 @@ import {
   watchEffect,
   getCurrentInstance,
 } from "vue";
-import { getWorksApi } from "@api";
+import { getWorksApi, shelvesNftApi } from "@api";
 import TabBar from "@/components/TabBar";
 import { useStore } from "vuex";
 
-// publishStatusUnPublish = "0"; //查询nft详情，返回0 表示未发布
-// publishStatusPublishing = "1" //发布中，等待审核
+// publishStatusUnPublish = "0"; //下架
+// publishStatusPublishing = "1" //审核
 // publishStatusSuccess    = "2" //发布成功
 // publishStatusFailed     = "3" //发布失败
 const menus = [
@@ -80,7 +92,7 @@ const menus = [
   },
   {
     text: "已下架",
-    type: "3",
+    type: "0",
   },
 ];
 export default defineComponent({
@@ -89,7 +101,6 @@ export default defineComponent({
   },
   setup() {
     const { proxy } = getCurrentInstance();
-    // const imgRef = ref();
     const currentMenu = ref("2");
     const menuList = reactive(menus);
     const worksList = ref([]);
@@ -124,7 +135,21 @@ export default defineComponent({
       }
     };
 
-    return { handleMouseover, currentMenu, menuList, renderWorksList };
+    const handleShelvesClick = async (id) => {
+      console.log(id);
+      const { err_code,result } = await shelvesNftApi(id);
+      if(err_code === '0'){
+        console.log(result);
+      }
+    };
+
+    return {
+      handleMouseover,
+      currentMenu,
+      menuList,
+      renderWorksList,
+      handleShelvesClick,
+    };
   },
 });
 </script>
@@ -202,7 +227,7 @@ export default defineComponent({
       position: relative;
       margin-right: 6px;
       margin-bottom: 6px;
-     
+
       .img {
         width: 100%;
         height: 100%;
@@ -236,10 +261,13 @@ export default defineComponent({
           width: 16px;
           height: 16px;
         }
-        span {
+        .text {
           font-size: 14px;
           font-weight: 400;
-          color: #ffd36c;
+          color: #ffd36c !important;
+        }
+        .icon {
+          color: #fff;
         }
       }
       .me {

@@ -55,7 +55,7 @@ import { warningNotify } from "@/utils";
 export default {
   emits: ["close"],
   props: {
-    nftNumber: Number,
+    nftNumber: [Number, String],
   },
   setup(props, { emit }) {
     const orderDetailRef = ref(null);
