@@ -69,3 +69,9 @@ export const redeemCodeApi = (id) => server.get("/redeem_code/" + id);
 //生成二维码
 export const genteratorRedeemCodeApi = (id, redeemCode) =>
   server.get("/nft_redeem/" + id + "/" + redeemCode);
+
+// 上架
+export const onShelvesNftApi = (data) => server.post("/nft_public", data);
+
+// 查询转赠天数
+export const queryGivingDayApi = () => server.get('/backend/get_give_time')

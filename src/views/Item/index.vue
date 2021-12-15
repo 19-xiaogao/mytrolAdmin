@@ -19,18 +19,21 @@
         <div class="img" :ref="item.id">
           <img :src="item.file" alt="" />
         </div>
-        <a-dropdown class="options">
+        <a-dropdown class="options" v-if="showOptionsElement(item.publish)">
           <p>
             <span class="text">设置</span>
             <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
           </p>
           <template #overlay>
             <a-menu>
-              <a-menu-item @click="handleShelvesClick(item.id)">
-                <span>下架</span>
+              <a-menu-item @click="handleShelvesClick(item.id, item.publish)">
+                <span>{{ showSwitchShelves(item.publish) }}</span>
               </a-menu-item>
-              <a-menu-item>
-                <span>二维码</span>
+              <a-menu-item
+                v-if="showQrCode(item.free, item.publish)"
+                @click="handleQrCodeClick(item.id)"
+              >
+                <span>小程序二维码</span>
               </a-menu-item>
             </a-menu>
           </template>
@@ -48,7 +51,9 @@
             </div>
           </div>
           <div class="me-m">
-            <div class="manay">${{ item.price }}</div>
+            <div class="manay" v-if="showPrice(item.publish)">
+              {{ showFreePrice(item.free, item.price) }}
+            </div>
 
             <div class="_limit">
               <div class="_t1">限量</div>
@@ -60,6 +65,12 @@
       </div>
       <p class="no-found" v-if="renderWorksList.length <= 0">暂无作品</p>
     </div>
+    <ShelvesNft
+      @shelves="handelShelvesEmit"
+      :params="shelvesObject"
+      v-model:shelvesVisible="shelvesVisible"
+      @cancel="handleCancelEmit"
+    />
   </div>
 </template>
 
@@ -72,9 +83,14 @@ import {
   ref,
   watchEffect,
   getCurrentInstance,
+  createVNode,
 } from "vue";
-import { getWorksApi, shelvesNftApi } from "@api";
+import QRCode from "qrcode";
+import { getWorksApi, shelvesNftApi, redeemCodeApi } from "@api";
+import { pollingItemsPublishApi } from "@/api/pllingApi";
 import TabBar from "@/components/TabBar";
+import ShelvesNft from "./ShelvesNft";
+import { Modal } from "ant-design-vue";
 import { useStore } from "vuex";
 
 // publishStatusUnPublish = "0"; //下架
@@ -98,6 +114,7 @@ const menus = [
 export default defineComponent({
   components: {
     TabBar,
+    ShelvesNft,
   },
   setup() {
     const { proxy } = getCurrentInstance();
@@ -106,7 +123,11 @@ export default defineComponent({
     const worksList = ref([]);
     const renderWorksList = ref();
     const store = useStore();
-
+    const shelvesObject = reactive({
+      id: "",
+      publish: "",
+    });
+    const shelvesVisible = ref(false);
     const handleMouseover = (bol, id) => {
       bol
         ? (proxy.$refs[id].style.transform = "scale(1.2)")
@@ -114,6 +135,28 @@ export default defineComponent({
     };
     const user = computed(() => store.getters.getUser);
 
+    const showSwitchShelves = computed(() => (publish) => {
+      if (publish === "0") return "上架";
+      if (publish === "2") return "下架";
+    });
+
+    // 是否显示设置元素
+    const showOptionsElement = computed(() => (publish) => publish !== "1");
+
+    //是否免费
+    const showFreePrice = computed(
+      () => (free, price) => free === "true" ? "免费" : "$" + price
+    );
+
+    //是否显示价格
+    const showPrice = computed(() => (publish) => publish !== "0");
+
+    //是否显示二维码
+    const showQrCode = computed(
+      () => (free, publish) => free === "true" && publish !== "0"
+    );
+
+    // watchEffect listen table switch change event
     watchEffect(() => {
       renderWorksList.value = worksList.value
         .filter((item) => item.publish === currentMenu.value)
@@ -135,12 +178,60 @@ export default defineComponent({
       }
     };
 
-    const handleShelvesClick = async (id) => {
-      console.log(id);
-      const { err_code,result } = await shelvesNftApi(id);
-      if(err_code === '0'){
-        console.log(result);
+    // 处理下架
+    const handleUnShelvesNft = async (id, publish) => {
+      const { err_code } = await shelvesNftApi(id);
+      if (err_code === "0") {
+        pollingItemsPublishApi(
+          { userId: user.value.user_id, itemId: id, publish },
+          (result) => {
+            worksList.value = result;
+          }
+        );
       }
+    };
+
+    const handleShelvesClick = (id, publish) => {
+      if (publish === "2") {
+        handleUnShelvesNft(id, publish);
+      }
+      if (publish === "0") {
+        shelvesVisible.value = true;
+        shelvesObject.id = id;
+        shelvesObject.publish = publish;
+      }
+    };
+
+    const handleQrCodeClick = async (id) => {
+      const { err_code, result } = await redeemCodeApi(id);
+      console.log(err_code);
+      console.log(result);
+      if (err_code === "0") {
+        const qrCode = await QRCode.toDataURL(
+          `https://mytroladmin.dbchain.cloud/applet?id=${id}&redeem_code=${result.redeem_code}`
+        );
+        Modal.success({
+          title: "二维码生成成功",
+          content: createVNode("img", {
+            src: qrCode,
+            style: "width:100%;height:100%;margin-left:-19px;",
+          }),
+        });
+      }
+    };
+
+    const handelShelvesEmit = ({ id, publish }) => {
+      shelvesVisible.value = false;
+      pollingItemsPublishApi(
+        { userId: user.value.user_id, itemId: id, publish },
+        (result) => {
+          worksList.value = result;
+        }
+      );
+    };
+
+    const handleCancelEmit = () => {
+      shelvesVisible.value = false;
     };
 
     return {
@@ -149,6 +240,16 @@ export default defineComponent({
       menuList,
       renderWorksList,
       handleShelvesClick,
+      handleQrCodeClick,
+      showSwitchShelves,
+      showOptionsElement,
+      showFreePrice,
+      showPrice,
+      showQrCode,
+      shelvesObject,
+      handelShelvesEmit,
+      handleCancelEmit,
+      shelvesVisible,
     };
   },
 });
@@ -328,6 +429,7 @@ export default defineComponent({
             font-size: 19px;
             color: #fff;
             font-weight: 500;
+            text-align: right;
           }
           ._limit {
             height: 20px;

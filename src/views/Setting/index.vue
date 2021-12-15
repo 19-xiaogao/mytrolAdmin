@@ -13,6 +13,7 @@
       </div>
     </div>
     <ModalUser v-model:createVisible="createVisible" />
+    <ModalSettingDay v-model:dayVisible="dayVisible" />
   </div>
 </template>
 
@@ -30,17 +31,26 @@ const settingList = [
     icon: "icon-setting-icon3",
     text: "二级密码",
   },
+  {
+    icon: "icon-a-bianzu9beifen4",
+    text: "转赠天数",
+  },
 ];
-import { computed, defineComponent, reactive, ref } from "vue";
+import { computed, defineComponent, onMounted, reactive, ref } from "vue";
+import { queryGivingDayApi } from "@api";
 import ModalUser from "./ModalUser";
+import ModalSettingDay from "./ModalSettingDay";
 export default defineComponent({
   components: {
     ModalUser,
+    ModalSettingDay,
   },
   setup() {
     const currentIndex = ref(-1);
     const settingLists = reactive(settingList);
     const createVisible = ref(false);
+    const days = ref(0);
+    const dayVisible = ref(false);
     const isShowActiveClass = computed(() => {
       return (index) => (currentIndex.value === index ? "ms active" : "ms");
     });
@@ -49,8 +59,29 @@ export default defineComponent({
       if (index === 0) {
         createVisible.value = true;
       }
+      if (index === 3) {
+        dayVisible.value = true;
+      }
     };
-    return { isShowActiveClass, handleClick, settingLists, createVisible };
+    onMounted(() => {
+      queryDay();
+    });
+    const queryDay = async () => {
+      const { result, err_code } = await queryGivingDayApi();
+      if (err_code === "0") {
+        days.value = result.days ? result.days : 0;
+        settingLists[
+          settingLists.length - 1
+        ].text = `转赠天数(${days.value}天)`;
+      }
+    };
+    return {
+      isShowActiveClass,
+      handleClick,
+      settingLists,
+      createVisible,
+      dayVisible,
+    };
   },
 });
 </script>

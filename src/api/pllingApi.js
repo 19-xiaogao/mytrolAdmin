@@ -53,3 +53,17 @@ export const pollingUpdateNumberApi = async (diffParams, fc) => {
   }
   setTimeout(() => pollingUpdateNumberApi(diffParams, fc), ASeconds);
 };
+
+// 查询作品
+export const pollingItemsPublishApi = async (diffParams, fc) => {
+  store.commit("setLoading", true);
+  const { result } = await pollingServer.get(
+    "/nfts_of_user_make/all/" + diffParams.userId
+  );
+  const targetFind = result.find((item) => item.id === diffParams.itemId);
+  if (targetFind.publish !== diffParams.publish) {
+    store.commit("setLoading", false);
+    return fc && fc(result);
+  }
+  setTimeout(() => pollingItemsPublishApi(diffParams, fc), ASeconds);
+};

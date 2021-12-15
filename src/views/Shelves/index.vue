@@ -63,6 +63,8 @@
             <a-input-number
               v-model:value="number"
               type="number"
+              :max="100000"
+              :min="0.01"
               style="width: 150px"
               placeholder="请输入数量"
             />
@@ -264,7 +266,7 @@ export default defineComponent({
         warningNotify("价格不能小于0");
         return (btnDisabled.value = false);
       }
-       if (Number(uploadParams.price) < 0.01) {
+      if (Number(uploadParams.price) < 0.01) {
         warningNotify("价格不能小于一分钱");
         return (btnDisabled.value = false);
       }
