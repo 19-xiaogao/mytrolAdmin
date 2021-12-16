@@ -79,3 +79,14 @@ export const queryGivingDayApi = () => server.get("/backend/get_give_time");
 // 设置转赠天数
 export const setGivingDayApi = (days) =>
   server.post("/backend/set_give_time", { days });
+
+// 更新banner
+export const updateBannerApi = (bannerInfo) => {
+  server.post("/update_banner", { banner_info: bannerInfo });
+};
+
+//获取banner
+export const getBannerApi = () => server.get("/get_banner");
+
+// 上传图片
+export const uploadFIleApi = (data) => server.post("/uploadFile", data);

@@ -1,11 +1,7 @@
 <template>
   <div class="box">
     <div class="left-box">
-      <img
-        :src="currentSelectObj.imgFile"
-        alt=""
-        v-show="currentSelectObj.imgFile"
-      />
+      <img :src="currentParams.imgFile" alt="" v-show="currentParams.imgFile" />
       <div class="upload-btn">
         <span>上传图片</span>
         <input type="file" alt="" @change="handleUploadChange" />
@@ -15,20 +11,25 @@
       <div class="select-box">
         <div class="select-branner">
           <span
-            :class="isSelctHoverClass(item.key)"
+            :class="isSelectHoverClass(item.key)"
             @click="handleTabClick(item)"
-            v-for="item in tabObj"
+            v-for="item in tableList"
             :key="item.key"
             >Banner{{ item.key }}</span
           >
         </div>
-        <!-- <icon-svg icon="icon-bannerAdd" class="icon-add"></icon-svg> -->
+        <icon-svg
+          icon="icon-bannerAdd"
+          class="icon-add"
+          @click="addBannerClick"
+        ></icon-svg>
       </div>
       <div class="small-program" v-if="showIpDom">
         <p>小程序跳转链接</p>
         <input type="text" value="http://longjiuwei999.com" />
         <div class="save">保存</div>
       </div>
+
       <div v-else>
         <div class="input-box">
           <div class="input-title">
@@ -37,7 +38,7 @@
             <input
               type="text"
               placeholder="请输入标题"
-              v-model="currentSelectObj.title"
+              v-model="currentParams.title"
             />
           </div>
           <div class="input-title">
@@ -46,7 +47,7 @@
             <input
               type="text"
               placeholder="请输入描述"
-              v-model="currentSelectObj.decs"
+              v-model="currentParams.decs"
             />
           </div>
         </div>
@@ -54,9 +55,9 @@
           <input
             type="text"
             placeholder="请输入图片链接"
-            v-model="currentSelectObj.imgUrl"
+            v-model="currentParams.imgUrl"
           />
-          <div class="save">保存</div>
+          <div class="save" @click="saveBannerClick">保存</div>
         </div>
       </div>
     </div>
@@ -64,44 +65,14 @@
 </template>
 
 <script>
-import { computed, ref, getCurrentInstance } from "vue";
-import { previewFile } from "@/utils";
-const defaultTabObj = [
+import { computed, ref, getCurrentInstance, onMounted, toRaw } from "vue";
+import { getBannerApi, updateBannerApi, uploadFIleApi } from "@api";
+import { pollingBannerApi } from "@/api/pllingApi";
+import { warningNotify } from "@/utils";
+const defaultTabList = [
   {
     name: "Banner1",
     key: 1,
-    imgFile: "",
-    title: "",
-    decs: "",
-    imgUrl: "",
-  },
-  {
-    name: "Banner2",
-    key: 2,
-    imgFile: "",
-    title: "",
-    decs: "",
-    imgUrl: "",
-  },
-  {
-    name: "Banner3",
-    key: 3,
-    imgFile: "",
-    title: "",
-    decs: "",
-    imgUrl: "",
-  },
-   {
-    name: "Banner4",
-    key: 4,
-    imgFile: "",
-    title: "",
-    decs: "",
-    imgUrl: "",
-  },
-   {
-    name: "Banner5",
-    key: 5,
     imgFile: "",
     title: "",
     decs: "",
@@ -120,31 +91,83 @@ export default {
   },
   setup(props) {
     const { proxy } = getCurrentInstance();
-    console.log(proxy);
-    const currentSelectObj = ref(defaultTabObj[0]);
-    const tabObj = ref(defaultTabObj);
+    const currentParams = ref(defaultTabList[0]);
+    const tableList = ref(defaultTabList);
 
-    const isSelctHoverClass = computed(
-      () => (index) =>
-        index === currentSelectObj.value.key ? "select-hover" : ""
+    const isSelectHoverClass = computed(
+      () => (index) => index === currentParams.value.key ? "select-hover" : ""
     );
-
+    onMounted(async () => {
+      //  await updateBannerApi(JSON.stringify(''));
+    });
     const handleTabClick = (item) => {
-      currentSelectObj.value = item;
+      currentParams.value = item;
     };
     const showIpDom = computed(() => props.smallProgram);
     const handleUploadChange = async (e) => {
       const files = e.target.files[0];
-      currentSelectObj.value.imgFile = await previewFile(files);
-      console.log(currentSelectObj.value.imgFile);
+      const formData = new FormData();
+      formData.append("file", files);
+      const { result, err_code } = await uploadFIleApi(formData);
+      e.target.value = "";
+      if (err_code === "0") {
+        console.log(proxy.joinPreviewUrl(result.cid));
+
+        currentParams.value.imgFile = proxy.joinPreviewUrl(result.cid);
+      }
     };
+    const addBannerClick = async () => {
+      if (tableList.value.length > 5) return warningNotify("最多添加5个");
+      tableList.value = [...toRaw(tableList.value)].concat({
+        ...defaultTabList,
+        key: tableList.value.length + 1,
+      });
+      currentParams.value = tableList.value[tableList.value.length - 1];
+    };
+    const assignment = (result) => {
+      let list = JSON.parse(result.banner_info);
+      if (!list) return;
+      tableList.value = list;
+      currentParams.value = tableList.value[0];
+    };
+    const saveBannerClick = async () => {
+      let uploadData = [];
+      if (tableList.value.length === 1) {
+        uploadData.push(toRaw(currentParams.value));
+      } else {
+        tableList.value.forEach((item) => {
+          if (item.key === currentParams.value.key) {
+            item = currentParams.value;
+          }
+        });
+        uploadData = tableList.value;
+      }
+      await updateBannerApi(JSON.stringify(uploadData));
+
+      pollingBannerApi(tableList.value.length, (result) => {
+        assignment(result);
+      });
+    };
+    const getBanner = async () => {
+      const { err_code, result } = await getBannerApi();
+      if (err_code === "0") {
+        assignment(result);
+      }
+    };
+
+    onMounted(() => {
+      getBanner();
+    });
+
     return {
       showIpDom,
-      currentSelectObj,
-      isSelctHoverClass,
+      currentParams,
+      isSelectHoverClass,
       handleTabClick,
-      tabObj,
+      tableList,
       handleUploadChange,
+      addBannerClick,
+      saveBannerClick,
     };
   },
 };

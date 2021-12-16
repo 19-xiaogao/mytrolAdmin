@@ -81,3 +81,17 @@ export const pollingGivingDaysApi = async (days, fc) => {
   
   setTimeout(() => pollingGivingDaysApi(days, fc), ASeconds);
 };
+
+// 查询轮播图数量
+export const pollingBannerApi = async (length, fc) => {
+  store.commit("setLoading", true);
+
+  const { result } = await pollingServer.get("/get_banner");
+
+  if (length === JSON.parse(result.banner_info).length) {
+    store.commit("setLoading", false);
+    return fc && fc(result);
+  }
+  
+  setTimeout(() => pollingBannerApi(length, fc), ASeconds);
+};
