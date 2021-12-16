@@ -13,7 +13,11 @@
       </div>
     </div>
     <ModalUser v-model:createVisible="createVisible" />
-    <ModalSettingDay v-model:dayVisible="dayVisible" />
+    <ModalSettingDay
+      v-model:dayVisible="dayVisible"
+      v-model:days="days"
+      @close="handleCloseEmit"
+    />
   </div>
 </template>
 
@@ -38,6 +42,7 @@ const settingList = [
 ];
 import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import { queryGivingDayApi } from "@api";
+import { pollingGivingDaysApi } from "@/api/pllingApi";
 import ModalUser from "./ModalUser";
 import ModalSettingDay from "./ModalSettingDay";
 export default defineComponent({
@@ -66,21 +71,32 @@ export default defineComponent({
     onMounted(() => {
       queryDay();
     });
+    const settingDays = (result) => {
+      days.value = result.days ? result.days : 0;
+      settingLists[settingLists.length - 1].text = `转赠天数(${days.value}天)`;
+    };
     const queryDay = async () => {
       const { result, err_code } = await queryGivingDayApi();
       if (err_code === "0") {
-        days.value = result.days ? result.days : 0;
-        settingLists[
-          settingLists.length - 1
-        ].text = `转赠天数(${days.value}天)`;
+        settingDays(result);
       }
     };
+
+    const handleCloseEmit = () => {
+      dayVisible.value = false;
+      pollingGivingDaysApi(days.value, (result) => {
+        settingDays(result);
+      });
+    };
+
     return {
       isShowActiveClass,
       handleClick,
       settingLists,
       createVisible,
       dayVisible,
+      days,
+      handleCloseEmit,
     };
   },
 });

@@ -74,4 +74,8 @@ export const genteratorRedeemCodeApi = (id, redeemCode) =>
 export const onShelvesNftApi = (data) => server.post("/nft_public", data);
 
 // 查询转赠天数
-export const queryGivingDayApi = () => server.get('/backend/get_give_time')
+export const queryGivingDayApi = () => server.get("/backend/get_give_time");
+
+// 设置转赠天数
+export const setGivingDayApi = (days) =>
+  server.post("/backend/set_give_time", { days });

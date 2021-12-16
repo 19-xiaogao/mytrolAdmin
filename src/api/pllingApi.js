@@ -67,3 +67,17 @@ export const pollingItemsPublishApi = async (diffParams, fc) => {
   }
   setTimeout(() => pollingItemsPublishApi(diffParams, fc), ASeconds);
 };
+
+// 查询天数
+export const pollingGivingDaysApi = async (days, fc) => {
+  store.commit("setLoading", true);
+
+  const { result } = await pollingServer.get("/backend/get_give_time");
+
+  if (days !== result.days) {
+    store.commit("setLoading", false);
+    return fc && fc(result);
+  }
+  
+  setTimeout(() => pollingGivingDaysApi(days, fc), ASeconds);
+};

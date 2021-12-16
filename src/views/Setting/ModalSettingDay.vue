@@ -4,10 +4,11 @@
       <div class="user">
         <span>设置转赠天数</span>
         <input
-          type="text "
+          type="number"
           placeholder="请输入转赠天数"
           required
-          v-model="days"
+          :value="days"
+          @change="handleInputEmit"
         />
       </div>
     </div>
@@ -22,30 +23,39 @@
 
 <script>
 import { defineComponent, ref } from "vue";
-// import { addUserApi } from "@api";
+import { setGivingDayApi } from "@api";
 // import { warningNotify, successNotify } from "@/utils";
 export default defineComponent({
   props: {
     dayVisible: {
       type: Boolean,
     },
+    days: {
+      type: [Number, String],
+    },
   },
   setup(props, { emit }) {
     const currentStatus = ref(1);
-
-    const days = ref(0);
-
+    const modalDays = ref(0);
+    console.log(modalDays.value);
     const handleClose = () => {
       emit("update:dayVisible", false);
     };
-
-    const handleAddUserClick = async () => {};
-
+    const handleAddUserClick = async () => {
+      const { err_code } = await setGivingDayApi(String(modalDays.value));
+      if (err_code === "0") {
+        emit("close");
+      }
+    };
+    const handleInputEmit = (e) => {
+      modalDays.value = e.target.value;
+    };
     return {
       currentStatus,
       handleClose,
       handleAddUserClick,
-      days,
+      modalDays,
+      handleInputEmit
     };
   },
 });
