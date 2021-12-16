@@ -8,7 +8,7 @@ const TOKEN = "ROLE";
 export function throttle(fn, delay = 3000) {
   let timer = null;
   let startTime;
-  return function(...args) {
+  return function (...args) {
     const ctx = this;
     const now = Date.now();
     if (startTime && now < startTime + delay) {
@@ -54,10 +54,12 @@ export function previewFile(file) {
   });
 }
 
+// 拼接ipfs请求路径
 export const joinPreviewUrl = (hash) => {
   return process.env.VUE_APP_BASE_IPFS + hash;
 };
 
+// 提示框
 export function notify(message, description, type = "info", duration = 4.5) {
   notification[type]({ message, description, duration });
 }
@@ -90,3 +92,15 @@ export function errorNotify(description, message = "有些错误~") {
   });
 }
 
+// sort运营列表
+export function sortOperation(operationList) {
+  const onList = operationList.filter((item) => item.status === "on");
+  const offList = operationList.filter((item) => item.status === "off");
+
+  const notExitNumberList = onList.filter((item) => !item.number);
+  const exitNumberList = onList
+    .filter((item) => item.number)
+    .sort((a, b) => Number(a.number) - Number(b.number));
+
+  return [...exitNumberList.concat(notExitNumberList), ...offList];
+}

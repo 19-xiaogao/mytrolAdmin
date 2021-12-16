@@ -39,6 +39,11 @@
           </template>
         </a-dropdown>
 
+        <div class="sale" v-if="showOpenTime(item)">
+          <icon-svg icon="icon-naozhong" class="icon"></icon-svg>
+          <span> {{dayjs(item.opening_time*1000).format('YYYY-MM-DD HH:mm')}}</span>
+        </div>
+
         <div class="me">
           <div class="me-t">
             <h3>{{ item.name }}</h3>
@@ -92,7 +97,7 @@ import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
 import { Modal } from "ant-design-vue";
 import { useStore } from "vuex";
-
+import dayjs from 'dayjs'
 // publishStatusUnPublish = "0"; //下架
 // publishStatusPublishing = "1" //审核
 // publishStatusSuccess    = "2" //发布成功
@@ -156,6 +161,11 @@ export default defineComponent({
       () => (free, publish) => free === "true" && publish !== "0"
     );
 
+    const showOpenTime = computed(() =>{
+      
+      return (item) => item.publish === '2' && Date.parse(new Date())/1000 < Number(item.opening_time)
+    })
+
     // watchEffect listen table switch change event
     watchEffect(() => {
       renderWorksList.value = worksList.value
@@ -208,7 +218,7 @@ export default defineComponent({
       console.log(result);
       if (err_code === "0") {
         const qrCode = await QRCode.toDataURL(
-          `https://mytroladmin.dbchain.cloud/applet?id=${id}&redeem_code=${result.redeem_code}`
+          `https://mytroladmin.dbchain.cloud/applet?id${id}=${result.redeem_code}`
         );
         Modal.success({
           title: "二维码生成成功",
@@ -247,9 +257,11 @@ export default defineComponent({
       showPrice,
       showQrCode,
       shelvesObject,
+      showOpenTime,
       handelShelvesEmit,
       handleCancelEmit,
       shelvesVisible,
+      dayjs
     };
   },
 });
@@ -346,7 +358,7 @@ export default defineComponent({
       .options {
         position: absolute;
         top: 11px;
-        right: 14px;
+        right: 2px;
         z-index: 2;
         width: 92px;
         height: 34px;
@@ -482,6 +494,30 @@ export default defineComponent({
           //     font-size: 8px;
           //   }
           // }
+        }
+      }
+      .sale {
+        position: absolute;
+        top: 11px;
+        left: 2px;
+        background: rgba(0, 0, 0, 0.6);
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.2);
+        // width: 80px;
+        padding: 0 5px;
+        height: 34px;
+        border-radius: 5px;
+        line-height: 28px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .icon {
+          color: #ffd36c;
+          margin-right: 10px;
+          font-size:12px;
+        }
+        span {
+          font-size: 12px;
+          color: #ffd36c;
         }
       }
       .mask {

@@ -10,37 +10,7 @@
           {{ isShowStatus(params.status) ? "未运营" : "运营中" }}
         </div>
       </div>
-      <div class="title-r">
-        <!-- <div class="icons">
-          <a-tooltip>
-            <template #title>复制链接</template>
-            <icon-svg icon="icon-a-bianzu10" class="icon"></icon-svg>
-          </a-tooltip>
-          <a-tooltip>
-            <template #title>下架</template>
-            <icon-svg icon="icon-yiyouzhujici" class="icon"></icon-svg>
-          </a-tooltip>
-        </div> -->
-        <a-dropdown class="serial-number">
-          <template #overlay>
-            <!-- <a-menu>
-              <a-menu-item key="1">
-                1st menu item
-              </a-menu-item>
-              <a-menu-item key="2">
-                2nd menu item
-              </a-menu-item>
-              <a-menu-item key="3">
-                3rd item
-              </a-menu-item>
-            </a-menu> -->
-          </template>
-          <a-button>
-            <span>序列 1</span>
-            <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
-          </a-button>
-        </a-dropdown>
-      </div>
+      <div class="title-r"></div>
     </div>
     <div class="ip-lists">
       <div
@@ -53,11 +23,7 @@
         <div class="img" :ref="item.id">
           <img :src="item.file" alt="" />
         </div>
-        <!-- <div class="options">
-          <img src="@assets/images/start.png" alt="" />
-          <span>入选</span>
-          <icon-svg icon="icon-a-bianzu13"></icon-svg>
-        </div> -->
+
         <div class="me">
           <div class="me-t">
             <h3>{{ item.name }}</h3>
@@ -117,7 +83,11 @@ export default defineComponent({
     };
 
     const getLastetNftList = async (id, page, numbers) => {
-      const { err_code, result } = await getLastestNftApi(id, page, numbers);
+      const { err_code, result } = await getLastestNftApi(
+        id,
+        page,
+        String(numbers)
+      );
       if (err_code === "0") {
         console.log("作品列表", result);
         workList.value = result.map((item) => ({

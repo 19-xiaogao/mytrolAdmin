@@ -79,11 +79,15 @@ import {
   pollingGetSerisesIpApi,
   pollingAddUpdateIpApi,
   pollingUpdateNumberApi,
-  
 } from "@/api/pllingApi";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
-import { joinPreviewUrl, successNotify, warningNotify } from "@/utils";
+import {
+  joinPreviewUrl,
+  successNotify,
+  warningNotify,
+  sortOperation,
+} from "@/utils";
 import { Modal } from "ant-design-vue";
 export default {
   components: {
@@ -104,12 +108,13 @@ export default {
       getSeriessListApi();
     });
     const assignmentFunc = (result) => {
-      seriessList.value = result
+      const joinIpfsList = result
         .map((item) => ({
           ...item,
           file: joinPreviewUrl(item.file),
         }))
         .reverse();
+      seriessList.value = sortOperation(joinIpfsList);
     };
     const getSeriessListApi = async () => {
       const { err_code, result } = await getSeriessApi();
@@ -132,7 +137,7 @@ export default {
       let paramsObj = {
         name: item.name,
         status: status,
-        number: item.number,
+        number: String(item.number),
         operate: "update",
       };
       if (status === "off") {
@@ -191,7 +196,7 @@ export default {
       const { err_code } = await funcAddupdateIpApi({
         name: item.name,
         status: item.status,
-        number: key,
+        number: String(key),
         operate: "update",
       });
       if (err_code === "0") {

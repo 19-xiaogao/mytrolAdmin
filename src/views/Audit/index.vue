@@ -189,7 +189,10 @@ export default defineComponent({
       window.removeEventListener("resize", calculateScroll);
     });
     const assignmentFunc = (result) => {
+      // no data ,result is array.
       if (Array.isArray(result)) {
+        pagination.total = result.length;
+        publishData.value = result;
         return;
       }
       pagination.total = result.total;
