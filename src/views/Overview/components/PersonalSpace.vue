@@ -57,7 +57,7 @@ export default {
 <style scoped lang="scss">
 .person-space {
   width: 40%;
-  height: 33.11%;
+  height: 298px;
   background: #fff;
   box-shadow: 0px 4px 12px 0px rgba(182, 182, 182, 0.13);
   border-radius: 8px;
