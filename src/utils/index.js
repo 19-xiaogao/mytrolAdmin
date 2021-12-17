@@ -104,3 +104,16 @@ export function sortOperation(operationList) {
 
   return [...exitNumberList.concat(notExitNumberList), ...offList];
 }
+
+//判断两个对象的value是否相同
+export function towObjectEqual(obj1, obj2) {
+  let boolean = false;
+  for (let key in obj1) {
+    if (obj1[key] !== obj2[key]) {
+      return false;
+    } else {
+      boolean = true;
+    }
+  }
+  return boolean;
+}

@@ -68,7 +68,7 @@
 import { computed, ref, getCurrentInstance, onMounted, toRaw } from "vue";
 import { getBannerApi, updateBannerApi, uploadFIleApi } from "@api";
 import { pollingBannerApi } from "@/api/pllingApi";
-import { warningNotify } from "@/utils";
+import { warningNotify,successNotify } from "@/utils";
 const defaultTabList = [
   {
     name: "Banner1",
@@ -97,9 +97,6 @@ export default {
     const isSelectHoverClass = computed(
       () => (index) => index === currentParams.value.key ? "select-hover" : ""
     );
-    onMounted(async () => {
-      //  await updateBannerApi(JSON.stringify(''));
-    });
     const handleTabClick = (item) => {
       currentParams.value = item;
     };
@@ -111,13 +108,11 @@ export default {
       const { result, err_code } = await uploadFIleApi(formData);
       e.target.value = "";
       if (err_code === "0") {
-        console.log(proxy.joinPreviewUrl(result.cid));
-
         currentParams.value.imgFile = proxy.joinPreviewUrl(result.cid);
       }
     };
     const addBannerClick = async () => {
-      if (tableList.value.length > 5) return warningNotify("最多添加5个");
+      if (tableList.value.length >= 5) return warningNotify("最多添加5个");
       tableList.value = [...toRaw(tableList.value)].concat({
         ...defaultTabList,
         key: tableList.value.length + 1,
@@ -146,6 +141,7 @@ export default {
 
       pollingBannerApi(tableList.value.length, (result) => {
         assignment(result);
+        successNotify("设置成功,区块上链中,请稍后查询。")
       });
     };
     const getBanner = async () => {
@@ -225,7 +221,7 @@ export default {
       justify-content: space-between;
       .select-branner {
         span {
-          margin-right: 25px;
+          margin-right: 18px;
           font-size: 14px;
           font-weight: 400;
           color: #979797;
