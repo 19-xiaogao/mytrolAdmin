@@ -84,12 +84,6 @@ const makeMenu = [
     path: "/items",
     id: 6,
   },
-  {
-    icon: "icon-a-bianzu4",
-    text: "记录",
-    path: "/record",
-    id: 2,
-  },
 ];
 const operationMenu = [
   {
@@ -115,12 +109,6 @@ const operationMenu = [
     text: "作品",
     path: "/items",
     id: 6,
-  },
-  {
-    icon: "icon-a-bianzu4",
-    text: "记录",
-    path: "/record",
-    id: 2,
   },
 ];
 export default {

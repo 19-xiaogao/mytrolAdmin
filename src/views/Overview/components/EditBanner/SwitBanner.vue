@@ -135,14 +135,13 @@ export default {
       } else {
         tableList.value.forEach((item) => {
           if (item.key === currentParams.value.key) {
-            delete item[0]
+            delete item[0];
             item.key = currentParams.value.key;
             item.name = currentParams.value.name;
             item.imgFile = currentParams.value.imgFile;
             item.title = currentParams.value.title;
             item.decs = currentParams.value.decs;
             item.imgUrl = currentParams.value.imgUrl;
-            
           }
         });
         uploadData = tableList.value;
@@ -189,6 +188,7 @@ export default {
     width: 287px;
     height: 215px;
     overflow: hidden;
+    box-sizing: border-box;
     border-radius: 5px;
     position: relative;
     img {
@@ -225,6 +225,8 @@ export default {
   .right-box {
     flex: 1;
     margin-left: 20px;
+    height: 215px;
+    box-sizing: border-box;
     .select-box {
       display: flex;
       justify-content: space-between;
