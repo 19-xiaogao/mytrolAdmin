@@ -98,6 +98,7 @@ export default {
       () => (index) => index === currentParams.value.key ? "select-hover" : ""
     );
     const handleTabClick = (item) => {
+      console.log(item);
       currentParams.value = item;
     };
     const showIpDom = computed(() => props.smallProgram);
@@ -126,7 +127,9 @@ export default {
       tx_hash.value = result.tx_hash;
       let list = JSON.parse(result.banner_info);
       if (!list) return;
+
       tableList.value = list;
+      console.log(tableList.value);
     };
     const saveBannerClick = async () => {
       let uploadData = [];
@@ -135,14 +138,13 @@ export default {
       } else {
         tableList.value.forEach((item) => {
           if (item.key === currentParams.value.key) {
-            delete item[0]
+            delete item[0];
             item.key = currentParams.value.key;
             item.name = currentParams.value.name;
             item.imgFile = currentParams.value.imgFile;
             item.title = currentParams.value.title;
             item.decs = currentParams.value.decs;
             item.imgUrl = currentParams.value.imgUrl;
-            
           }
         });
         uploadData = tableList.value;
@@ -157,6 +159,7 @@ export default {
       const { err_code, result } = await getBannerApi();
       if (err_code === "0") {
         assignment(result);
+        handleTabClick(tableList.value[0]);
       }
     };
 
@@ -189,7 +192,7 @@ export default {
     width: 287px;
     height: 215px;
     overflow: hidden;
-    
+
     border-radius: 5px;
     position: relative;
     img {

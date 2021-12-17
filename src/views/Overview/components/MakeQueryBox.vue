@@ -51,7 +51,6 @@ export default {
 .make-query {
   width: 58%;
   height: 298px;
-
   background: #ffffff;
   box-shadow: 0px 4px 12px 0px rgba(182, 182, 182, 0.13);
   border-radius: 8px;
