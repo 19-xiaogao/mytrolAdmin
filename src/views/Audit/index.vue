@@ -35,12 +35,15 @@
       :data-source="publishData"
       v-model:pagination="pagination"
       :position="false"
-      @change="handlePagitionChange"
+      @change="handlePaginationChange"
       :scroll="{ y: scrollHeight }"
       :row-class-name="
         (_record, index) => (index % 2 === 1 ? 'table-striped' : null)
       "
     >
+      <template #price="{ record }">
+        <a-tag color="#f50">{{ record.price }} 元</a-tag>
+      </template>
       <template #detail="record">
         <a-button type="link" @click.stop="handleOrderDetailClick(record)"
           >查看</a-button
@@ -50,7 +53,7 @@
     <AuditDetail
       v-if="isOrderShow"
       v-model:messageDetail="detailMessage"
-      @clonse="hanldeCloseClick"
+      @clonse="handleCloseClick"
     />
   </div>
 </template>
@@ -73,11 +76,12 @@ import AuditDetail from "./AuditDetail";
 const columns = [
   {
     title: "序号",
-    dataIndex: "id",
-    key: "id",
+    dataIndex: "index",
+    key: "index",
+    with: 50,
   },
   {
-    title: "名称",
+    title: "创作者",
     dataIndex: "nickname",
     key: "nickname",
   },
@@ -95,6 +99,7 @@ const columns = [
     title: "价格",
     dataIndex: "price",
     key: "price",
+    slots: { customRender: "price" },
   },
   {
     title: "数量",
@@ -167,7 +172,7 @@ export default defineComponent({
     const handleSelectClick = ({ key }) => {
       currentQueryParams.value = queryList.find((item) => item.key === key);
     };
-    const handlePagitionChange = ({ current }) => {
+    const handlePaginationChange = ({ current }) => {
       pagination.current = current;
       getPublishingList(pagination);
     };
@@ -196,13 +201,14 @@ export default defineComponent({
         return;
       }
       pagination.total = result.total;
-      publishData.value = result.list.map((item) => ({
+      publishData.value = result.list.map((item, index) => ({
         ...item,
         opening_time: dayjs(Number(item.opening_time) * 1000).format(
           "YYYY-MM-DD HH:mm"
         ),
         series_ip: item.series_ip === "common" ? "首页" : item.series_ip,
         avatar: joinPreviewUrl(item.avatar),
+        index: index + 1,
       }));
     };
     const getPublishingList = async (pagination) => {
@@ -215,11 +221,8 @@ export default defineComponent({
       currentItemDetail.detailMessage = row.record;
       currentItemDetail.isOrderShow = !currentItemDetail.isOrderShow;
     };
-    const hanldeCloseClick = async (refresh, id) => {
+    const handleCloseClick = async (refresh, id) => {
       if (refresh) {
-        // 由于区块链有延迟，所以删除内存的这个条数据
-        // publishData.value = publishData.value.filter((item) => item.id !== id);
-
         // 由于区块链有延迟,所以递归查询数据
         pollingQueryPublishingApi(pagination, id, (result) => {
           assignmentFunc(result);
@@ -232,7 +235,7 @@ export default defineComponent({
       columns,
       publishData,
       handleOrderDetailClick,
-      hanldeCloseClick,
+      handleCloseClick,
       queryParams,
       currentQueryParams,
       handleSelectClick,
@@ -241,7 +244,7 @@ export default defineComponent({
       scrollHeight,
       pagination,
       ...toRefs(currentItemDetail),
-      handlePagitionChange,
+      handlePaginationChange,
     };
   },
 });

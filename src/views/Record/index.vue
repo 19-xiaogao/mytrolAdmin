@@ -30,9 +30,16 @@
         </div>
       </div>
     </div>
-    <Order v-show="currentTableIndex === 0" />
+    <Order
+      v-show="currentTableIndex === 0"
+      @showOrderDetailComponent="handleShowOrderDetailComponent"
+    />
     <ShareRecord v-show="currentTableIndex === 1" />
-    <OrderDetail v-show="isOrderShow" @clonse="handleOrderDetailClick" />
+    <OrderDetail
+      v-if="isOrderShow"
+      :orderItem="currentOrderItem"
+      @close="handleOrderDetailClick"
+    />
   </div>
 </template>
 
@@ -51,6 +58,7 @@ export default defineComponent({
   setup() {
     const currentTableIndex = ref(0);
     const isOrderShow = ref(false);
+    const currentOrderItem = ref({});
     const handleOrderDetailClick = () => {
       isOrderShow.value = !isOrderShow.value;
     };
@@ -59,12 +67,19 @@ export default defineComponent({
       () => (index) => index === currentTableIndex.value ? "active" : ""
     );
     const handleSwitchTableClick = (index) => (currentTableIndex.value = index);
+
+    const handleShowOrderDetailComponent = (item) => {
+      isOrderShow.value = true;
+      currentOrderItem.value = item;
+    };
     return {
       handleOrderDetailClick,
       isOrderShow,
       renderCurrentActive,
       handleSwitchTableClick,
       currentTableIndex,
+      currentOrderItem,
+      handleShowOrderDetailComponent,
     };
   },
 });

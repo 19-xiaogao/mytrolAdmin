@@ -1,62 +1,90 @@
 <template>
   <a-table
     :columns="columns"
-    :row-key="(item) => item.ID"
+    :row-key="(item, index) => index"
     class="ant-table-striped"
+    v-model:pagination="pagination"
     :data-source="data"
     :position="false"
+    @change="handlePaginationChange"
+    :scroll="{ y: scrollHeight }"
     :row-class-name="
       (_record, index) => (index % 2 === 1 ? 'table-striped' : null)
     "
   >
-    <template #make>
-      <img src="@assets/images/avtor.png" alt="" />
-      <span>小龙</span>
+    <template #nickname="{ record }">
+      <img :src="joinPreviewUrl(record.avatar)" class="avatar" alt="" />
+      <span>{{ record.nickname }}</span>
     </template>
-    <template #detail>
-      <a-button type="link" @click.stop="handleOrderDetailClick">查看</a-button>
+    <template #created_at="{ text }">
+      <span>{{ dayjs(Number(text)).format("YYYY-MM-DD HH:mm:ss") }}</span>
+    </template>
+    <template #vendor_payment_no="{ record }">
+      <a-tooltip>
+        <template #title>{{ record.vendor_payment_no }}</template>
+        <div class="txt-overflow">{{ record.vendor_payment_no }}</div>
+      </a-tooltip>
+    </template>
+    <template #buyer="{ record }">
+      <a-tooltip>
+        <template #title>{{ record.buyer }}</template>
+        <div class="txt-overflow">{{ record.buyer }}</div>
+      </a-tooltip>
+    </template>
+
+    <template #amount="{ record }">
+      <a-tag color="#f50">{{ record.amount }} 元</a-tag>
+    </template>
+    <template #detail="{ record }">
+      <a-button type="link" @click.stop="handleOrderDetailClick(record)"
+        >查看</a-button
+      >
     </template>
   </a-table>
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, ref } from "vue";
-import { getUserOrderApi } from "@api";
+import {
+  defineComponent,
+  onMounted,
+  reactive,
+  ref,
+  onUnmounted,
+  getCurrentInstance,
+} from "vue";
+import { getAllOrderApi } from "@api";
+import dayjs from "dayjs";
 const columns = [
   {
     title: "创作者",
-    key: "make",
-    slots: { customRender: "make" },
+    key: "nickname",
+    dataIndex: "nickname",
+    slots: { customRender: "nickname" },
   },
   {
     title: "订单号",
-    dataIndex: "code",
-    key: "code",
-  },
-  {
-    title: "IP主题",
-    dataIndex: "title",
-    key: "title",
+    dataIndex: "vendor_payment_no",
+    width: 250,
+    key: "vendor_payment_no",
+    slots: { customRender: "vendor_payment_no" },
   },
   {
     title: "买家",
-    dataIndex: "buyers",
-    key: "buyers",
+    dataIndex: "buyer",
+    key: "buyer",
+    slots: { customRender: "buyer" },
   },
   {
     title: "金额",
-    dataIndex: "money",
-    key: "money",
+    dataIndex: "amount",
+    key: "amount",
+    slots: { customRender: "amount" },
   },
   {
     title: "成交时间",
-    dataIndex: "time",
-    key: "time",
-  },
-  {
-    title: "状态",
-    dataIndex: "status",
-    key: "status",
+    dataIndex: "created_at",
+    key: "created_at",
+    slots: { customRender: "created_at" },
   },
   {
     title: "详情",
@@ -67,30 +95,68 @@ const columns = [
 ];
 
 export default defineComponent({
-  setup() {
-    const data = reactive([]);
-    const isOrderShow = ref(false);
-    const handleOrderDetailClick = () => {
-      isOrderShow.value = !isOrderShow.value;
+  setup(props, { emit }) {
+    const { proxy } = getCurrentInstance();
+    const data = ref([]);
+    const pagination = reactive({
+      current: 1,
+      numbers: 10,
+      total: 0,
+      defaultPageSize: 10,
+      showTotal: (total) => `一共 ${total} 条`,
+    });
+
+    const scrollHeight = ref();
+
+    const handleOrderDetailClick = (item) => {
+      emit("showOrderDetailComponent", item);
+    };
+
+    const calculateScroll = function () {
+      scrollHeight.value = document.body.clientWidth <= 1440 ? 470 : 700;
     };
     onMounted(() => {
-      getuserOrderList();
+      getUserOrderList(pagination);
+      calculateScroll();
+      window.addEventListener("resize", calculateScroll);
     });
-    const getuserOrderList = async () => {
-      const { err_code, result } = await getUserOrderApi();
+    onUnmounted(() => {
+      window.removeEventListener("resize", calculateScroll);
+    });
+    const getUserOrderList = async (pagination) => {
+      const { err_code, result } = await getAllOrderApi(pagination);
       if (err_code === "0") {
-        console.log(result);
+        if (result.list) {
+          data.value = result.list;
+          pagination.total = Number(result.total);
+        }
       }
-      console.log(result);
+    };
+    const handlePaginationChange = ({ current }) => {
+      pagination.current = current;
+      getUserOrderList(pagination);
     };
     return {
       columns,
       data,
       handleOrderDetailClick,
-      isOrderShow,
+      pagination,
+      dayjs,
+      scrollHeight,
+      joinPreviewUrl: proxy.joinPreviewUrl,
+      handlePaginationChange,
     };
   },
 });
 </script>
 
-<style></style>
+<style scoped lang="scss">
+.avatar {
+  width: 58px;
+  height: 58px;
+  object-fit: cover;
+  object-position: center center;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+</style>

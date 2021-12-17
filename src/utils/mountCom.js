@@ -12,6 +12,7 @@ import {
   DatePicker,
   Switch,
   Select,
+  Tag
 } from "ant-design-vue";
 
 import IconSvg from "@/components/IconSvg";
@@ -34,4 +35,5 @@ export default function (app) {
   app.component("a-switch", Switch);
   app.component("a-select", Select);
   app.component("a-select-option", Select.Option);
+  app.component("a-tag", Tag);
 }

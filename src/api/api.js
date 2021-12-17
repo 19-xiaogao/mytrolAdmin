@@ -90,3 +90,7 @@ export const getBannerApi = () => server.get("/get_banner");
 
 // 上传图片
 export const uploadFIleApi = (data) => server.post("/uploadFile", data);
+
+//订单
+export const getAllOrderApi = (params) =>
+  server.get("/all_success_order/" + params.current + "/" + params.numbers);

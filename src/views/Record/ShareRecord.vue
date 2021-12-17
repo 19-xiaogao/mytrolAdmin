@@ -21,7 +21,7 @@
 
 <script>
 import { defineComponent, onMounted, reactive, ref } from "vue";
-import { getUserOrderApi } from "@api";
+// import { getUserOrderApi } from "@api";
 const columns = [
   {
     title: "序号",
@@ -58,15 +58,15 @@ export default defineComponent({
       isOrderShow.value = !isOrderShow.value;
     };
     onMounted(() => {
-      getuserOrderList();
+      // getuserOrderList();
     });
-    const getuserOrderList = async () => {
-      const { err_code, result } = await getUserOrderApi();
-      if (err_code === "0") {
-        console.log(result);
-      }
-      console.log(result);
-    };
+    // const getuserOrderList = async () => {
+    //   const { err_code, result } = await getUserOrderApi();
+    //   if (err_code === "0") {
+    //     console.log(result);
+    //   }
+    //   console.log(result);
+    // };
     return {
       columns,
       data,

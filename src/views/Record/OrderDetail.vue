@@ -1,28 +1,34 @@
 <template>
   <div class="order-detail" ref="orderDetailRef">
     <div class="header">
-      <div>
-        订单详情
-      </div>
-      <icon-svg icon="icon-a-bianzu101" class="icon" @click="handleHideClick"></icon-svg>
+      <div>订单详情</div>
+      <icon-svg
+        icon="icon-a-bianzu101"
+        class="icon"
+        @click="handleHideClick"
+      ></icon-svg>
     </div>
-    <p class="des">
-      山舞银河，原驰蜡象，欲与天公试比高
-    </p>
+    <p class="des">{{ orderItem.description }}</p>
     <div class="ikon">
-      <img src="@assets/images/order-detail-img.jpg" alt="" />
+      <img :src="joinPreviewUrl(orderItem.nft_file)" alt="" />
     </div>
     <div class="dress_chain">
-      <p>上链地址</p>
-      <span>
-        0xf7a21ffb762ef2c14d8713b18f5596b4b0b0490a
-      </span>
+      <p>交易hash</p>
+      <p>
+        <a-tooltip>
+          <template #title> {{ orderItem.tx_hash }}</template>
+          <div class="txt-overflow">{{ orderItem.tx_hash }}</div>
+        </a-tooltip>
+      </p>
     </div>
     <div class="dress_token">
       <p>Token ID</p>
-      <span>
-        0xf7a21ffb762ef2c14d8713b18f5596b4b0b0490a
-      </span>
+      <p>
+        <a-tooltip>
+          <template #title> {{ orderItem.nft_code }}</template>
+          <div class="txt-overflow">{{ orderItem.nft_code }}</div>
+        </a-tooltip>
+      </p>
     </div>
     <div class="logo">
       <img src="@assets/images/mytrolLogo.png" alt="" />
@@ -31,15 +37,20 @@
 </template>
 
 <script>
-import { ref, onUpdated } from "vue";
+import { ref, onUpdated, getCurrentInstance } from "vue";
 export default {
-  emits: ["clonse"],
+  props: {
+    orderItem: {
+      type: Object,
+    },
+  },
   setup(props, { emit }) {
+    const { proxy } = getCurrentInstance();
     const orderDetailRef = ref(null);
     const handleHideClick = () => {
       orderDetailRef.value.style.animation = "sliding-hiden 0.5s linear 0s";
       setTimeout(() => {
-        emit("clonse");
+        emit("close");
       }, 400);
     };
     onUpdated(() => {
@@ -48,6 +59,7 @@ export default {
     return {
       handleHideClick,
       orderDetailRef,
+      joinPreviewUrl: proxy.joinPreviewUrl,
     };
   },
 };
@@ -132,6 +144,7 @@ export default {
       font-size: 14px;
       font-family: Helvetica;
       color: #000000;
+      width: 100%;
     }
   }
   .dress_token {
