@@ -41,7 +41,11 @@
 
         <div class="sale" v-if="showOpenTime(item)">
           <icon-svg icon="icon-naozhong" class="icon"></icon-svg>
-          <span> {{dayjs(item.opening_time*1000).format('YYYY-MM-DD HH:mm')}}</span>
+          <span>
+            {{
+              dayjs(item.opening_time * 1000).format("YYYY-MM-DD HH:mm")
+            }}</span
+          >
         </div>
 
         <div class="me">
@@ -97,7 +101,7 @@ import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
 import { Modal } from "ant-design-vue";
 import { useStore } from "vuex";
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 // publishStatusUnPublish = "0"; //下架
 // publishStatusPublishing = "1" //审核
 // publishStatusSuccess    = "2" //发布成功
@@ -161,10 +165,11 @@ export default defineComponent({
       () => (free, publish) => free === "true" && publish !== "0"
     );
 
-    const showOpenTime = computed(() =>{
-      
-      return (item) => item.publish === '2' && Date.parse(new Date())/1000 < Number(item.opening_time)
-    })
+    const showOpenTime = computed(() => {
+      return (item) =>
+        item.publish === "2" &&
+        Date.parse(new Date()) / 1000 < Number(item.opening_time);
+    });
 
     // watchEffect listen table switch change event
     watchEffect(() => {
@@ -214,12 +219,11 @@ export default defineComponent({
 
     const handleQrCodeClick = async (id) => {
       const { err_code, result } = await redeemCodeApi(id);
-      console.log(err_code);
-      console.log(result);
       if (err_code === "0") {
         const qrCode = await QRCode.toDataURL(
-          `https://mytroladmin.dbchain.cloud/applet?id${id}=${result.redeem_code}`
+          `https://mshare.dbchain.cloud/applet?id${id}=${result.redeem_code}`
         );
+
         Modal.success({
           title: "二维码生成成功",
           content: createVNode("img", {
@@ -227,6 +231,9 @@ export default defineComponent({
             style: "width:100%;height:100%;margin-left:-19px;",
           }),
         });
+        console.log(
+          `https://mshare.dbchain.cloud/applet?id${id}=${result.redeem_code}`
+        );
       }
     };
 
@@ -261,7 +268,7 @@ export default defineComponent({
       handelShelvesEmit,
       handleCancelEmit,
       shelvesVisible,
-      dayjs
+      dayjs,
     };
   },
 });
@@ -513,7 +520,7 @@ export default defineComponent({
         .icon {
           color: #ffd36c;
           margin-right: 10px;
-          font-size:12px;
+          font-size: 12px;
         }
         span {
           font-size: 12px;
