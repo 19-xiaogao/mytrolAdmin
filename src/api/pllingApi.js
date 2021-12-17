@@ -78,20 +78,20 @@ export const pollingGivingDaysApi = async (days, fc) => {
     store.commit("setLoading", false);
     return fc && fc(result);
   }
-  
+
   setTimeout(() => pollingGivingDaysApi(days, fc), ASeconds);
 };
 
 // 查询轮播图数量
-export const pollingBannerApi = async (length, fc) => {
+export const pollingBannerApi = async (tx_hash, fc) => {
   store.commit("setLoading", true);
 
   const { result } = await pollingServer.get("/get_banner");
 
-  if (length === JSON.parse(result.banner_info).length) {
+  if (tx_hash !== result.tx_hash) {
     store.commit("setLoading", false);
     return fc && fc(result);
   }
-  
-  setTimeout(() => pollingBannerApi(length, fc), ASeconds);
+
+  setTimeout(() => pollingBannerApi(tx_hash, fc), ASeconds);
 };

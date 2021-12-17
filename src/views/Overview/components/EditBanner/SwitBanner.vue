@@ -68,7 +68,7 @@
 import { computed, ref, getCurrentInstance, onMounted, toRaw } from "vue";
 import { getBannerApi, updateBannerApi, uploadFIleApi } from "@api";
 import { pollingBannerApi } from "@/api/pllingApi";
-import { warningNotify,successNotify } from "@/utils";
+import { warningNotify } from "@/utils";
 const defaultTabList = [
   {
     name: "Banner1",
@@ -93,7 +93,7 @@ export default {
     const { proxy } = getCurrentInstance();
     const currentParams = ref(defaultTabList[0]);
     const tableList = ref(defaultTabList);
-
+    const tx_hash = ref("");
     const isSelectHoverClass = computed(
       () => (index) => index === currentParams.value.key ? "select-hover" : ""
     );
@@ -113,17 +113,20 @@ export default {
     };
     const addBannerClick = async () => {
       if (tableList.value.length >= 5) return warningNotify("最多添加5个");
-      tableList.value = [...toRaw(tableList.value)].concat({
-        ...defaultTabList,
-        key: tableList.value.length + 1,
-      });
+      tableList.value = [
+        ...toRaw(tableList.value),
+        {
+          ...defaultTabList,
+          key: tableList.value.length + 1,
+        },
+      ];
       currentParams.value = tableList.value[tableList.value.length - 1];
     };
     const assignment = (result) => {
+      tx_hash.value = result.tx_hash;
       let list = JSON.parse(result.banner_info);
       if (!list) return;
       tableList.value = list;
-      currentParams.value = tableList.value[0];
     };
     const saveBannerClick = async () => {
       let uploadData = [];
@@ -132,16 +135,22 @@ export default {
       } else {
         tableList.value.forEach((item) => {
           if (item.key === currentParams.value.key) {
-            item = currentParams.value;
+            delete item[0]
+            item.key = currentParams.value.key;
+            item.name = currentParams.value.name;
+            item.imgFile = currentParams.value.imgFile;
+            item.title = currentParams.value.title;
+            item.decs = currentParams.value.decs;
+            item.imgUrl = currentParams.value.imgUrl;
+            
           }
         });
         uploadData = tableList.value;
       }
       await updateBannerApi(JSON.stringify(uploadData));
 
-      pollingBannerApi(tableList.value.length, (result) => {
+      pollingBannerApi(tx_hash.value, (result) => {
         assignment(result);
-        successNotify("设置成功,区块上链中,请稍后查询。")
       });
     };
     const getBanner = async () => {
