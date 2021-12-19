@@ -18,6 +18,7 @@
       v-model:days="days"
       @close="handleCloseEmit"
     />
+    <ModalSettingClassVue v-model:classVisible="classVisible" />
   </div>
 </template>
 
@@ -37,6 +38,10 @@ const settingList = [
   },
   {
     icon: "icon-a-bianzu9beifen4",
+    text: "设置分类",
+  },
+  {
+    icon: "icon-a-bianzu9beifen4",
     text: "转赠天数",
   },
 ];
@@ -45,10 +50,12 @@ import { queryGivingDayApi } from "@api";
 import { pollingGivingDaysApi } from "@/api/pllingApi";
 import ModalUser from "./ModalUser";
 import ModalSettingDay from "./ModalSettingDay";
+import ModalSettingClassVue from "./ModalSettingClass";
 export default defineComponent({
   components: {
     ModalUser,
     ModalSettingDay,
+    ModalSettingClassVue,
   },
   setup() {
     const currentIndex = ref(-1);
@@ -56,6 +63,7 @@ export default defineComponent({
     const createVisible = ref(false);
     const days = ref(0);
     const dayVisible = ref(false);
+    const classVisible = ref(false);
     const isShowActiveClass = computed(() => {
       return (index) => (currentIndex.value === index ? "ms active" : "ms");
     });
@@ -65,6 +73,9 @@ export default defineComponent({
         createVisible.value = true;
       }
       if (index === 3) {
+        classVisible.value = true;
+      }
+      if (index === 4) {
         dayVisible.value = true;
       }
     };
@@ -96,6 +107,7 @@ export default defineComponent({
       createVisible,
       dayVisible,
       days,
+      classVisible,
       handleCloseEmit,
     };
   },

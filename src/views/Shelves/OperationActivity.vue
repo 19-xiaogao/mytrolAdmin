@@ -30,18 +30,6 @@
         私人发售作品，只有通过访问特定链接才能观看藏品详情和购买
       </p>
     </div>
-    <!-- <div class="limit-time-free">
-      <p class="free-title">藏品链接</p>
-      <input type="text" placeholder="http:www.baidu.com" />
-      <icon-svg icon="icon-copy" class="icon-copy"></icon-svg>
-    </div>
-    <div class="goods-qr-code">
-      <div class="good-header">
-        <span class="good-title">商品二维码</span>
-        <icon-svg icon="icon-xiazai" class="good-icon"></icon-svg>
-      </div>
-      <img src="" class="qr-code" alt="" />
-    </div> -->
     <div class="save-setting" @click="handleSaveSettingClick">
       <icon-svg icon="icon-save"></icon-svg>
       保存设置
@@ -50,7 +38,7 @@
 </template>
 
 <script>
-import { ref, onUpdated } from "vue";
+import { ref, onUpdated, onMounted } from "vue";
 import { warningNotify } from "@/utils";
 export default {
   emits: ["close"],
@@ -60,7 +48,8 @@ export default {
   setup(props, { emit }) {
     const orderDetailRef = ref(null);
     const checked = ref(false);
-    const free_number = ref();
+    const free_number = ref(0);
+    const currentSelectClass = ref([]);
     const handleHideClick = () => {
       orderDetailRef.value.style.animation = "sliding-hiden 0.5s linear 0s";
       setTimeout(() => {
@@ -82,6 +71,9 @@ export default {
         private_sale: checked.value,
       });
     };
+  
+    onMounted(() => {
+    });
     onUpdated(() => {
       orderDetailRef.value.style.animation = "sliding-show 0.5s linear 0s";
     });
@@ -92,6 +84,7 @@ export default {
       checked,
       free_number,
       handleSaveSettingClick,
+      currentSelectClass,
     };
   },
 };
@@ -201,6 +194,7 @@ export default {
       margin-top: 4px;
     }
   }
+ 
   .save-setting {
     width: 134px;
     height: 40px;

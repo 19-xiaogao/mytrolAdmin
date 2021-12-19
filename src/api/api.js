@@ -94,3 +94,12 @@ export const uploadFIleApi = (data) => server.post("/uploadFile", data);
 //订单
 export const getAllOrderApi = (params) =>
   server.get("/all_success_order/" + params.current + "/" + params.numbers);
+
+// 查询分类
+export const getClassificationApi = () =>
+  server.get("/backend/get_classification");
+
+// 添加分类
+export const addClassificationApi = (name) =>
+  server.post("/backend/add_classification", { name });
+

@@ -95,7 +95,7 @@ import {
   createVNode,
 } from "vue";
 import QRCode from "qrcode";
-import { getWorksApi, shelvesNftApi, redeemCodeApi } from "@api";
+import { getWorksApi, shelvesNftApi, redeemCodeApi, getBannerApi } from "@api";
 import { pollingItemsPublishApi } from "@/api/pllingApi";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
@@ -132,6 +132,7 @@ export default defineComponent({
     const worksList = ref([]);
     const renderWorksList = ref();
     const store = useStore();
+    const smellProgramBaseUrl = ref({});
     const shelvesObject = reactive({
       id: "",
       publish: "",
@@ -184,6 +185,7 @@ export default defineComponent({
 
     onMounted(() => {
       getWorksList();
+      getSmellProgramBaseUrl();
     });
 
     const getWorksList = async () => {
@@ -205,7 +207,10 @@ export default defineComponent({
         );
       }
     };
-
+    const getSmellProgramBaseUrl = async () => {
+      const { result } = await getBannerApi();
+      smellProgramBaseUrl.value = JSON.parse(result.share_base_url);
+    };
     const handleShelvesClick = (id, publish) => {
       if (publish === "2") {
         handleUnShelvesNft(id, publish);
@@ -216,14 +221,19 @@ export default defineComponent({
         shelvesObject.publish = publish;
       }
     };
-
     const handleQrCodeClick = async (id) => {
       const { err_code, result } = await redeemCodeApi(id);
       if (err_code === "0") {
-        const qrCode = await QRCode.toDataURL(
-          `https://mshare.dbchain.cloud/applet?id${id}=${result.redeem_code}`
-        );
-
+        let shellBaseUrl = "";
+        if (
+          smellProgramBaseUrl.value.nft_url.indexOf("open.weixin.qq.com") == -1
+        ) {
+          shellBaseUrl = `${smellProgramBaseUrl.value.nft_url}id${id}=${result.redeem_code}`;
+        } else {
+          shellBaseUrl = `${smellProgramBaseUrl.value.nft_url}id${id}=${result.redeem_code}#wechat-redirect`;
+        }
+        console.log(shellBaseUrl);
+        const qrCode = await QRCode.toDataURL(shellBaseUrl);
         Modal.success({
           title: "二维码生成成功",
           content: createVNode("img", {

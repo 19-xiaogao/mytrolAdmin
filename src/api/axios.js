@@ -61,7 +61,6 @@ server.interceptors.response.use((config) => {
         router.push("/login");
       },
     });
-    Modal.destroy();
   }
   if (responseData.err_code === "1") {
     errorNotify("密码错误");

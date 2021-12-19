@@ -18,7 +18,7 @@
       type="file"
       class="input-file"
       style="z-index: 3"
-      accept=".png,.jpg"
+      :accept="uploadAccept"
       @change="handleUploadFile"
     />
   </div>
@@ -42,6 +42,10 @@ export default defineComponent({
     };
 
     const typeBol = computed(() => props.type === "originalImage");
+
+    const uploadAccept = computed(() =>
+      typeBol.value ? ".png,.jpg,.gif,.gift" : ".png,.jpg"
+    );
 
     const title = computed(() => {
       if (typeBol.value) {
@@ -82,6 +86,7 @@ export default defineComponent({
       handleImgVisibleClick,
       title,
       decs,
+      uploadAccept
     };
   },
 });

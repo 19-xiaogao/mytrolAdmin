@@ -95,3 +95,18 @@ export const pollingBannerApi = async (tx_hash, fc) => {
 
   setTimeout(() => pollingBannerApi(tx_hash, fc), ASeconds);
 };
+
+// 查询分类数量
+
+export const pollingClassApi = async (length, fc) => {
+  store.commit("setLoading", true);
+
+  const { result } = await pollingServer.get("/backend/get_classification");
+
+  if (length !== result.length) {
+    store.commit("setLoading", false);
+    return fc && fc(result);
+  }
+
+  setTimeout(() => pollingClassApi(length, fc), ASeconds);
+};

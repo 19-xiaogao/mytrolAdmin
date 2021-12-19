@@ -70,6 +70,22 @@
             />
           </div>
           <div class="price">
+            <div>设置分类</div>
+            <a-select
+              class="select"
+              placeholder="请选择分类"
+              mode="multiple"
+              v-model:value="classification"
+            >
+              <a-select-option
+                v-for="item in classData"
+                :key="item.id"
+                :value="item.id"
+                >{{ item.name }}</a-select-option
+              >
+            </a-select>
+          </div>
+          <div class="price">
             <div>开售时间</div>
             <a-date-picker
               show-time
@@ -152,7 +168,7 @@ import {
   onUnmounted,
 } from "vue";
 import { useStore } from "vuex";
-import { getSerisesIpApi, uploadNftApi } from "@api";
+import { getSerisesIpApi, uploadNftApi, getClassificationApi } from "@api";
 import dayjs from "dayjs";
 import UploadNft from "./UploadNft";
 import { warningNotify, successNotify } from "@/utils";
@@ -172,6 +188,7 @@ let obj = {
   nft_thumbnail: {},
   free_number: "",
   private_sale: "",
+  classification: [],
 };
 export default defineComponent({
   components: {
@@ -187,6 +204,7 @@ export default defineComponent({
     const ipList = ref([]);
     const currentIpName = ref("首页");
     const showHeaderSelect = ref(false);
+    const classData = ref([]);
     const privewImgComponentParmas = reactive({
       imgUrl: "",
       visible: false,
@@ -195,6 +213,7 @@ export default defineComponent({
     const isOperationActivity = ref(false);
     onMounted(() => {
       getIpList();
+      getClassData();
     });
     onUnmounted(() => {
       initParams();
@@ -211,6 +230,12 @@ export default defineComponent({
         ipList.value = result.filter((item) => item.status === "on");
       }
     };
+    const getClassData = async () => {
+      const { result, err_code } = await getClassificationApi();
+      if (err_code === "0") {
+        classData.value = result;
+      }
+    };
     const initParams = () => {
       uploadParams.name = "";
       uploadParams.description = "";
@@ -223,6 +248,7 @@ export default defineComponent({
       uploadParams.nft_thumbnail = {};
       uploadParams.free_number = "";
       uploadParams.private_sale = "";
+      uploadParams.classification = [];
       currentIpName.value = "首页";
       btnDisabled.value = false;
     };
@@ -241,6 +267,7 @@ export default defineComponent({
         warningNotify("作品名称过长,14字以内");
         return (btnDisabled.value = false);
       }
+
       if (!uploadParams.description.trim()) {
         warningNotify("请输入描述");
         return (btnDisabled.value = false);
@@ -260,6 +287,10 @@ export default defineComponent({
       }
       if (!uploadParams.price) {
         warningNotify("请输入价格");
+        return (btnDisabled.value = false);
+      }
+      if (uploadParams.classification.length === 0) {
+        warningNotify("请选择分类");
         return (btnDisabled.value = false);
       }
       if (Number(uploadParams.price) < 0) {
@@ -288,6 +319,7 @@ export default defineComponent({
       }
       const formData = new FormData();
 
+      uploadParams.classification = uploadParams.classification.join();
       for (let key in uploadParams) {
         formData.append(key, uploadParams[key]);
       }
@@ -339,6 +371,7 @@ export default defineComponent({
       btnDisabled,
       isOperationActivity,
       handleOperationActivityClick,
+      classData,
       handleShowOperationActivityClick,
     };
   },
@@ -480,6 +513,9 @@ export default defineComponent({
             background-color: #fff;
 
             display: inline-block;
+          }
+          .select {
+            width: 200px;
           }
         }
         .select-headers {
