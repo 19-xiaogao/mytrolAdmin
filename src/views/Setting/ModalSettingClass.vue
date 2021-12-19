@@ -1,5 +1,5 @@
 <template>
-  <a-modal :visible="classVisible" class="modal" title="设置分类">
+  <a-modal :visible="classVisible" class="modal" title="设置分类" :footer="null">
     <div class="user-input">
       <div class="user">
         <span>添加分类</span>
@@ -21,16 +21,12 @@
     <template #closeIcon>
       <div class="close" @click="handleClose">取消</div>
     </template>
-    <template #footer>
-      <div class="create-user" @click="handleAddUserClick">确定</div>
-    </template>
   </a-modal>
 </template>
 
 <script>
 import { defineComponent, ref, watchEffect } from "vue";
 import {
-  setGivingDayApi,
   getClassificationApi,
   addClassificationApi,
 } from "@api";
@@ -51,12 +47,6 @@ export default defineComponent({
     const classData = ref([]);
     const handleClose = () => {
       emit("update:classVisible", false);
-    };
-    const handleAddUserClick = async () => {
-      const { err_code } = await setGivingDayApi(String(userClass.value));
-      if (err_code === "0") {
-        emit("close");
-      }
     };
     const handleAddClassClick = async () => {
       if (!userClass.value.trim()) {
@@ -90,7 +80,6 @@ export default defineComponent({
     return {
       currentStatus,
       handleClose,
-      handleAddUserClick,
       handleAddClassClick,
       classData,
       userClass,
