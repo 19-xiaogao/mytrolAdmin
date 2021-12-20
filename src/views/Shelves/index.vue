@@ -40,14 +40,7 @@
         </div>
         <div class="search-base">
           <div class="avator">
-            <div class="header">
-              <img :src="personMessage.avatar" alt="" />
-              <p>{{ personMessage.nickname }}</p>
-            </div>
-            <!-- <div
-              class="icon"
-              @click="() => handleHeaderSelectClick(true)"
-            ></div> -->
+           
           </div>
           <div class="price">
             <div>价格</div>
@@ -446,7 +439,7 @@ export default defineComponent({
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-right: 64px;
+          margin-right: 4px;
           margin-left: 30px;
           margin-top: 20px;
           .header {

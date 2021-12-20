@@ -56,7 +56,7 @@
                 <img :src="item.author_avatar" alt="" />
                 <img src="@assets/images/v-icon.png" class="icon" alt="" />
               </div>
-              <span>{{ item.author_nickname }}</span>
+              <span class="txt-overflow" style="width:100px;">{{ item.author_nickname }}</span>
             </div>
           </div>
           <div class="me-m">
@@ -232,7 +232,6 @@ export default defineComponent({
         } else {
           shellBaseUrl = `${smellProgramBaseUrl.value.nft_url}id${id}=${result.redeem_code}#wechat-redirect`;
         }
-        console.log(shellBaseUrl);
         const qrCode = await QRCode.toDataURL(shellBaseUrl);
         Modal.success({
           title: "二维码生成成功",
@@ -241,9 +240,7 @@ export default defineComponent({
             style: "width:100%;height:100%;margin-left:-19px;",
           }),
         });
-        console.log(
-          `https://mshare.dbchain.cloud/applet?id${id}=${result.redeem_code}`
-        );
+    
       }
     };
 

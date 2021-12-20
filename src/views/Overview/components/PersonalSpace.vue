@@ -10,7 +10,7 @@
         <img src="@assets/images/card.png" alt="" />
       </div>
       <div class="message">
-        <h4>{{ personMessage.nickname }}</h4>
+        <h4 class="txt-overflow">{{ personMessage.nickname }}</h4>
         <span>{{ currentRole }}</span>
       </div>
     </div>
@@ -112,6 +112,7 @@ export default {
       h4 {
         font-size: 22px;
         font-weight: 500;
+        width: 300px;
         color: #4c4668;
       }
       span {
