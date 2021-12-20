@@ -132,7 +132,6 @@ export default {
     const isColor = computed(() => (path) =>
       path === currentPath.value ? "color:#ED6637" : ""
     );
-    // const menus = reactive(adminMenu);
     return { menus, isOpacity, isColor };
   },
 };

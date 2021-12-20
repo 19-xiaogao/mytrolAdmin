@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { computed, ref } from "vue";
+import { computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 import { logoutApi } from "@api";
@@ -44,7 +44,6 @@ export default {
       }
     };
     return {
-      value2: ref("lucy"),
       handleRouteClick,
       handleRouteLogin,
       personMessage,

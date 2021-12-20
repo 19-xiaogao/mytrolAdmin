@@ -1,6 +1,6 @@
 import server from "./axios";
 
-// 登陆
+// 登录
 export const loginApi = (data) => server.post("/backend_login", data);
 
 // 退出登陆

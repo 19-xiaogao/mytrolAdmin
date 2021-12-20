@@ -20,7 +20,7 @@
       <div class="user_search">
         <div class="search-title">
           <a-input
-            placeholder="在此输入作品名称(14字以内)"
+            placeholder="在此输入作品名称(50字以内)"
             v-model:value="name"
           />
           <a-dropdown class="serial-number">
@@ -263,8 +263,8 @@ export default defineComponent({
         warningNotify("请输入作品名称");
         return (btnDisabled.value = false);
       }
-      if (uploadParams.name.trim().length >= 14) {
-        warningNotify("作品名称过长,14字以内");
+      if (uploadParams.name.trim().length >= 50) {
+        warningNotify("作品名称过长,50字以内");
         return (btnDisabled.value = false);
       }
 
