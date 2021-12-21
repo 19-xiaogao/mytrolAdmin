@@ -113,8 +113,7 @@ export default defineComponent({
         warningNotify("请选择上架时间");
         return (btnDisabled.value = false);
       }
-
-      const userSelectTime = dayjs(addParmas.opening_time).unix();
+      const userSelectTime = dayjs(addParmas.openingTime).unix();
       if (userSelectTime < dayjs(Date.now()).unix()) {
         return warningNotify("请选择正确的开售时间，当前你选择的时间已过。");
       }
