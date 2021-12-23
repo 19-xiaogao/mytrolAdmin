@@ -6,7 +6,6 @@ import store from "@/store";
 const baseUrl = process.env.VUE_APP_BASE_URL;
 const server = axios.create({
   baseURL: baseUrl,
-  timeout: 9000,
 });
 
 server.interceptors.request.use(
