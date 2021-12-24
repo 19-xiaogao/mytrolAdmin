@@ -65,8 +65,8 @@
 </template>
 
 <script>
-import { computed, ref, getCurrentInstance, onMounted, toRaw } from "vue";
-import { getBannerApi, updateBannerApi, uploadFIleApi } from "@api";
+import { computed, ref, onMounted, toRaw } from "vue";
+import { getBannerApi, updateBannerApi, uploadAliOssApi } from "@api";
 import { pollingBannerApi } from "@/api/pllingApi";
 import { warningNotify } from "@/utils";
 const defaultTabList = [
@@ -90,7 +90,6 @@ export default {
     },
   },
   setup(props) {
-    const { proxy } = getCurrentInstance();
     const currentParams = ref(defaultTabList[0]);
     const tableList = ref(defaultTabList);
     const tx_hash = ref("");
@@ -106,11 +105,16 @@ export default {
       const files = e.target.files[0];
       const formData = new FormData();
       formData.append("file", files);
-      const { result, err_code } = await uploadFIleApi(formData);
-      e.target.value = "";
-      if (err_code === "0") {
-        currentParams.value.imgFile = proxy.joinPreviewUrl(result.cid);
+
+      const splitArr = files.name.split(".");
+      const imgType = splitArr[splitArr.length - 1];
+      const fileName = `banner${currentParams.value.key}.${imgType}`;
+
+      const result = await uploadAliOssApi(fileName, formData.get("file"));
+      if (result.res.status === 200) {
+        currentParams.value.imgFile = result.url;
       }
+      e.target.value = "";
     };
     const addBannerClick = async () => {
       if (tableList.value.length >= 5) return warningNotify("最多添加5个");
@@ -149,6 +153,7 @@ export default {
         });
         uploadData = tableList.value;
       }
+      console.log(uploadData);
       await updateBannerApi(JSON.stringify(uploadData));
 
       pollingBannerApi(tx_hash.value, (result) => {

@@ -1,8 +1,11 @@
 import server from "./axios";
-import aliClientOss from '@/utils/alioss'
+import aliClientOss from "@/utils/alioss";
 
 // alioss 上传文件
-export const uploadAliOssApi = (name,file) => aliClientOss.put(`mytrol/${name}`,file)
+export const uploadAliOssApi = async (name, file) => {
+  return aliClientOss.put(`mytrol/${name}`, file);
+};
+
 // 登录
 export const loginApi = (data) => server.post("/backend_login", data);
 
@@ -105,4 +108,3 @@ export const getClassificationApi = () =>
 // 添加分类
 export const addClassificationApi = (name) =>
   server.post("/backend/add_classification", { name });
-

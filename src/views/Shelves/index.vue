@@ -313,6 +313,7 @@ export default defineComponent({
       const formData = new FormData();
 
       uploadParams.classification = uploadParams.classification.join();
+      
       for (let key in uploadParams) {
         formData.append(key, uploadParams[key]);
       }
@@ -320,6 +321,8 @@ export default defineComponent({
         formData.set("nft_background", "");
       }
       formData.set("opening_time", String(userSelectTime));
+
+
       const { err_code } = await uploadNftApi(formData, {
         headers: { "content-type": "application/x-www-form-urlencoded" },
       });
