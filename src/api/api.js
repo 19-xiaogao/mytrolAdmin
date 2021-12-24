@@ -1,5 +1,8 @@
 import server from "./axios";
+import aliClientOss from '@/utils/alioss'
 
+// alioss 上传文件
+export const uploadAliOssApi = (name,file) => aliClientOss.put(`mytrol/${name}`,file)
 // 登录
 export const loginApi = (data) => server.post("/backend_login", data);
 

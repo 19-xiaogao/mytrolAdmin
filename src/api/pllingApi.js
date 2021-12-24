@@ -1,7 +1,7 @@
 import { pollingServer } from "./axios";
 import store from "@/store";
 
-const ASeconds = 1000;
+const ASeconds = 1.5 * 1000;
 
 // 轮询审核列表数据
 export const pollingQueryPublishingApi = async (params, id, fc) => {

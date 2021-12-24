@@ -4,7 +4,7 @@
     <Sidebar />
     <UserSettingModal v-if="!isShowEditModal" />
     <div class="body">
-      <Loading v-if="loading" />
+      <Loading v-show="loading" />
       <a-config-provider :locale="locale">
         <router-view v-slot="{ Component }">
           <keep-alive>
