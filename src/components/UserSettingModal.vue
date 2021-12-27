@@ -48,7 +48,7 @@ import {
 } from "vue";
 import { useStore } from "vuex";
 import { previewFile, warningNotify } from "@/utils";
-import { editPersonApi } from "@api";
+import { editPersonApi, uploadAliOssApi } from "@api";
 export default defineComponent({
   props: {
     user_file: Object,
@@ -91,20 +91,29 @@ export default defineComponent({
       fromData.set("nickname", userMessage.username);
 
       // oss 图片上传
+      const fileName = "avator" + new Date().getTime() + ".png";
+      const ossResult = await uploadAliOssApi(fileName, fromData.get("file"));
 
-      const { err_code, result } = await editPersonApi(fromData);
-      if (err_code === "0") {
-        // 本地存一份，vuex 存一份
-        const setPersonMessage = {
-          ...result,
-          address: "",
-          my_code: "",
-          token: "",
-          avatar: proxy.joinPreviewUrl(result.cid),
-        };
-        store.commit("setPersonMessage", setPersonMessage);
-        localStorage.setItem("personMessage", JSON.stringify(setPersonMessage));
-        visible.value = false;
+      if (ossResult.res.status === 200) {
+        const ossFileUrl = ossResult.res.requestUrls[0];
+        fromData.set("file", ossFileUrl);
+        const { err_code, result } = await editPersonApi(fromData);
+        if (err_code === "0") {
+          // 本地存一份，vuex 存一份
+          const setPersonMessage = {
+            ...result,
+            address: "",
+            my_code: "",
+            token: "",
+            avatar: ossFileUrl,
+          };
+          store.commit("setPersonMessage", setPersonMessage);
+          localStorage.setItem(
+            "personMessage",
+            JSON.stringify(setPersonMessage)
+          );
+          visible.value = false;
+        }
       }
     };
     return {
