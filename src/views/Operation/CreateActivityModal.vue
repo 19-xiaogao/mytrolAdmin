@@ -33,7 +33,7 @@
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
 import { addUpdateIpApi, uploadAliOssApi } from "@api";
-import { previewFile } from "@/utils";
+import { previewFile,uuidToCreateHash } from "@/utils";
 
 export default defineComponent({
   props: {
@@ -67,7 +67,7 @@ export default defineComponent({
     const handleSureClick = async () => {
       formData.set("name", addIpParams.name);
 
-      const fileName = "ip/" + new Date().getTime() + ".png";
+      const fileName = "ip/" +uuidToCreateHash() + ".png";
       const ossResult = await uploadAliOssApi(fileName, formData.get("file"));
 
       if (ossResult.res.status === 200) {

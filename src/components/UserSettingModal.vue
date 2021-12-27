@@ -47,7 +47,7 @@ import {
   toRefs,
 } from "vue";
 import { useStore } from "vuex";
-import { previewFile, warningNotify } from "@/utils";
+import { previewFile, warningNotify,uuidToCreateHash } from "@/utils";
 import { editPersonApi, uploadAliOssApi } from "@api";
 export default defineComponent({
   props: {
@@ -91,7 +91,7 @@ export default defineComponent({
       fromData.set("nickname", userMessage.username);
 
       // oss 图片上传
-      const fileName = "avator/" + new Date().getTime() + ".png";
+      const fileName = "avator/" +uuidToCreateHash() + ".png";
       const ossResult = await uploadAliOssApi(fileName, fromData.get("file"));
 
       if (ossResult.res.status === 200) {

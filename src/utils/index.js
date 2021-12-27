@@ -1,4 +1,6 @@
 import { notification } from "ant-design-vue";
+import { v4 as uuid } from "uuid";
+import sha256 from "sha256";
 const TOKEN = "ROLE";
 /**
  * 节流
@@ -57,7 +59,7 @@ export function previewFile(file) {
 // 拼接ipfs请求路径 ，图片都是用oss,避免过大改动...
 export const joinPreviewUrl = (url) => {
   // return process.env.VUE_APP_BASE_IPFS + url;
-  return  url;
+  return url;
 };
 
 // 提示框
@@ -117,4 +119,10 @@ export function towObjectEqual(obj1, obj2) {
     }
   }
   return boolean;
+}
+
+// 创建一个随机hash值
+export function uuidToCreateHash() {
+  const uuidString = uuid();
+  return sha256(uuidString);
 }

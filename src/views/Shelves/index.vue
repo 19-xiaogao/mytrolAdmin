@@ -105,6 +105,11 @@
           />
         </div>
         <div class="ope-act-b-l">
+          <div class="opeAct-button" @click="handleEquityActivityClick">
+            <icon-svg icon="icon-a-bianzu34"></icon-svg>
+            <icon-svg icon="icon-duihao"></icon-svg>
+            添加权益卡
+          </div>
           <div class="opeAct-button" @click="handleShowOperationActivityClick">
             <icon-svg icon="icon-qizi" class="icon"></icon-svg>
             运营活动
@@ -136,6 +141,10 @@
       :nftNumber="number"
       @close="handleOperationActivityClick"
     />
+    <EquityActivity
+      v-show="isEquityActivity"
+      @close="handleCloseEquityActivityClick"
+    />
   </div>
 </template>
 
@@ -157,10 +166,11 @@ import {
 } from "@api";
 import dayjs from "dayjs";
 import UploadNft from "./UploadNft";
-import { warningNotify, successNotify } from "@/utils";
+import { warningNotify, successNotify, uuidToCreateHash } from "@/utils";
 import UploadCollection from "./UploadCollection";
 import PreviewImg from "@/components/PreviewImg";
 import OperationActivity from "./OperationActivity";
+import EquityActivity from "./EquityActivity.vue";
 
 let shelvesParams = {
   name: "",
@@ -182,6 +192,7 @@ export default defineComponent({
     UploadCollection,
     PreviewImg,
     OperationActivity,
+    EquityActivity,
   },
   setup() {
     const { proxy } = getCurrentInstance();
@@ -201,7 +212,7 @@ export default defineComponent({
     });
     const btnDisabled = ref(false);
     const isOperationActivity = ref(false);
-
+    const isEquityActivity = ref(false);
     onMounted(() => {
       getIpList();
       getClassData();
@@ -244,14 +255,14 @@ export default defineComponent({
     };
 
     const uploadAllNftToOssApi = (formData) => {
-      const time = new Date().getTime();
+      const hash = uuidToCreateHash();
       const nft_file = formData.get("nft_file");
       const nft_background = formData.get("nft_background");
       const nft_thumbnail = formData.get("nft_thumbnail");
 
-      const nft_file_name = `item/nftFile${time}.${nftAllImgType.nft_file_type}`;
-      const nft_background_name = `item/nftBackground${time}.${nftAllImgType.nft_background_type}`;
-      const nft_thumbnail_name = `item/nftThumbnail${time}.${nftAllImgType.nft_thumbnail_type}`;
+      const nft_file_name = `item/nftFile${hash}.${nftAllImgType.nft_file_type}`;
+      const nft_background_name = `item/nftBackground${hash}.${nftAllImgType.nft_background_type}`;
+      const nft_thumbnail_name = `item/nftThumbnail${hash}.${nftAllImgType.nft_thumbnail_type}`;
 
       return new Promise((resolve, reject) => {
         Promise.all([
@@ -277,7 +288,6 @@ export default defineComponent({
     };
 
     const handleUploadNftClick = async () => {
-      console.log(nftAllImgType);
       btnDisabled.value = true;
       const userSelectTime = dayjs(uploadParams.opening_time).unix();
       if (userSelectTime < dayjs(Date.now()).unix()) {
@@ -388,6 +398,14 @@ export default defineComponent({
     const handleShowOperationActivityClick = () => {
       isOperationActivity.value = true;
     };
+    const handleEquityActivityClick = () => {
+      isEquityActivity.value = true;
+    };
+
+    const handleCloseEquityActivityClick = () => {
+      isEquityActivity.value = false;
+    };
+
     return {
       ...toRefs(uploadParams),
       handleUploadNftClick,
@@ -401,6 +419,9 @@ export default defineComponent({
       handleOperationActivityClick,
       classData,
       handleShowOperationActivityClick,
+      isEquityActivity,
+      handleEquityActivityClick,
+      handleCloseEquityActivityClick,
       nftAllImgType,
     };
   },
@@ -650,6 +671,7 @@ export default defineComponent({
         color: #ffffff;
         text-align: center;
         line-height: 40px;
+        margin: 0 10px;
 
         cursor: pointer;
         .icon {
