@@ -54,9 +54,10 @@ export function previewFile(file) {
   });
 }
 
-// 拼接ipfs请求路径
-export const joinPreviewUrl = (hash) => {
-  return process.env.VUE_APP_BASE_IPFS + hash;
+// 拼接ipfs请求路径 ，图片都是用oss,避免过大改动...
+export const joinPreviewUrl = (url) => {
+  // return process.env.VUE_APP_BASE_IPFS + url;
+  return  url;
 };
 
 // 提示框

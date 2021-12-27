@@ -10,7 +10,6 @@
     "
   >
     <template #make>
-      <img src="@assets/images/avtor.png" alt="" />
       <span>小龙</span>
     </template>
     <template #detail>

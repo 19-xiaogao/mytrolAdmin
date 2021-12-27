@@ -86,17 +86,6 @@
               :bordered="false"
             />
           </div>
-          <div class="select-headers" v-if="showHeaderSelect">
-            <div
-              class="header"
-              v-for="item in [1, 2, 3, 4, 5]"
-              :key="item"
-              @click="() => handleHeaderSelectClick(false, item)"
-            >
-              <img src="@assets/images/avtor.png" alt="" />
-              <span>JOSN</span>
-            </div>
-          </div>
         </div>
         <div class="ups">
           <div class="nft-des">
@@ -155,10 +144,8 @@ import {
   toRefs,
   onMounted,
   getCurrentInstance,
-  computed,
   onUnmounted,
 } from "vue";
-import { useStore } from "vuex";
 import {
   getSerisesIpApi,
   uploadNftApi,
@@ -195,11 +182,9 @@ export default defineComponent({
   },
   setup() {
     const { proxy } = getCurrentInstance();
-    const store = useStore();
     let uploadParams = reactive(obj);
     const ipList = ref([]);
     const currentIpName = ref("首页");
-    const showHeaderSelect = ref(false);
     const classData = ref([]);
     const privewImgComponentParmas = reactive({
       imgUrl: "",
@@ -218,7 +203,6 @@ export default defineComponent({
       privewImgComponentParmas.imgUrl = imgSrc;
       privewImgComponentParmas.visible = true;
     };
-    const personMessage = computed(() => store.getters.getPersonMessage);
     const getIpList = async () => {
       const { err_code, result } = await getSerisesIpApi();
       if (err_code === "0") {
@@ -378,10 +362,6 @@ export default defineComponent({
         successNotify("图片上传失败...");
       }
     };
-
-    const handleHeaderSelectClick = (boolan) => {
-      showHeaderSelect.value = boolan;
-    };
     const handleMenuClick = (e) => {
       uploadParams.series_ip = e.key;
       const findName = ipList.value.find((item) => item.name === e.key);
@@ -400,12 +380,9 @@ export default defineComponent({
     return {
       ...toRefs(uploadParams),
       handleUploadNftClick,
-      handleHeaderSelectClick,
-      showHeaderSelect,
       ipList,
       handleMenuClick,
       currentIpName,
-      personMessage,
       handleUploadNftPreview,
       privewImgComponentParmas,
       btnDisabled,
