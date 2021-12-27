@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { ref, onUpdated, onMounted } from "vue";
+import { ref, onUpdated } from "vue";
 import { warningNotify } from "@/utils";
 export default {
   emits: ["close"],
@@ -49,7 +49,6 @@ export default {
     const orderDetailRef = ref(null);
     const checked = ref(false);
     const free_number = ref(0);
-    const currentSelectClass = ref([]);
     const handleHideClick = () => {
       orderDetailRef.value.style.animation = "sliding-hiden 0.5s linear 0s";
       setTimeout(() => {
@@ -70,10 +69,9 @@ export default {
         free_number: free_number.value,
         private_sale: checked.value,
       });
+      free_number.value = 0;
+      checked.value = false;
     };
-  
-    onMounted(() => {
-    });
     onUpdated(() => {
       orderDetailRef.value.style.animation = "sliding-show 0.5s linear 0s";
     });
@@ -84,7 +82,6 @@ export default {
       checked,
       free_number,
       handleSaveSettingClick,
-      currentSelectClass,
     };
   },
 };
@@ -194,7 +191,7 @@ export default {
       margin-top: 4px;
     }
   }
- 
+
   .save-setting {
     width: 134px;
     height: 40px;

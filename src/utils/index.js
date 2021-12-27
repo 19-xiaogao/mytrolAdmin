@@ -126,3 +126,9 @@ export function uuidToCreateHash() {
   const uuidString = uuid();
   return sha256(uuidString);
 }
+
+//返回文件类型
+export function backFileType(file) {
+  const splitArr = file.name.split(".");
+  return splitArr[splitArr.length - 1];
+}
