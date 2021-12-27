@@ -4,12 +4,14 @@
       <div class="upload-img-box">
         <UploadNft
           v-model:doneImgFile="nft_file"
+          v-model:doneImgType="nftAllImgType.nft_file_type"
           ref="uploadNftRef"
           type="originalImage"
           @previewImgClick="handleUploadNftPreview"
         />
         <UploadNft
           v-model:doneImgFile="nft_thumbnail"
+          v-model:doneImgType="nftAllImgType.nft_thumbnail_type"
           ref="nftThumbnailRef"
           style="margin-top: 10px"
           type="thumbnail"
@@ -98,6 +100,7 @@
           <UploadCollection
             ref="uploadCollection"
             v-model:nft_background="nft_background"
+            v-model:doneImgType="nftAllImgType.nft_background_type"
             @previewImgClick="handleUploadNftPreview"
           />
         </div>
@@ -125,8 +128,8 @@
     </div>
 
     <PreviewImg
-      :imgUrl="privewImgComponentParmas.imgUrl"
-      v-model:visible="privewImgComponentParmas.visible"
+      :imgUrl="priviesImgComponentParams.imgUrl"
+      v-model:visible="priviesImgComponentParams.visible"
     />
     <OperationActivity
       v-show="isOperationActivity"
@@ -159,7 +162,7 @@ import UploadCollection from "./UploadCollection";
 import PreviewImg from "@/components/PreviewImg";
 import OperationActivity from "./OperationActivity";
 
-let obj = {
+let shelvesParams = {
   name: "",
   description: "",
   number: "",
@@ -182,16 +185,23 @@ export default defineComponent({
   },
   setup() {
     const { proxy } = getCurrentInstance();
-    let uploadParams = reactive(obj);
+
     const ipList = ref([]);
-    const currentIpName = ref("首页");
     const classData = ref([]);
-    const privewImgComponentParmas = reactive({
+    const currentIpName = ref("首页");
+    const priviesImgComponentParams = reactive({
       imgUrl: "",
       visible: false,
     });
+    const uploadParams = reactive(shelvesParams);
+    const nftAllImgType = reactive({
+      nft_file_type: "",
+      nft_background_type: "",
+      nft_thumbnail_type: "",
+    });
     const btnDisabled = ref(false);
     const isOperationActivity = ref(false);
+
     onMounted(() => {
       getIpList();
       getClassData();
@@ -200,8 +210,8 @@ export default defineComponent({
       initParams();
     });
     const handleUploadNftPreview = (imgSrc) => {
-      privewImgComponentParmas.imgUrl = imgSrc;
-      privewImgComponentParmas.visible = true;
+      priviesImgComponentParams.imgUrl = imgSrc;
+      priviesImgComponentParams.visible = true;
     };
     const getIpList = async () => {
       const { err_code, result } = await getSerisesIpApi();
@@ -239,9 +249,9 @@ export default defineComponent({
       const nft_background = formData.get("nft_background");
       const nft_thumbnail = formData.get("nft_thumbnail");
 
-      const nft_file_name = `item/nftFile${time}.png`;
-      const nft_background_name = `item/nftBackground${time}.png`;
-      const nft_thumbnail_name = `item/nftThumbnail${time}.png`;
+      const nft_file_name = `item/nftFile${time}.${nftAllImgType.nft_file_type}`;
+      const nft_background_name = `item/nftBackground${time}.${nftAllImgType.nft_background_type}`;
+      const nft_thumbnail_name = `item/nftThumbnail${time}.${nftAllImgType.nft_thumbnail_type}`;
 
       return new Promise((resolve, reject) => {
         Promise.all([
@@ -267,6 +277,7 @@ export default defineComponent({
     };
 
     const handleUploadNftClick = async () => {
+      console.log(nftAllImgType);
       btnDisabled.value = true;
       const userSelectTime = dayjs(uploadParams.opening_time).unix();
       if (userSelectTime < dayjs(Date.now()).unix()) {
@@ -384,12 +395,13 @@ export default defineComponent({
       handleMenuClick,
       currentIpName,
       handleUploadNftPreview,
-      privewImgComponentParmas,
+      priviesImgComponentParams,
       btnDisabled,
       isOperationActivity,
       handleOperationActivityClick,
       classData,
       handleShowOperationActivityClick,
+      nftAllImgType,
     };
   },
 });

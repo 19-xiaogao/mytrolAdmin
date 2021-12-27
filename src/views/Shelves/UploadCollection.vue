@@ -2,7 +2,7 @@
   <div class="upload_collection">
     <div class="titles">
       <h3>藏品描述图片</h3>
-      <div class="prew" @click="hanldePrewClick">
+      <div class="prew" @click="handlePreviewClick">
         <icon-svg icon="icon-icon4-hover" class="icon"></icon-svg>
         <span>预览</span>
       </div>
@@ -28,6 +28,7 @@ export default defineComponent({
   name: "uploadCollection",
   props: {
     nft_background: Object,
+    doneImgType: String,
     previewImgClick: Function,
   },
   setup(props, { emit }) {
@@ -41,18 +42,21 @@ export default defineComponent({
 
       previewFile(imgFile[0]).then((res) => {
         imgSrc.value = res;
+        const splitArr = imgFile[0].name.split(".");
+        const imgType = splitArr[splitArr.length - 1];
         emit("update:nft_background", imgFile[0]);
+        emit("update:doneImgType", imgType);
         e.target.value = "";
       });
     };
-    const hanldePrewClick = () => {
+    const handlePreviewClick = () => {
       emit("previewImgClick", imgSrc);
     };
 
     return {
       imgSrc,
       handleUploadFile,
-      hanldePrewClick,
+      handlePreviewClick,
     };
   },
 });

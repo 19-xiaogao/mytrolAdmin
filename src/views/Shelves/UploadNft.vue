@@ -32,6 +32,7 @@ import { previewFile, warningNotify } from "@/utils";
 export default defineComponent({
   props: {
     doneImgFile: Object,
+    doneImgType:String,
     previewImgClick: Function,
     type: String,
   },
@@ -72,10 +73,13 @@ export default defineComponent({
       if (!typeBol.value && imgFile[0].size > 1024 * 500) {
         return warningNotify("请上传300K以内的图片");
       }
+      const splitArr = imgFile[0].name.split(".");
+      const imgType = splitArr[splitArr.length - 1];
 
       previewFile(imgFile[0]).then((res) => {
         imgSrc.value = res;
         emit("update:doneImgFile", imgFile[0]);
+        emit("update:doneImgType", imgType);
         e.target.value = "";
       });
     };
@@ -86,7 +90,7 @@ export default defineComponent({
       handleImgVisibleClick,
       title,
       decs,
-      uploadAccept
+      uploadAccept,
     };
   },
 });
