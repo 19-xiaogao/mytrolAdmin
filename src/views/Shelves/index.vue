@@ -39,9 +39,7 @@
           </a-dropdown>
         </div>
         <div class="search-base">
-          <div class="avator">
-           
-          </div>
+          <div class="avator"></div>
           <div class="price">
             <div>价格</div>
             <a-input-number
@@ -161,7 +159,12 @@ import {
   onUnmounted,
 } from "vue";
 import { useStore } from "vuex";
-import { getSerisesIpApi, uploadNftApi, getClassificationApi } from "@api";
+import {
+  getSerisesIpApi,
+  uploadNftApi,
+  getClassificationApi,
+  uploadAliOssApi,
+} from "@api";
 import dayjs from "dayjs";
 import UploadNft from "./UploadNft";
 import { warningNotify, successNotify } from "@/utils";
@@ -246,6 +249,39 @@ export default defineComponent({
       btnDisabled.value = false;
     };
 
+    const uploadAllNftToOssApi = (formData) => {
+      const time = new Date().getTime();
+      const nft_file = formData.get("nft_file");
+      const nft_background = formData.get("nft_background");
+      const nft_thumbnail = formData.get("nft_thumbnail");
+
+      const nft_file_name = `item/nftFile${time}.png`;
+      const nft_background_name = `item/nftBackground${time}.png`;
+      const nft_thumbnail_name = `item/nftThumbnail${time}.png`;
+
+      return new Promise((resolve, reject) => {
+        Promise.all([
+          uploadAliOssApi(nft_file_name, nft_file),
+          uploadAliOssApi(nft_background_name, nft_background),
+          uploadAliOssApi(nft_thumbnail_name, nft_thumbnail),
+        ])
+          .then((result) => {
+            resolve({
+              nft_file: result[0].res.requestUrls[0],
+              nft_background: result[1].res.requestUrls[0],
+              nft_thumbnail: result[2].res.requestUrls[0],
+            });
+          })
+          .catch((err) => reject(err));
+      });
+    };
+
+    const setFormDateNft = (formData, obj) => {
+      formData.set("nft_file", obj.nft_file);
+      formData.set("nft_background", obj.nft_background);
+      formData.set("nft_thumbnail", obj.nft_thumbnail);
+    };
+
     const handleUploadNftClick = async () => {
       btnDisabled.value = true;
       const userSelectTime = dayjs(uploadParams.opening_time).unix();
@@ -313,7 +349,7 @@ export default defineComponent({
       const formData = new FormData();
 
       uploadParams.classification = uploadParams.classification.join();
-      
+
       for (let key in uploadParams) {
         formData.append(key, uploadParams[key]);
       }
@@ -322,16 +358,24 @@ export default defineComponent({
       }
       formData.set("opening_time", String(userSelectTime));
 
+      try {
+        const ossResult = await uploadAllNftToOssApi(formData);
 
-      const { err_code } = await uploadNftApi(formData, {
-        headers: { "content-type": "application/x-www-form-urlencoded" },
-      });
-      if (err_code === "0") {
-        initParams();
-        proxy.$refs.uploadNftRef.imgSrc = "";
-        proxy.$refs.uploadCollection.imgSrc = "";
-        proxy.$refs.nftThumbnailRef.imgSrc = "";
-        successNotify("创作成功，请等待审核通过。区块上链中...");
+        setFormDateNft(ossResult);
+
+        const { err_code } = await uploadNftApi(formData, {
+          headers: { "content-type": "application/x-www-form-urlencoded" },
+        });
+        if (err_code === "0") {
+          initParams();
+          proxy.$refs.uploadNftRef.imgSrc = "";
+          proxy.$refs.uploadCollection.imgSrc = "";
+          proxy.$refs.nftThumbnailRef.imgSrc = "";
+          successNotify("创作成功，请等待审核通过。区块上链中...");
+        }
+      } catch (error) {
+        console.log(error);
+        successNotify("图片上传失败...");
       }
     };
 
