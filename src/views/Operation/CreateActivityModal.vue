@@ -32,7 +32,7 @@
 
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
-import { addUpdateIpApi } from "@api";
+import { addUpdateIpApi, uploadAliOssApi } from "@api";
 import { previewFile } from "@/utils";
 
 export default defineComponent({
@@ -66,12 +66,21 @@ export default defineComponent({
     };
     const handleSureClick = async () => {
       formData.set("name", addIpParams.name);
-      const { err_code } = await addUpdateIpApi(formData);
-      if (err_code === "0") {
-        emit("update:createVisible", false);
-        emit("ok");
-        addIpParams.imgSrc = "";
-        addIpParams.name = "";
+
+      const fileName = "ip/" + new Date().getTime() + ".png";
+      const ossResult = await uploadAliOssApi(fileName, formData.get("file"));
+
+      if (ossResult.res.status === 200) {
+        const ossFileUrl = ossResult.res.requestUrls[0];
+        formData.set("file", ossFileUrl);
+        
+        const { err_code } = await addUpdateIpApi(formData);
+        if (err_code === "0") {
+          emit("update:createVisible", false);
+          emit("ok");
+          addIpParams.imgSrc = "";
+          addIpParams.name = "";
+        }
       }
     };
     return {
