@@ -26,7 +26,11 @@
     </div>
     <div class="user-input">
       <span>名称</span>
-      <input type="text" placeholder="请输入创作者名称(10个字符以内)" v-model="username" />
+      <input
+        type="text"
+        placeholder="请输入创作者名称(10个字符以内)"
+        v-model="username"
+      />
     </div>
     <template #footer>
       <div class="footer" @click="handleSureClick">确定</div>
@@ -85,6 +89,9 @@ export default defineComponent({
       }
 
       fromData.set("nickname", userMessage.username);
+
+      // oss 图片上传
+
       const { err_code, result } = await editPersonApi(fromData);
       if (err_code === "0") {
         // 本地存一份，vuex 存一份
