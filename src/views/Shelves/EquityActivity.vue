@@ -29,29 +29,6 @@
         />
       </div>
     </div>
-    <div class="add-equity-box">
-      <h3>权益卡内容</h3>
-      <div class="equity-cover">
-        <icon-svg
-          icon="icon-tianjia"
-          class="icon"
-          @click="handleHideClick"
-        ></icon-svg>
-        <p style="width: 249px">
-          详情尺寸宽1052px，高度没有限制，图片内容需要按照模版尺寸和元素
-        </p>
-        <input
-          type="file"
-          class="upload-file"
-          @change="handleEquityContentChange"
-        />
-        <img
-          v-if="equityParams.equityContent.value"
-          :src="equityParams.equityContent.value"
-          alt=""
-        />
-      </div>
-    </div>
     <a-button
       class="save-setting"
       @click="handleSaveSettingClick"
@@ -85,14 +62,9 @@ export default {
         value: "",
         type: "",
       },
-      equityContent: {
-        value: "",
-        type: "",
-      },
     });
     const formData = new FormData();
     formData.append("equityCover", "");
-    formData.append("equityContent", "");
     const handleHideClick = () => {
       orderDetailRef.value.style.animation = "sliding-hiden 0.5s linear 0s";
       setTimeout(() => {
@@ -103,18 +75,13 @@ export default {
       const equityCoverFilName = `item/equityCover${uuidToCreateHash()}.${
         equityParams.equityCover.type
       }`;
-      const equityContentFileName = `item/equityContent${uuidToCreateHash()}.${
-        equityParams.equityContent.type
-      }`;
       return new Promise((resolve, reject) => {
         Promise.all([
           uploadAliOssApi(equityCoverFilName, formData.get("equityCover")),
-          uploadAliOssApi(equityContentFileName, formData.get("equityContent")),
         ])
           .then((result) => {
             resolve({
               equityCover: result[0].res.requestUrls[0],
-              equityContent: result[1].res.requestUrls[0],
             });
           })
           .catch((err) => reject(err));
@@ -125,17 +92,10 @@ export default {
         value: "",
         type: "",
       };
-      equityParams.equityContent = {
-        value: "",
-        type: "",
-      };
     };
     const handleSaveSettingClick = async () => {
       if (!equityParams.equityCover.value.trim().length === 0) {
         return warningNotify("请上传权益封面");
-      }
-      if (!equityParams.equityContent.value.trim().length === 0) {
-        return warningNotify("请上传权益内容");
       }
       loading.value = true;
       const result = await uploadFileAllOss();
@@ -152,15 +112,6 @@ export default {
         formData.set("equityCover", file[0]);
       });
     };
-    const handleEquityContentChange = (e) => {
-      const file = e.target.files;
-      previewFile(file[0]).then((res) => {
-        equityParams.equityContent.type = backFileType(file[0]);
-        equityParams.equityContent.value = res;
-        formData.set("equityContent", file[0]);
-      });
-    };
-
     onUpdated(() => {
       orderDetailRef.value.style.animation = "sliding-show 0.5s linear 0s";
     });
@@ -171,7 +122,6 @@ export default {
       handleSaveSettingClick,
       equityParams,
       handleEquityCoverChange,
-      handleEquityContentChange,
       loading,
     };
   },

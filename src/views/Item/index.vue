@@ -104,6 +104,7 @@ import ShelvesNft from "./ShelvesNft";
 import { Modal } from "ant-design-vue";
 import { useStore } from "vuex";
 import dayjs from "dayjs";
+import { successNotify } from "@/utils";
 // publishStatusUnPublish = "0"; //下架
 // publishStatusPublishing = "1" //审核
 // publishStatusSuccess    = "2" //发布成功
@@ -202,6 +203,7 @@ export default defineComponent({
       const { err_code } = await shelvesNftApi(id);
       if (err_code === "0") {
         getWorksList();
+        successNotify("操作成功。");
       }
     };
     const getSmellProgramBaseUrl = async () => {

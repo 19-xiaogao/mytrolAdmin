@@ -151,8 +151,10 @@ export default {
         uploadData = tableList.value;
       }
       await updateBannerApi(JSON.stringify(uploadData));
-      successNotify("更新成功");
-      getBanner();
+      setTimeout(() => {
+        getBanner();
+        successNotify("更新成功");
+      }, 1000);
     };
     const getBanner = async () => {
       const { err_code, result } = await getBannerApi();

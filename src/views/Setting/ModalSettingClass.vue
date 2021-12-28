@@ -1,5 +1,10 @@
 <template>
-  <a-modal :visible="classVisible" class="modal" title="设置分类" :footer="null">
+  <a-modal
+    :visible="classVisible"
+    class="modal"
+    title="设置分类"
+    :footer="null"
+  >
     <div class="user-input">
       <div class="user">
         <span>添加分类</span>
@@ -26,12 +31,9 @@
 
 <script>
 import { defineComponent, ref, watchEffect } from "vue";
-import {
-  getClassificationApi,
-  addClassificationApi,
-} from "@api";
+import { getClassificationApi, addClassificationApi } from "@api";
 import { pollingClassApi } from "@/api/pllingApi";
-import { warningNotify } from "../../utils";
+import { successNotify, warningNotify } from "../../utils";
 export default defineComponent({
   props: {
     classVisible: {
@@ -62,6 +64,7 @@ export default defineComponent({
       if (err_code === "0") {
         pollingClassApi(classData.value.length, (result) => {
           classData.value = result;
+          successNotify("添加成功");
         });
       }
     };
