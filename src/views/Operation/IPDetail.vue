@@ -89,7 +89,6 @@ export default defineComponent({
         String(numbers)
       );
       if (err_code === "0") {
-        console.log("作品列表", result);
         workList.value = result.map((item) => ({
           ...item,
           avatar: proxy.joinPreviewUrl(item.avatar),
@@ -98,7 +97,9 @@ export default defineComponent({
       }
     };
     watchEffect(() => {
-      getLastetNftList(props.params.id, pagination.page, pagination.numbers);
+      if (props.params.id) {
+        getLastetNftList(props.params.id, pagination.page, pagination.numbers);
+      }
     }, [props.params.id]);
 
     const isShowStatus = computed(() => {

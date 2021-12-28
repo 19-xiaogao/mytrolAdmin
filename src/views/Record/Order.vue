@@ -126,7 +126,7 @@ export default defineComponent({
     const getUserOrderList = async (pagination) => {
       const { err_code, result } = await getAllOrderApi(pagination);
       if (err_code === "0") {
-        if (result.list) {
+        if (result && result.list) {
           data.value = result.list;
           pagination.total = Number(result.total);
         }

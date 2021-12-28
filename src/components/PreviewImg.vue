@@ -2,7 +2,7 @@
   <a-modal
     :visible="visible"
     class="modal"
-    @cancel="hanldeClick"
+    @cancel="handleClick"
     :centered="true"
     :footer="null"
   >
@@ -17,10 +17,10 @@ export default {
     imgUrl: String,
   },
   setup(props, { emit }) {
-    const hanldeClick = () => {
+    const handleClick = () => {
       emit("update:visible", false);
     };
-    return { hanldeClick };
+    return { handleClick };
   },
 };
 </script>

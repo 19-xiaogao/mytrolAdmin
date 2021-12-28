@@ -37,7 +37,6 @@ export default defineComponent({
   setup(props, { emit }) {
     const currentStatus = ref(1);
     const modalDays = ref(0);
-    console.log(modalDays.value);
     const handleClose = () => {
       emit("update:dayVisible", false);
     };

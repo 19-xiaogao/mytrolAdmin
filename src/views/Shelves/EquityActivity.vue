@@ -112,7 +112,6 @@ export default {
           uploadAliOssApi(equityContentFileName, formData.get("equityContent")),
         ])
           .then((result) => {
-            console.log(result);
             resolve({
               equityCover: result[0].res.requestUrls[0],
               equityContent: result[1].res.requestUrls[0],

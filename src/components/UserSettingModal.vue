@@ -47,7 +47,7 @@ import {
   toRefs,
 } from "vue";
 import { useStore } from "vuex";
-import { previewFile, warningNotify,uuidToCreateHash } from "@/utils";
+import { previewFile, warningNotify, uuidToCreateHash } from "@/utils";
 import { editPersonApi, uploadAliOssApi } from "@api";
 export default defineComponent({
   props: {
@@ -91,29 +91,33 @@ export default defineComponent({
       fromData.set("nickname", userMessage.username);
 
       // oss 图片上传
-      const fileName = "avator/" +uuidToCreateHash() + ".png";
-      const ossResult = await uploadAliOssApi(fileName, fromData.get("file"));
+      try {
+        const fileName = "avator/" + uuidToCreateHash() + ".png";
+        const ossResult = await uploadAliOssApi(fileName, fromData.get("file"));
 
-      if (ossResult.res.status === 200) {
-        const ossFileUrl = ossResult.res.requestUrls[0];
-        fromData.set("file", ossFileUrl);
-        const { err_code, result } = await editPersonApi(fromData);
-        if (err_code === "0") {
-          // 本地存一份，vuex 存一份
-          const setPersonMessage = {
-            ...result,
-            address: "",
-            my_code: "",
-            token: "",
-            avatar: ossFileUrl,
-          };
-          store.commit("setPersonMessage", setPersonMessage);
-          localStorage.setItem(
-            "personMessage",
-            JSON.stringify(setPersonMessage)
-          );
-          visible.value = false;
+        if (ossResult.res.status === 200) {
+          const ossFileUrl = ossResult.res.requestUrls[0];
+          fromData.set("file", ossFileUrl);
+          const { err_code, result } = await editPersonApi(fromData);
+          if (err_code === "0") {
+            // 本地存一份，vuex 存一份
+            const setPersonMessage = {
+              ...result,
+              address: "",
+              my_code: "",
+              token: "",
+              avatar: ossFileUrl,
+            };
+            store.commit("setPersonMessage", setPersonMessage);
+            localStorage.setItem(
+              "personMessage",
+              JSON.stringify(setPersonMessage)
+            );
+            visible.value = false;
+          }
         }
+      } catch (error) {
+        console.log(error);
       }
     };
     return {

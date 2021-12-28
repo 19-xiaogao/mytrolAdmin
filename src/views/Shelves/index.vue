@@ -123,7 +123,7 @@
       <a-button
         class="btn"
         @click="handleUploadNftClick"
-        :btnDisabled="btnDisabled"
+        :loading="btnDisabled"
       >
         <template #icon>
           <icon-svg icon="icon-icon4" class="icon"></icon-svg
@@ -363,24 +363,18 @@ export default defineComponent({
       }
       formData.set("opening_time", String(userSelectTime));
 
-      try {
-        const ossResult = await uploadAllNftToOssApi(formData);
+      const ossResult = await uploadAllNftToOssApi(formData);
+      setFormDateNft(formData, ossResult);
 
-        setFormDateNft(ossResult);
-
-        const { err_code } = await uploadNftApi(formData, {
-          headers: { "content-type": "application/x-www-form-urlencoded" },
-        });
-        if (err_code === "0") {
-          initParams();
-          proxy.$refs.uploadNftRef.imgSrc = "";
-          proxy.$refs.uploadCollection.imgSrc = "";
-          proxy.$refs.nftThumbnailRef.imgSrc = "";
-          successNotify("创作成功，请等待审核通过。区块上链中...");
-        }
-      } catch (error) {
-        console.log(error);
-        successNotify("图片上传失败...");
+      const { err_code } = await uploadNftApi(formData, {
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+      });
+      if (err_code === "0") {
+        initParams();
+        proxy.$refs.uploadNftRef.imgSrc = "";
+        proxy.$refs.uploadCollection.imgSrc = "";
+        proxy.$refs.nftThumbnailRef.imgSrc = "";
+        successNotify("创作成功，请等待审核通过。区块上链中...");
       }
     };
     const handleMenuClick = (e) => {
@@ -712,6 +706,7 @@ export default defineComponent({
       border-radius: 8px;
       display: flex;
       justify-content: center;
+      align-items: center;
       .icon {
         font-size: 2rem;
         color: #fff;

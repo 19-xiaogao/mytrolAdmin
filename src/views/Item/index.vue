@@ -16,7 +16,7 @@
         v-for="item in renderWorksList"
         :key="item.id"
       >
-        <div class="img" :ref="item.id">
+        <div class="img" :ref="String(item.id)">
           <img :src="item.file" alt="" />
         </div>
         <a-dropdown class="options" v-if="showOptionsElement(item.publish)">
@@ -56,7 +56,9 @@
                 <img :src="item.author_avatar" alt="" />
                 <img src="@assets/images/v-icon.png" class="icon" alt="" />
               </div>
-              <span class="txt-overflow" style="width:100px;">{{ item.author_nickname }}</span>
+              <span class="txt-overflow" style="width: 100px">{{
+                item.author_nickname
+              }}</span>
             </div>
           </div>
           <div class="me-m">
@@ -196,20 +198,17 @@ export default defineComponent({
     };
 
     // 处理下架
-    const handleUnShelvesNft = async (id, publish) => {
+    const handleUnShelvesNft = async (id) => {
       const { err_code } = await shelvesNftApi(id);
       if (err_code === "0") {
-        pollingItemsPublishApi(
-          { userId: user.value.user_id, itemId: id, publish },
-          (result) => {
-            worksList.value = result;
-          }
-        );
+        getWorksList();
       }
     };
     const getSmellProgramBaseUrl = async () => {
       const { result } = await getBannerApi();
-      smellProgramBaseUrl.value = JSON.parse(result.share_base_url);
+      if (result.share_base_url) {
+        smellProgramBaseUrl.value = JSON.parse(result.share_base_url);
+      }
     };
     const handleShelvesClick = (id, publish) => {
       if (publish === "2") {
@@ -240,7 +239,6 @@ export default defineComponent({
             style: "width:100%;height:100%;margin-left:-19px;",
           }),
         });
-    
       }
     };
 

@@ -121,7 +121,7 @@ export default defineComponent({
         opening_time: String(userSelectTime),
         price: String(addParmas.price),
         series_ip: addParmas.seriesIp === "首页" ? "" : addParmas.seriesIp,
-        denom_id: props.params.id,
+        denom_id: String(props.params.id),
       });
       if (err_code === "0") {
         initFunc();

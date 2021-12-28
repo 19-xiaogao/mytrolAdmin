@@ -67,8 +67,7 @@
 <script>
 import { computed, ref, onMounted, toRaw } from "vue";
 import { getBannerApi, updateBannerApi, uploadAliOssApi } from "@api";
-import { pollingBannerApi } from "@/api/pllingApi";
-import { warningNotify } from "@/utils";
+import { successNotify, warningNotify } from "@/utils";
 const defaultTabList = [
   {
     name: "Banner1",
@@ -97,7 +96,6 @@ export default {
       () => (index) => index === currentParams.value.key ? "select-hover" : ""
     );
     const handleTabClick = (item) => {
-      console.log(item);
       currentParams.value = item;
     };
     const showIpDom = computed(() => props.smallProgram);
@@ -133,7 +131,6 @@ export default {
       if (!list) return;
 
       tableList.value = list;
-      console.log(tableList.value);
     };
     const saveBannerClick = async () => {
       let uploadData = [];
@@ -153,12 +150,9 @@ export default {
         });
         uploadData = tableList.value;
       }
-      console.log(uploadData);
       await updateBannerApi(JSON.stringify(uploadData));
-
-      pollingBannerApi(tx_hash.value, (result) => {
-        assignment(result);
-      });
+      successNotify("更新成功");
+      getBanner();
     };
     const getBanner = async () => {
       const { err_code, result } = await getBannerApi();

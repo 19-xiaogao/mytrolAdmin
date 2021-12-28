@@ -51,6 +51,9 @@
                     >
                       序号{{ index + 1 }}
                     </a-menu-item>
+                    <a-menu-item @click="handleDropdownIdClick('', item)">
+                      待定
+                    </a-menu-item>
                   </a-menu>
                 </template>
                 <a-button>
@@ -78,7 +81,6 @@ import { getSeriessApi, addUpdateIpApi } from "@api";
 import {
   pollingGetSerisesIpApi,
   pollingAddUpdateIpApi,
-  pollingUpdateNumberApi,
 } from "@/api/pllingApi";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
@@ -200,10 +202,8 @@ export default {
         operate: "update",
       });
       if (err_code === "0") {
-        pollingUpdateNumberApi({ name: item.name, number: key }, (result) => {
-          assignmentFunc(result);
-          successNotify("更新序号成功。");
-        });
+        getSeriessListApi();
+        successNotify("更新序号成功。");
       }
     };
     return {

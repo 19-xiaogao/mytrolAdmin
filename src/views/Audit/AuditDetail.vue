@@ -62,10 +62,13 @@ export default {
     });
     const handleAuditClick = (bol) => {
       const status = bol ? "success" : "failed";
-      auditPassed(props.messageDetail.id, status);
+      auditPassed(String(props.messageDetail.id), status);
     };
     const auditPassed = async (denom_id, status) => {
-      const { err_code } = await auditPassedApi({ denom_id, status });
+      const { err_code } = await auditPassedApi({
+        denom_id: String(denom_id),
+        status,
+      });
       if (err_code === "0") {
         emit("clonse", "refresh", props.messageDetail.id);
       } else {

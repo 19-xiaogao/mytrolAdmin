@@ -67,7 +67,7 @@ export const getLastestNftApi = (ip, page, numbers) =>
 
 // 下架作品
 export const shelvesNftApi = (id) =>
-  server.post("/nft_withdraw", { denom_id: id });
+  server.post("/nft_withdraw", { denom_id: String(id) });
 
 // 查看兑换码
 export const redeemCodeApi = (id) => server.get("/redeem_code/" + id);
