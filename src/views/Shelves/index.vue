@@ -106,8 +106,8 @@
         </div>
         <div class="ope-act-b-l">
           <div class="opeAct-button" @click="handleEquityActivityClick">
-            <icon-svg icon="icon-a-bianzu34"></icon-svg>
-            <icon-svg icon="icon-duihao"></icon-svg>
+            <icon-svg icon="icon-duihao" v-if="equity_cover"></icon-svg>
+            <icon-svg icon="icon-a-bianzu34" v-else></icon-svg>
             添加权益卡
           </div>
           <div class="opeAct-button" @click="handleShowOperationActivityClick">
@@ -142,6 +142,7 @@
       @close="handleOperationActivityClick"
     />
     <EquityActivity
+      ref="equityActivity"
       v-show="isEquityActivity"
       @close="handleCloseEquityActivityClick"
     />
@@ -185,6 +186,7 @@ let shelvesParams = {
   free_number: "",
   private_sale: "",
   classification: [],
+  equity_cover: "",
 };
 export default defineComponent({
   components: {
@@ -250,6 +252,7 @@ export default defineComponent({
       uploadParams.free_number = "";
       uploadParams.private_sale = "";
       uploadParams.classification = [];
+      uploadParams.equity_cover = "";
       currentIpName.value = "首页";
       btnDisabled.value = false;
     };
@@ -374,6 +377,8 @@ export default defineComponent({
         proxy.$refs.uploadNftRef.imgSrc = "";
         proxy.$refs.uploadCollection.imgSrc = "";
         proxy.$refs.nftThumbnailRef.imgSrc = "";
+        proxy.$refs.equityActivity.equityParams.value = "";
+        proxy.$refs.equityActivity.equityParams.type = "";
         successNotify("创作成功，请等待审核通过。区块上链中...");
       }
     };
@@ -396,7 +401,10 @@ export default defineComponent({
       isEquityActivity.value = true;
     };
 
-    const handleCloseEquityActivityClick = () => {
+    const handleCloseEquityActivityClick = (item) => {
+      if (item && item.equityCover) {
+        uploadParams.equity_cover = item.equityCover;
+      }
       isEquityActivity.value = false;
     };
 

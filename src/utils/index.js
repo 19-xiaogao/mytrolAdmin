@@ -58,8 +58,12 @@ export function previewFile(file) {
 
 // 拼接ipfs请求路径 ，图片都是用oss,避免过大改动...
 export const joinPreviewUrl = (url) => {
-  // return process.env.VUE_APP_BASE_IPFS + url;
-  return url;
+  const agreement = url.split(":")[0];
+  if (agreement.includes("http")) {
+    return url;
+  } else {
+    return process.env.VUE_APP_BASE_IPFS + url;
+  }
 };
 
 // 提示框

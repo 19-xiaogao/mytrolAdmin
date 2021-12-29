@@ -87,12 +87,6 @@ export default {
           .catch((err) => reject(err));
       });
     };
-    const initData = () => {
-      equityParams.equityCover = {
-        value: "",
-        type: "",
-      };
-    };
     const handleSaveSettingClick = async () => {
       if (!equityParams.equityCover.value.trim().length === 0) {
         return warningNotify("请上传权益封面");
@@ -101,7 +95,6 @@ export default {
       const result = await uploadFileAllOss();
       loading.value = false;
       emit("close", result);
-      initData();
     };
 
     const handleEquityCoverChange = (e) => {
