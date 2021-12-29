@@ -6,9 +6,19 @@
           <span>上传图片</span>
           <input type="file" alt="" @change="handleUploadFile" />
         </div>
-        <img :src="imgSrc" alt="" v-if="imgSrc" />
+        <img :src="imgSrc.value" alt="" v-if="imgSrc.value" />
       </div>
       <p>温馨提示：尺寸为510*324，请按照特定模板的原则产图</p>
+    </div>
+    <div class="upload-img">
+      <div class="upload-box">
+        <div class="upload-btn">
+          <span>上传背景图片</span>
+          <input type="file" alt="" @change="handleBgUploadFile" />
+        </div>
+        <img :src="bgImgSrc.value" alt="" v-if="bgImgSrc.value" />
+      </div>
+      <p>温馨提示：尺寸为510*1200，请按照特定模板的原则产图</p>
     </div>
     <div class="user-input">
       <div class="user">
@@ -33,32 +43,73 @@
 <script>
 import { defineComponent, reactive, toRefs } from "vue";
 import { addUpdateIpApi, uploadAliOssApi } from "@api";
-import { previewFile,uuidToCreateHash } from "@/utils";
+import { previewFile, uuidToCreateHash, backFileType } from "@/utils";
 
 export default defineComponent({
   props: {
     createVisible: {
       type: Boolean,
     },
-    uploadImg: Object,
   },
   setup(props, { emit }) {
-    const addIpParams = reactive({ imgSrc: "", name: "" });
+    const addIpParams = reactive({
+      imgSrc: {
+        type: "",
+        value: "",
+      },
+      name: "",
+      bgImgSrc: {
+        type: "",
+        value: "",
+      },
+    });
     const formData = new FormData();
     formData.append("status", "off");
     formData.append("operate", "add");
     formData.append("name", "");
     formData.append("number", "");
     formData.append("file", "");
+    formData.append("bg_file", "");
 
     const handleUploadFile = (e) => {
       let imgFile = e.target.files;
       if (!imgFile.length) return;
       previewFile(imgFile[0]).then((res) => {
-        addIpParams.imgSrc = res;
+        addIpParams.imgSrc.value = res;
+        addIpParams.imgSrc.type = backFileType(imgFile[0]);
         formData.set("file", imgFile[0]);
-        emit("update:uploadImg", imgFile[0]);
         e.target.value = "";
+      });
+    };
+
+    const handleBgUploadFile = (e) => {
+      let imgFile = e.target.files;
+      if (!imgFile.length) return;
+      previewFile(imgFile[0]).then((res) => {
+        addIpParams.bgImgSrc.value = res;
+        addIpParams.bgImgSrc.type = backFileType(imgFile[0]);
+        formData.set("bg_file", imgFile[0]);
+        e.target.value = "";
+      });
+    };
+
+    const uploadAllToOss = () => {
+      return new Promise((resolve, reject) => {
+        const fileName = `ip/${uuidToCreateHash()}.${addIpParams.imgSrc.type}`;
+        const fileBgName = `ip/${uuidToCreateHash()}.${
+          addIpParams.bgImgSrc.type
+        }`;
+        Promise.all([
+          uploadAliOssApi(fileName, formData.get("file")),
+          uploadAliOssApi(fileBgName, formData.get("bg_file")),
+        ])
+          .then((result) => {
+            resolve({
+              file: result[0].res.requestUrls[0],
+              bg_file: result[1].res.requestUrls[0],
+            });
+          })
+          .catch((err) => reject(err));
       });
     };
     const handleClose = () => {
@@ -66,21 +117,20 @@ export default defineComponent({
     };
     const handleSureClick = async () => {
       formData.set("name", addIpParams.name);
+      const ossResult = await uploadAllToOss();
 
-      const fileName = "ip/" +uuidToCreateHash() + ".png";
-      const ossResult = await uploadAliOssApi(fileName, formData.get("file"));
+      formData.set("file", ossResult.file);
+      formData.set("bg_file", ossResult.bg_file);
 
-      if (ossResult.res.status === 200) {
-        const ossFileUrl = ossResult.res.requestUrls[0];
-        formData.set("file", ossFileUrl);
-        
-        const { err_code } = await addUpdateIpApi(formData);
-        if (err_code === "0") {
-          emit("update:createVisible", false);
-          emit("ok");
-          addIpParams.imgSrc = "";
-          addIpParams.name = "";
-        }
+      console.log(formData);
+
+      const { err_code } = await addUpdateIpApi(formData);
+      if (err_code === "0") {
+        emit("update:createVisible", false);
+        emit("ok");
+        addIpParams.imgSrc = { type: "", value: "" };
+        addIpParams.bgImgSrc = { type: "", value: "" };
+        addIpParams.name = "";
       }
     };
     return {
@@ -88,6 +138,7 @@ export default defineComponent({
       handleUploadFile,
       ...toRefs(addIpParams),
       handleSureClick,
+      handleBgUploadFile,
     };
   },
 });

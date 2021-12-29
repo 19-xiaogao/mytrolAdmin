@@ -5,7 +5,8 @@ function resolve(dir) {
 
 module.exports = {
   configureWebpack: (config) => {
-    config.module.noParse = /^(vu|vue-router|vuex|vuex-router-sync|lodash|echarts|axios|antd-design-vue)$/;
+    config.module.noParse =
+      /^(vu|vue-router|vuex|vuex-router-sync|lodash|echarts|axios|antd-design-vue)$/;
   },
   chainWebpack: (config) => {
     config.resolve.alias
@@ -13,7 +14,7 @@ module.exports = {
       .set("@assets", resolve("./src/assets"))
       .set("@api", resolve("./src/api/api.js"));
 
-      // 压缩img
+    // 压缩img
     config.module
       .rule("images")
       .test(/\.(png|jpe?g|gif)(\?.*)?$/)
