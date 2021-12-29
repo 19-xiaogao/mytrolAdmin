@@ -69,8 +69,7 @@ export default {
         free_number: free_number.value,
         private_sale: checked.value,
       });
-      free_number.value = 0;
-      checked.value = false;
+      
     };
     onUpdated(() => {
       orderDetailRef.value.style.animation = "sliding-show 0.5s linear 0s";

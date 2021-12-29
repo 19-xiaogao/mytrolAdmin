@@ -138,6 +138,7 @@
     />
     <OperationActivity
       v-show="isOperationActivity"
+      ref="operationActivity"
       :nftNumber="number"
       @close="handleOperationActivityClick"
     />
@@ -379,6 +380,9 @@ export default defineComponent({
         proxy.$refs.nftThumbnailRef.imgSrc = "";
         proxy.$refs.equityActivity.equityParams.value = "";
         proxy.$refs.equityActivity.equityParams.type = "";
+        proxy.$refs.operationActivity.free_number = 0;
+        proxy.$refs.operationActivity.private_sale = false;
+
         successNotify("创作成功，请等待审核通过。区块上链中...");
       }
     };
