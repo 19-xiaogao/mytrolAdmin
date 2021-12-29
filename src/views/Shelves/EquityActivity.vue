@@ -8,26 +8,22 @@
         @click="handleHideClick"
       ></icon-svg>
     </div>
-    <div class="add-equity-box">
-      <h3>权益卡封面</h3>
-      <div class="equity-cover">
-        <icon-svg
-          icon="icon-tianjia"
-          class="icon"
-          @click="handleHideClick"
-        ></icon-svg>
-        <p>卡片尺寸1002*602，图片内容需要按照模版尺寸和元素</p>
-        <input
-          type="file"
-          class="upload-file"
-          @change="handleEquityCoverChange"
-        />
-        <img
-          v-if="equityParams.equityCover.value"
-          :src="equityParams.equityCover.value"
-          alt=""
-        />
-      </div>
+    <div class="add-box">
+      <UploadEquityImg
+        uploadName="权益卡封面"
+        ref="cover"
+        @uploadDone="handleEquityCoverDone"
+      />
+      <UploadEquityImg
+        uploadName="权益卡内容"
+        ref="content"
+        @uploadDone="handleEquityContentDone"
+      />
+      <UploadEquityImg
+        uploadName="权益卡二维码"
+        ref="code"
+        @uploadDone="handleEquityQrCodeDone"
+      />
     </div>
     <a-button
       class="save-setting"
@@ -41,55 +37,100 @@
 </template>
 
 <script>
-import { ref, onUpdated, reactive } from "vue";
-import {
-  warningNotify,
-  previewFile,
-  uuidToCreateHash,
-  backFileType,
-} from "@/utils";
+import { ref, onUpdated, reactive, getCurrentInstance } from "vue";
 import { uploadAliOssApi } from "@api";
+import { warningNotify, uuidToCreateHash } from "@/utils";
+import UploadEquityImg from "./UploadEquityImg";
+
 export default {
   emits: ["close"],
+  components: {
+    UploadEquityImg,
+  },
   props: {
     nftNumber: [Number, String],
   },
   setup(props, { emit }) {
+
+    const { proxy } = getCurrentInstance();
+
     const orderDetailRef = ref(null);
     const loading = ref(false);
+    
     const equityParams = reactive({
       equityCover: {
         value: "",
         type: "",
       },
+      equity_content: {
+        value: "",
+        type: "",
+      },
+      qr_code: {
+        value: "",
+        type: "",
+      },
     });
+
     const formData = new FormData();
-    formData.append("equityCover", "");
+    formData.append("equity_cover", "");
+    formData.append("equity_content", "");
+    formData.append("qr_code", "");
+
+    const initData = () => {
+      proxy.$refs.cover.file.value = "";
+      proxy.$refs.cover.file.type = "";
+
+      proxy.$refs.content.file.value = "";
+      proxy.$refs.content.file.type = "";
+
+      proxy.$refs.code.file.value = "";
+      proxy.$refs.code.file.type = "";
+    };
+
     const handleHideClick = () => {
       orderDetailRef.value.style.animation = "sliding-hiden 0.5s linear 0s";
       setTimeout(() => {
         emit("close");
       }, 400);
     };
+
     const uploadFileAllOss = () => {
       const equityCoverFilName = `item/equityCover${uuidToCreateHash()}.${
         equityParams.equityCover.type
       }`;
+      const equityContentFilName = `item/equityCover${uuidToCreateHash()}.${
+        equityParams.equity_content.type
+      }`;
+      const equityQrCodeFilName = `item/equityCover${uuidToCreateHash()}.${
+        equityParams.qr_code.type
+      }`;
       return new Promise((resolve, reject) => {
         Promise.all([
-          uploadAliOssApi(equityCoverFilName, formData.get("equityCover")),
+          uploadAliOssApi(equityCoverFilName, formData.get("equity_cover")),
+          uploadAliOssApi(equityContentFilName, formData.get("equity_content")),
+          uploadAliOssApi(equityQrCodeFilName, formData.get("qr_code")),
         ])
           .then((result) => {
             resolve({
               equityCover: result[0].res.requestUrls[0],
+              equity_content: result[1].res.requestUrls[0],
+              qr_code: result[2].res.requestUrls[0],
             });
           })
           .catch((err) => reject(err));
       });
     };
+
     const handleSaveSettingClick = async () => {
-      if (!equityParams.equityCover.value.trim().length === 0) {
+      if (!equityParams.equityCover.value) {
         return warningNotify("请上传权益封面");
+      }
+      if (!equityParams.equity_content.value) {
+        return warningNotify("请上传权益内容");
+      }
+      if (!equityParams.qr_code.value) {
+        return warningNotify("请上传权益二维码");
       }
       loading.value = true;
       const result = await uploadFileAllOss();
@@ -97,14 +138,24 @@ export default {
       emit("close", result);
     };
 
-    const handleEquityCoverChange = (e) => {
-      const file = e.target.files;
-      previewFile(file[0]).then((res) => {
-        equityParams.equityCover.type = backFileType(file[0]);
-        equityParams.equityCover.value = res;
-        formData.set("equityCover", file[0]);
-      });
+    const handleEquityCoverDone = (file, type) => {
+      equityParams.equityCover.type = type;
+      equityParams.equityCover.value = file;
+      formData.set("equity_cover", file);
     };
+
+    const handleEquityContentDone = (file, type) => {
+      equityParams.equity_content.type = type;
+      equityParams.equity_content.value = file;
+      formData.set("equity_content", file);
+    };
+    
+    const handleEquityQrCodeDone = (file, type) => {
+      equityParams.qr_code.type = type;
+      equityParams.qr_code.value = file;
+      formData.set("qr_code", file);
+    };
+
     onUpdated(() => {
       orderDetailRef.value.style.animation = "sliding-show 0.5s linear 0s";
     });
@@ -114,8 +165,11 @@ export default {
       orderDetailRef,
       handleSaveSettingClick,
       equityParams,
-      handleEquityCoverChange,
       loading,
+      handleEquityCoverDone,
+      handleEquityContentDone,
+      handleEquityQrCodeDone,
+      initData,
     };
   },
 };
@@ -155,63 +209,11 @@ export default {
       cursor: pointer;
     }
   }
-  .add-equity-box {
-    margin-top: 20px;
-    h3 {
-      font-size: 16px;
-      font-weight: 500;
-      color: #000000;
-    }
-    .equity-cover {
-      position: relative;
-      width: 100%;
-      height: 200px;
-      overflow: hidden;
-      border-radius: 16px;
-      background: #f1f1f1;
-      .icon {
-        position: absolute;
-        font-size: 40px;
-        font-weight: 600;
-        top: 40%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
-      p {
-        position: absolute;
-        font-size: 40px;
-        top: 65%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 223px;
-        height: 52px;
-        font-size: 14px;
-        text-align: center;
-        font-weight: 400;
-        color: #979797;
-      }
-      img {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        top: 0;
-        left: 0;
-        object-fit: cover;
-        object-position: center center;
-      }
-      .upload-file {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-        opacity: 0;
-        top: 0;
-        left: 0;
-        cursor: pointer;
-        overflow: hidden;
-        z-index: 11;
-      }
-    }
+  .add-box {
+    height: 90%;
+    overflow-y: auto;
   }
+
   .save-setting {
     width: 134px;
     height: 40px;

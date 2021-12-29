@@ -21,12 +21,16 @@
 <script>
 import { computed } from "vue";
 import { useStore } from "vuex";
+
+import { getStorageRole } from "@/utils";
+
 import zhCN from "ant-design-vue/es/locale/zh_CN";
+
 import Header from "@/components/Header";
 import Sidebar from "@/components/Sidebar";
 import UserSettingModal from "@/components/UserSettingModal";
 import Loading from "@/components/Loading";
-import { getStorageRole } from "@/utils";
+
 export default {
   name: "Home",
   components: {
@@ -38,15 +42,14 @@ export default {
   setup() {
     const store = useStore();
     // 解决刷新 store没有数据的问题。
-    store.commit(
-      "setPersonMessage",
-      JSON.parse(localStorage.getItem("personMessage"))
-    );
+    const personMessage = JSON.parse(localStorage.getItem("personMessage"));
+    store.commit("setPersonMessage", personMessage);
     store.commit("setUser", JSON.parse(getStorageRole()));
 
     const person = computed(() => store.getters.getPersonMessage);
     const isShowEditModal = computed(() => !!person.value.nickname);
     const loading = computed(() => store.getters.getLoading);
+
     return { isShowEditModal, locale: zhCN, loading };
   },
 };

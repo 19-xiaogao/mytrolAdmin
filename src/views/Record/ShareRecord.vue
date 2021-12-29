@@ -19,8 +19,7 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, reactive, ref } from "vue";
-// import { getUserOrderApi } from "@api";
+import { defineComponent, onMounted, reactive } from "vue";
 const columns = [
   {
     title: "序号",
@@ -52,25 +51,11 @@ const columns = [
 export default defineComponent({
   setup() {
     const data = reactive([]);
-    const isOrderShow = ref(false);
-    const handleOrderDetailClick = () => {
-      isOrderShow.value = !isOrderShow.value;
-    };
-    onMounted(() => {
-      // getuserOrderList();
-    });
-    // const getuserOrderList = async () => {
-    //   const { err_code, result } = await getUserOrderApi();
-    //   if (err_code === "0") {
-    //     console.log(result);
-    //   }
-    //   console.log(result);
-    // };
+    onMounted(() => {});
+
     return {
       columns,
       data,
-      handleOrderDetailClick,
-      isOrderShow,
     };
   },
 });

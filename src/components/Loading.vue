@@ -14,19 +14,6 @@
 <script>
 export default {
   name: "Loading",
-  data() {
-    return {
-      loading: false,
-    };
-  },
-  methods: {
-    start() {
-      this.loading = true;
-    },
-    finish() {
-      this.loading = false;
-    },
-  },
 };
 </script>
 
@@ -51,7 +38,7 @@ export default {
     font-size: 17px;
   }
   .loading {
-    margin-top: calc(50vh );
+    margin-top: calc(50vh);
     span {
       display: inline-block;
       width: 20px;

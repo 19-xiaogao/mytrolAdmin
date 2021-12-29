@@ -122,8 +122,6 @@ export default defineComponent({
       formData.set("file", ossResult.file);
       formData.set("bg_file", ossResult.bg_file);
 
-      console.log(formData);
-
       const { err_code } = await addUpdateIpApi(formData);
       if (err_code === "0") {
         emit("update:createVisible", false);

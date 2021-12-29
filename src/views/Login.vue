@@ -61,17 +61,23 @@ export default defineComponent({
     const router = useRouter();
     const store = useStore();
     const { proxy } = getCurrentInstance();
-    const loginParms = reactive({ username: "", password: "" });
+    const loginParams = reactive({ username: "", password: "" });
 
     const handleLoginBtn = async () => {
-      if (loginParms.username.trim() === "") {
+
+      if (loginParams.username.trim() === "") {
         return notify("提示", "请输入用户名", "warning");
-      } else if (loginParms.password.trim() === "") {
+      }
+      if (loginParams.password.trim() === "") {
         return notify("提示", "请输入密码", "warning");
       }
-      const response = await loginApi(loginParms);
+
+      const response = await loginApi(loginParams);
+
       if (response.err_code === "0") {
+
         notify("提示", "欢迎回来", "success");
+
         getUserInfoApi().then(({ err_code, result }) => {
           if (err_code === "0") {
             // 本地存一份，vuex 存一份
@@ -79,6 +85,7 @@ export default defineComponent({
               ...result,
               avatar: proxy.joinPreviewUrl(result.avatar),
             };
+            
             setStorageRole(JSON.stringify(response.result));
             store.commit("setUser", response.result);
             store.commit("setPersonMessage", setPersonMessage);
@@ -93,7 +100,7 @@ export default defineComponent({
     };
     return {
       handleLoginBtn,
-      ...toRefs(loginParms),
+      ...toRefs(loginParams),
     };
   },
 });

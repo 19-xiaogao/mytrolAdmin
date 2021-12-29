@@ -160,19 +160,21 @@ import {
   getCurrentInstance,
   onUnmounted,
 } from "vue";
+import dayjs from "dayjs";
 import {
   getSerisesIpApi,
   uploadNftApi,
   getClassificationApi,
   uploadAliOssApi,
 } from "@api";
-import dayjs from "dayjs";
-import UploadNft from "./UploadNft";
+
 import { warningNotify, successNotify, uuidToCreateHash } from "@/utils";
-import UploadCollection from "./UploadCollection";
+
 import PreviewImg from "@/components/PreviewImg";
+import UploadCollection from "./UploadCollection";
 import OperationActivity from "./OperationActivity";
-import EquityActivity from "./EquityActivity.vue";
+import EquityActivity from "./EquityActivity";
+import UploadNft from "./UploadNft";
 
 let shelvesParams = {
   name: "",
@@ -203,30 +205,38 @@ export default defineComponent({
     const ipList = ref([]);
     const classData = ref([]);
     const currentIpName = ref("首页");
+
     const priviesImgComponentParams = reactive({
       imgUrl: "",
       visible: false,
     });
+
     const uploadParams = reactive(shelvesParams);
+
     const nftAllImgType = reactive({
       nft_file_type: "",
       nft_background_type: "",
       nft_thumbnail_type: "",
     });
+
     const btnDisabled = ref(false);
     const isOperationActivity = ref(false);
     const isEquityActivity = ref(false);
+
     onMounted(() => {
       getIpList();
       getClassData();
     });
+
     onUnmounted(() => {
       initParams();
     });
+
     const handleUploadNftPreview = (imgSrc) => {
       priviesImgComponentParams.imgUrl = imgSrc;
       priviesImgComponentParams.visible = true;
     };
+
     const getIpList = async () => {
       const { err_code, result } = await getSerisesIpApi();
       if (err_code === "0") {
@@ -234,12 +244,14 @@ export default defineComponent({
         ipList.value = result.filter((item) => item.status === "on");
       }
     };
+
     const getClassData = async () => {
       const { result, err_code } = await getClassificationApi();
       if (err_code === "0") {
         classData.value = result;
       }
     };
+
     const initParams = () => {
       uploadParams.name = "";
       uploadParams.description = "";
@@ -378,11 +390,9 @@ export default defineComponent({
         proxy.$refs.uploadNftRef.imgSrc = "";
         proxy.$refs.uploadCollection.imgSrc = "";
         proxy.$refs.nftThumbnailRef.imgSrc = "";
-        proxy.$refs.equityActivity.equityParams.value = "";
-        proxy.$refs.equityActivity.equityParams.type = "";
         proxy.$refs.operationActivity.free_number = 0;
         proxy.$refs.operationActivity.private_sale = false;
-
+        proxy.$refs.equityActivity.initData();
         successNotify("创作成功，请等待审核通过。区块上链中...");
       }
     };
@@ -406,8 +416,10 @@ export default defineComponent({
     };
 
     const handleCloseEquityActivityClick = (item) => {
-      if (item && item.equityCover) {
+      if (item) {
         uploadParams.equity_cover = item.equityCover;
+        uploadParams.equity_content = item.equity_content;
+        uploadParams.qr_code = item.qr_code;
       }
       isEquityActivity.value = false;
     };
@@ -415,20 +427,20 @@ export default defineComponent({
     return {
       ...toRefs(uploadParams),
       handleUploadNftClick,
-      ipList,
       handleMenuClick,
-      currentIpName,
       handleUploadNftPreview,
+      handleOperationActivityClick,
+      handleShowOperationActivityClick,
+      handleEquityActivityClick,
+      handleCloseEquityActivityClick,
+      isEquityActivity,
+      nftAllImgType,
       priviesImgComponentParams,
       btnDisabled,
       isOperationActivity,
-      handleOperationActivityClick,
       classData,
-      handleShowOperationActivityClick,
-      isEquityActivity,
-      handleEquityActivityClick,
-      handleCloseEquityActivityClick,
-      nftAllImgType,
+      currentIpName,
+      ipList,
     };
   },
 });
