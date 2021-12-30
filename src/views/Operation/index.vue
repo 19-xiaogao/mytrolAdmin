@@ -78,10 +78,6 @@
 <script>
 import { ref, onMounted, computed, reactive } from "vue";
 import { getSeriessApi, addUpdateIpApi } from "@api";
-import {
-  pollingGetSerisesIpApi,
-  pollingAddUpdateIpApi,
-} from "@/api/pllingApi";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
 import {
@@ -127,11 +123,10 @@ export default {
     };
 
     const handleAddIpClick = () => {
-      getSeriessListApi();
-      pollingGetSerisesIpApi(seriessList.value.length, (result) => {
-        assignmentFunc(result);
+      setTimeout(() => {
         successNotify("创建IP成功。");
-      });
+        getSeriessListApi();
+      }, 1000);
     };
 
     const handleStatusClick = async (item) => {
@@ -160,10 +155,10 @@ export default {
     const uploadStatus = async (item, paramsObj) => {
       const { err_code } = await funcAddupdateIpApi(paramsObj);
       if (err_code === "0") {
-        pollingAddUpdateIpApi(item, (result) => {
-          assignmentFunc(result);
-          successNotify("更新状态成功。");
-        });
+        setTimeout(() => {
+          successNotify("更新IP成功。");
+          getSeriessListApi();
+        }, 1000);
       }
     };
 
