@@ -51,14 +51,13 @@ export default {
     nftNumber: [Number, String],
   },
   setup(props, { emit }) {
-
     const { proxy } = getCurrentInstance();
 
     const orderDetailRef = ref(null);
     const loading = ref(false);
-    
+
     const equityParams = reactive({
-      equityCover: {
+      equity_cover: {
         value: "",
         type: "",
       },
@@ -95,43 +94,47 @@ export default {
       }, 400);
     };
 
-    const uploadFileAllOss = () => {
-      const equityCoverFilName = `item/equityCover${uuidToCreateHash()}.${
-        equityParams.equityCover.type
-      }`;
-      const equityContentFilName = `item/equityCover${uuidToCreateHash()}.${
-        equityParams.equity_content.type
-      }`;
-      const equityQrCodeFilName = `item/equityCover${uuidToCreateHash()}.${
-        equityParams.qr_code.type
-      }`;
-      return new Promise((resolve, reject) => {
-        Promise.all([
-          uploadAliOssApi(equityCoverFilName, formData.get("equity_cover")),
-          uploadAliOssApi(equityContentFilName, formData.get("equity_content")),
-          uploadAliOssApi(equityQrCodeFilName, formData.get("qr_code")),
-        ])
-          .then((result) => {
-            resolve({
-              equityCover: result[0].res.requestUrls[0],
-              equity_content: result[1].res.requestUrls[0],
-              qr_code: result[2].res.requestUrls[0],
-            });
-          })
-          .catch((err) => reject(err));
-      });
+    const uploadFileAllOss = async () => {
+      const callBackObj = {
+        equity_cover: "",
+        equity_content: "",
+        qr_code: "",
+      };
+      if (formData.get("equity_cover")) {
+        const fileName = `item/equity_cover${uuidToCreateHash()}.${
+          equityParams.equity_cover.type
+        }`;
+        const result = await uploadAliOssApi(
+          fileName,
+          formData.get("equity_cover")
+        );
+        callBackObj.equity_cover = result.res.requestUrls[0];
+      }
+      if (formData.get("equity_content")) {
+        const fileName = `item/equity_cover${uuidToCreateHash()}.${
+          equityParams.equity_content.type
+        }`;
+        const result = await uploadAliOssApi(
+          fileName,
+          formData.get("equity_content")
+        );
+        callBackObj.equity_content = result.res.requestUrls[0];
+      }
+      if (formData.get("qr_code")) {
+        const fileName = `item/qr_code${uuidToCreateHash()}.${
+          equityParams.qr_code.type
+        }`;
+        const result = await uploadAliOssApi(fileName, formData.get("qr_code"));
+        callBackObj.qr_code = result.res.requestUrls[0];
+      }
+      return callBackObj;
     };
 
     const handleSaveSettingClick = async () => {
-      if (!equityParams.equityCover.value) {
+      if (!equityParams.equity_cover.value) {
         return warningNotify("请上传权益封面");
       }
-      if (!equityParams.equity_content.value) {
-        return warningNotify("请上传权益内容");
-      }
-      if (!equityParams.qr_code.value) {
-        return warningNotify("请上传权益二维码");
-      }
+
       loading.value = true;
       const result = await uploadFileAllOss();
       loading.value = false;
@@ -139,8 +142,8 @@ export default {
     };
 
     const handleEquityCoverDone = (file, type) => {
-      equityParams.equityCover.type = type;
-      equityParams.equityCover.value = file;
+      equityParams.equity_cover.type = type;
+      equityParams.equity_cover.value = file;
       formData.set("equity_cover", file);
     };
 
@@ -149,7 +152,7 @@ export default {
       equityParams.equity_content.value = file;
       formData.set("equity_content", file);
     };
-    
+
     const handleEquityQrCodeDone = (file, type) => {
       equityParams.qr_code.type = type;
       equityParams.qr_code.value = file;

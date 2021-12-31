@@ -417,7 +417,7 @@ export default defineComponent({
 
     const handleCloseEquityActivityClick = (item) => {
       if (item) {
-        uploadParams.equity_cover = item.equityCover;
+        uploadParams.equity_cover = item.equity_cover;
         uploadParams.equity_content = item.equity_content;
         uploadParams.qr_code = item.qr_code;
       }

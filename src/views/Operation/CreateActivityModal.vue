@@ -35,15 +35,22 @@
       <div class="close" @click="handleClose">取消</div>
     </template>
     <template #footer>
-      <div class="create-user" @click="handleSureClick">确定</div>
+      <a-button class="create-user" :loading="loading" @click="handleSureClick"
+        >确定</a-button
+      >
     </template>
   </a-modal>
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, reactive, ref, toRefs } from "vue";
 import { addUpdateIpApi, uploadAliOssApi } from "@api";
-import { previewFile, uuidToCreateHash, backFileType } from "@/utils";
+import {
+  previewFile,
+  uuidToCreateHash,
+  backFileType,
+  warningNotify,
+} from "@/utils";
 
 export default defineComponent({
   props: {
@@ -52,6 +59,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const loading = ref(false);
     const addIpParams = reactive({
       imgSrc: {
         type: "",
@@ -117,6 +125,15 @@ export default defineComponent({
     };
     const handleSureClick = async () => {
       formData.set("name", addIpParams.name);
+
+      if (!addIpParams.imgSrc.value) {
+        return warningNotify("请上传图片");
+      }
+
+      if (!addIpParams.bgImgSrc.value) {
+        return warningNotify("请背景图片");
+      }
+      loading.value = true;
       const ossResult = await uploadAllToOss();
 
       formData.set("file", ossResult.file);
@@ -130,6 +147,7 @@ export default defineComponent({
         addIpParams.bgImgSrc = { type: "", value: "" };
         addIpParams.name = "";
       }
+      loading.value = false;
     };
     return {
       handleClose,
@@ -137,6 +155,7 @@ export default defineComponent({
       ...toRefs(addIpParams),
       handleSureClick,
       handleBgUploadFile,
+      loading,
     };
   },
 });

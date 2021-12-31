@@ -25,9 +25,9 @@ module.exports = {
   },
   devServer: {
     proxy: {
-      "/relay/dbchain/oracle/nft": {
-        target: "http://192.168.0.19:3001",
-        // target: "https://controlpanel.dbchain.cloud",
+      "/nft_relay/dbchain/oracle/nft": {
+        // target: "http://192.168.0.19:3001",
+        target: "https://controlpanel.dbchain.cloud",
         // target: "https://mytroladmin.dbchain.cloud",
         ws: true,
         changeOrigin: true,
