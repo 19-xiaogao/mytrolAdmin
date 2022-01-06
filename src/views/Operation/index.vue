@@ -77,7 +77,7 @@
 
 <script>
 import { ref, onMounted, computed, reactive } from "vue";
-import { getSeriessApi, addUpdateIpApi } from "@api";
+import { getSeriesApi, addUpdateIpApi } from "@api";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
 import {
@@ -115,7 +115,7 @@ export default {
       seriessList.value = sortOperation(joinIpfsList);
     };
     const getSeriessListApi = async () => {
-      const { err_code, result } = await getSeriessApi();
+      const { err_code, result } = await getSeriesApi();
       if (err_code === "0") {
         if (!Array.isArray(result)) return;
         assignmentFunc(result);

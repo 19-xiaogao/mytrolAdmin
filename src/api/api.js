@@ -47,22 +47,16 @@ export const addUpdateIpApi = (data) =>
   });
 
 //获取IP
-export const getSeriessApi = () => server.get("/backend/get_serises_ip");
+export const getSeriesApi = () => server.get("/backend/get_serises_ip");
 
 // 查看自己的作品
 export const getWorksApi = (id) => server.get("/nfts_of_user_make/all/" + id);
-
-//用户订单列表
-export const getUserOrderApi = () => server.get("/user_purchase_order");
-
-//用户nft数量
-export const getUserNftNumberApi = (id) => server.get("/user_nft_number/" + id);
 
 //获取交易量
 export const getTradeDataCountApi = () => server.get("/get_trade_data");
 
 //查看IP系列
-export const getLastestNftApi = (ip, page, numbers) =>
+export const getLatestNftApi = (ip, page, numbers) =>
   server.get("/lastest_nft/" + ip + "/" + page + "/" + numbers);
 
 // 下架作品
@@ -71,10 +65,6 @@ export const shelvesNftApi = (id) =>
 
 // 查看兑换码
 export const redeemCodeApi = (id) => server.get("/redeem_code/" + id);
-
-//生成二维码
-export const genteratorRedeemCodeApi = (id, redeemCode) =>
-  server.get("/nft_redeem/" + id + "/" + redeemCode);
 
 // 上架
 export const onShelvesNftApi = (data) => server.post("/nft_public", data);

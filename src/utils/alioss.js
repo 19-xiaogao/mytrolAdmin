@@ -1,4 +1,5 @@
 import OSS from "ali-oss";
+
 const client = new OSS({
   secure: true,
   // 线上环境
@@ -13,4 +14,5 @@ const client = new OSS({
   bucket: "apply-sign",
 
 });
+
 export default client;

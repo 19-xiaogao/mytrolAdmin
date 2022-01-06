@@ -59,7 +59,7 @@ import {
   computed,
   getCurrentInstance,
 } from "vue";
-import { getLastestNftApi } from "@api";
+import { getLatestNftApi } from "@api";
 export default defineComponent({
   props: {
     visible: Boolean,
@@ -83,7 +83,7 @@ export default defineComponent({
     };
 
     const getLastetNftList = async (id, page, numbers) => {
-      const { err_code, result } = await getLastestNftApi(
+      const { err_code, result } = await getLatestNftApi(
         id,
         page,
         String(numbers)
