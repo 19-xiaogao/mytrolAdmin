@@ -33,7 +33,7 @@
 import { defineComponent, ref, watchEffect } from "vue";
 import { getClassificationApi, addClassificationApi } from "@api";
 import { pollingClassApi } from "@/api/pllingApi";
-import { successNotify, warningNotify } from "../../utils";
+import { successNotify, warningNotify } from "@/utils";
 export default defineComponent({
   props: {
     classVisible: {

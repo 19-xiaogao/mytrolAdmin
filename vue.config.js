@@ -25,8 +25,14 @@ module.exports = {
   },
   devServer: {
     proxy: {
+      // 本地开发环境地址....
+      "/relay/dbchain/oracle/nft":{
+        target: "http://192.168.0.19:3001",
+        ws: true,
+        changeOrigin: true,
+      },
+      // 沙盒测试环境地址....
       "/nft_relay/dbchain/oracle/nft": {
-        // target: "http://192.168.0.19:3001",
         target: "https://controlpanel.dbchain.cloud",
         ws: true,
         changeOrigin: true,
