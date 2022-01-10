@@ -11,12 +11,12 @@
       <span class="circle" />
       <div class="form-item login-header d-flex">
         <span class="avatar flex-center">
-          <img src="@assets/images/mytrolLogo.png" alt="author" />
+          <img alt="author" src="@assets/images/mytrolLogo.png" />
         </span>
       </div>
       <div class="form-item">
         <label class="ipt-item">
-          <input type="text" required autocomplete="off" v-model="username" />
+          <input v-model.trim="username" autocomplete="off" required type="text" />
           <span class="tip-label">Username</span>
           <span class="border-line" />
         </label>
@@ -24,10 +24,10 @@
       <div class="form-item">
         <label class="ipt-item">
           <input
-            type="password"
+            v-model.trim="password"
             autocomplete="off"
             required
-            v-model="password"
+            type="password"
             @keydown.enter="handleLoginBtn"
           />
           <span class="tip-label">Password</span>
@@ -51,11 +51,12 @@
 </template>
 
 <script>
-import { defineComponent, reactive, toRefs, getCurrentInstance } from "vue";
-import { useRouter } from "vue-router";
-import { loginApi, getUserInfoApi } from "@api";
-import { useStore } from "vuex";
-import { setStorageRole, notify } from "@/utils";
+import {defineComponent, getCurrentInstance, reactive, toRefs} from "vue";
+import {useRouter} from "vue-router";
+import {getUserInfoApi, loginApi} from "@api";
+import {useStore} from "vuex";
+import {notify, setStorageRole} from "@/utils";
+
 export default defineComponent({
   setup() {
     const router = useRouter();
