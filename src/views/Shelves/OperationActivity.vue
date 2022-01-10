@@ -1,29 +1,29 @@
 <template>
-  <div class="operation-activity" ref="orderDetailRef">
+  <div ref="orderDetailRef" class="operation-activity">
     <div class="header">
       <span class="title">运营活动</span>
       <icon-svg
-        icon="icon-a-bianzu101"
-        class="icon"
-        @click="handleHideClick"
+          class="icon"
+          icon="icon-a-bianzu101"
+          @click="handleHideClick"
       ></icon-svg>
     </div>
     <div class="limit-time-free">
       <p class="free-title">限量免费</p>
       <input
-        type="number"
-        placeholder="输入前多少份作品免费"
-        v-model="free_number"
+          v-model="free_number"
+          placeholder="输入前多少份作品免费"
+          type="number"
       />
     </div>
     <div class="private-sale">
       <div class="private-sale-is">
         <span class="p-title">私人发售</span>
         <a-switch
-          checked-children="开"
-          un-checked-children="关"
-          default-checked
-          v-model:checked="checked"
+            v-model:checked="checked"
+            checked-children="开"
+            default-checked
+            un-checked-children="关"
         />
       </div>
       <p class="decs">
@@ -38,14 +38,15 @@
 </template>
 
 <script>
-import { ref, onUpdated } from "vue";
-import { warningNotify } from "@/utils";
+import {onUpdated, ref} from "vue";
+import {warningNotify} from "@/utils";
+
 export default {
   emits: ["close"],
   props: {
     nftNumber: [Number, String],
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const orderDetailRef = ref(null);
     const checked = ref(false);
     const free_number = ref(0);
@@ -69,7 +70,7 @@ export default {
         free_number: free_number.value,
         private_sale: checked.value,
       });
-      
+
     };
     onUpdated(() => {
       orderDetailRef.value.style.animation = "sliding-show 0.5s linear 0s";
@@ -100,6 +101,7 @@ export default {
   padding: 0 21px;
   animation: sliding-show 0.5s linear 0s;
   z-index: 11;
+
   .header {
     display: flex;
     align-items: center;
@@ -110,24 +112,29 @@ export default {
     background: #fff;
     height: 50px;
     width: 105%;
+
     .title {
       font-size: 18px;
       font-weight: 500;
       color: #000000;
     }
+
     .icon {
       font-size: 1.6rem;
       cursor: pointer;
     }
   }
+
   .limit-time-free {
     margin-top: 12px;
     position: relative;
+
     .free-title {
       font-size: 16px;
       font-weight: 500;
       color: #000000;
     }
+
     input {
       width: 100%;
       height: 50px;
@@ -137,6 +144,7 @@ export default {
       font-size: 16px;
       padding-right: 50px;
     }
+
     .icon-copy {
       position: absolute;
       font-size: 30px;
@@ -145,12 +153,15 @@ export default {
       cursor: pointer;
     }
   }
+
   .private-sale {
     margin-top: 30px;
+
     .private-sale-is {
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       .p-title {
         font-size: 16px;
         font-family: PingFangSC-Medium, PingFang SC;
@@ -159,6 +170,7 @@ export default {
         margin-top: 10px;
       }
     }
+
     .decs {
       font-size: 14px;
       font-weight: 400;
@@ -167,23 +179,28 @@ export default {
       color: #cacaca;
     }
   }
+
   .goods-qr-code {
     margin-top: 10px;
     text-align: center;
+
     .good-header {
       display: flex;
       justify-content: space-between;
+
       .good-title {
         font-size: 16px;
         font-weight: 500;
         color: #000000;
       }
+
       .good-icon {
         font-size: 20px;
         cursor: pointer;
         margin-right: 20px;
       }
     }
+
     .qr-code {
       width: 226px;
       height: 226px;
@@ -208,6 +225,7 @@ export default {
     transform: translateX(-50%);
   }
 }
+
 @keyframes sliding-show {
   from {
     transform: translateX(500px);

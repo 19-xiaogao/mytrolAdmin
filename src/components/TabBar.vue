@@ -1,10 +1,10 @@
 <template>
   <div class="menu">
     <div
-      v-for="item in menuList"
-      :key="item.type"
-      :class="isActClass(item.type)"
-      @click="handleMenuClick(item.type)"
+        v-for="item in menuList"
+        :key="item.type"
+        :class="isActClass(item.type)"
+        @click="handleMenuClick(item.type)"
     >
       {{ item.text }}
     </div>
@@ -12,14 +12,14 @@
 </template>
 
 <script>
-import { computed } from "vue";
+import {computed} from "vue";
 
 export default {
   props: {
     currentIndex: String,
     menuList: Array,
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const handleMenuClick = (type) => {
       emit("update:currentIndex", type);
     };
@@ -34,7 +34,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .menu {
   height: 36px;
   background: #f1f1f1;
@@ -45,6 +45,7 @@ export default {
   align-items: center;
   box-sizing: border-box;
   padding: 0 10px;
+
   div {
     color: #979797;
     height: 24px;
@@ -57,6 +58,7 @@ export default {
     text-align: center;
     cursor: pointer;
   }
+
   .act {
     font-size: 14px;
     color: #000000;

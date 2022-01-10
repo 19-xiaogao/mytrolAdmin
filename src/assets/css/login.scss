@@ -188,13 +188,13 @@ $b-bg: #00d2ff;
         input:valid {
           border-bottom-color: transparent;
 
-          &+.tip-label {
+          & + .tip-label {
             top: -20px;
             font-size: 12px;
             color: var(--primary);
           }
 
-          &~.border-line {
+          & ~ .border-line {
             transform: scaleX(1);
           }
         }

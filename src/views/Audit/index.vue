@@ -22,57 +22,52 @@
         </div>
         <div class="search">
           <span class="line"></span>
-          <input type="text" class="input" v-model="queryValue" />
+          <input v-model="queryValue" class="input" type="text"/>
           <span class="icon" @click="handleSearchClick">
-            <img src="@assets/images/search.png" alt="" />
+            <img alt="" src="@assets/images/search.png"/>
           </span>
         </div>
       </div>
     </div>
     <a-table
-      :columns="columns"
-      :row-key="(item) => item.id"
-      :data-source="publishData"
-      v-model:pagination="pagination"
-      :position="false"
-      @change="handlePaginationChange"
-      :scroll="{ y: scrollHeight }"
-      :row-class-name="
+        v-model:pagination="pagination"
+        :columns="columns"
+        :data-source="publishData"
+        :position="false"
+        :row-class-name="
         (_record, index) => (index % 2 === 1 ? 'table-striped' : null)
       "
+        :row-key="(item) => item.id"
+        :scroll="{ y: scrollHeight }"
+        @change="handlePaginationChange"
     >
       <template #price="{ record }">
         <a-tag color="#f50">{{ record.price }} 元</a-tag>
       </template>
       <template #detail="record">
         <a-button type="link" @click.stop="handleOrderDetailClick(record)"
-          >查看</a-button
+        >查看
+        </a-button
         >
       </template>
     </a-table>
     <AuditDetail
-      v-if="isOrderShow"
-      v-model:messageDetail="detailMessage"
-      @clonse="handleCloseClick"
+        v-if="isOrderShow"
+        v-model:messageDetail="detailMessage"
+        @clonse="handleCloseClick"
     />
   </div>
 </template>
 
 <script>
-import {
-  defineComponent,
-  reactive,
-  ref,
-  onMounted,
-  onUnmounted,
-  toRefs,
-} from "vue";
+import {defineComponent, onMounted, onUnmounted, reactive, ref, toRefs,} from "vue";
 import dayjs from "dayjs";
 
-import { joinPreviewUrl, successNotify } from "@/utils";
-import { getPublishingApi } from "@api";
-import { pollingQueryPublishingApi } from "@/api/pllingApi";
+import {joinPreviewUrl, successNotify} from "@/utils";
+import {getPublishingApi} from "@api";
+import {pollingQueryPublishingApi} from "@/api/pllingApi";
 import AuditDetail from "./AuditDetail";
+
 const columns = [
   {
     title: "序号",
@@ -99,7 +94,7 @@ const columns = [
     title: "价格",
     dataIndex: "price",
     key: "price",
-    slots: { customRender: "price" },
+    slots: {customRender: "price"},
   },
   {
     title: "数量",
@@ -115,7 +110,7 @@ const columns = [
     title: "详情",
     dataIndex: "detail",
     key: "detail",
-    slots: { customRender: "detail" },
+    slots: {customRender: "detail"},
   },
 ];
 const queryList = [
@@ -161,7 +156,7 @@ export default defineComponent({
       showTotal: (total) => `一共 ${total} 条`,
     });
 
-    let currentItemDetail = reactive({ isOrderShow: false, detailMessage: {} });
+    let currentItemDetail = reactive({isOrderShow: false, detailMessage: {}});
 
     const queryParams = ref(queryList);
     const currentQueryParams = ref(queryList[0]);
@@ -169,10 +164,10 @@ export default defineComponent({
     const queryValue = ref();
     const scrollHeight = ref();
 
-    const handleSelectClick = ({ key }) => {
+    const handleSelectClick = ({key}) => {
       currentQueryParams.value = queryList.find((item) => item.key === key);
     };
-    const handlePaginationChange = ({ current }) => {
+    const handlePaginationChange = ({current}) => {
       pagination.current = current;
       getPublishingList(pagination);
     };
@@ -204,7 +199,7 @@ export default defineComponent({
       publishData.value = result.list.map((item, index) => ({
         ...item,
         opening_time: dayjs(Number(item.opening_time) * 1000).format(
-          "YYYY-MM-DD HH:mm"
+            "YYYY-MM-DD HH:mm"
         ),
         series_ip: item.series_ip === "common" ? "首页" : item.series_ip,
         avatar: joinPreviewUrl(item.avatar),
@@ -212,7 +207,7 @@ export default defineComponent({
       }));
     };
     const getPublishingList = async (pagination) => {
-      const { err_code, result } = await getPublishingApi(pagination);
+      const {err_code, result} = await getPublishingApi(pagination);
       if (err_code === "0") {
         assignmentFunc(result);
       }
@@ -250,18 +245,20 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .order {
   border-radius: 8px;
   padding-top: 31px;
   padding-left: 44px;
   padding-right: 36px;
   box-sizing: border-box;
+
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 4px;
+
     .search-box {
       width: 301px;
       height: 40px;
@@ -270,12 +267,15 @@ export default defineComponent({
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       .dropdown {
         width: 20%;
+
         .current-option {
           display: flex;
           justify-content: center;
           align-items: center;
+
           .text {
             font-size: 14px;
             font-weight: 400;
@@ -301,12 +301,14 @@ export default defineComponent({
           }
         }
       }
+
       .search {
         flex: 1;
         text-align: left;
         padding-left: 4px;
         display: flex;
         align-items: center;
+
         .line {
           display: inline-block;
           width: 1px;
@@ -315,10 +317,12 @@ export default defineComponent({
           border-radius: 1px;
           border: 1px solid #c7c7c7;
         }
+
         .input {
           margin-left: 5px;
           width: 80%;
         }
+
         .icon {
           cursor: pointer;
         }
@@ -326,6 +330,7 @@ export default defineComponent({
     }
   }
 }
+
 .ant-table-striped :deep(.table-striped) td {
   background-color: #fafafa;
 }

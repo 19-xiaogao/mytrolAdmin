@@ -3,32 +3,32 @@
     <div class="top">
       <div class="upload-img-box">
         <UploadNft
-          v-model:doneImgFile="nft_file"
-          v-model:doneImgType="nftAllImgType.nft_file_type"
-          ref="uploadNftRef"
-          type="originalImage"
-          @previewImgClick="handleUploadNftPreview"
+            ref="uploadNftRef"
+            v-model:doneImgFile="nft_file"
+            v-model:doneImgType="nftAllImgType.nft_file_type"
+            type="originalImage"
+            @previewImgClick="handleUploadNftPreview"
         />
         <UploadNft
-          v-model:doneImgFile="nft_thumbnail"
-          v-model:doneImgType="nftAllImgType.nft_thumbnail_type"
-          ref="nftThumbnailRef"
-          style="margin-top: 10px"
-          type="thumbnail"
-          @previewImgClick="handleUploadNftPreview"
+            ref="nftThumbnailRef"
+            v-model:doneImgFile="nft_thumbnail"
+            v-model:doneImgType="nftAllImgType.nft_thumbnail_type"
+            style="margin-top: 10px"
+            type="thumbnail"
+            @previewImgClick="handleUploadNftPreview"
         />
       </div>
 
       <div class="user_search">
         <div class="search-title">
           <a-input
-            placeholder="在此输入作品名称(50字以内)"
-            v-model:value="name"
+              v-model:value="name"
+              placeholder="在此输入作品名称(50字以内)"
           />
           <a-dropdown class="serial-number">
             <template #overlay>
               <a-menu @click="handleMenuClick">
-                <a-menu-item key=""> 首页 </a-menu-item>
+                <a-menu-item key=""> 首页</a-menu-item>
                 <a-menu-item v-for="item in ipList" :key="item.name">
                   {{ item.name }}
                 </a-menu-item>
@@ -36,7 +36,7 @@
             </template>
             <a-button>
               <span>{{ currentIpName }}</span>
-              <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
+              <icon-svg class="icon" icon="icon-a-bianzu13"></icon-svg>
             </a-button>
           </a-dropdown>
         </div>
@@ -45,47 +45,48 @@
           <div class="price">
             <div>价格</div>
             <a-input-number
-              v-model:value="price"
-              type="number"
-              style="width: 150px"
-              placeholder="设定价格"
+                v-model:value="price"
+                placeholder="设定价格"
+                style="width: 150px"
+                type="number"
             />
           </div>
           <div class="price">
             <div>限量</div>
             <a-input-number
-              v-model:value="number"
-              type="number"
-              :max="100000"
-              :min="0.01"
-              style="width: 150px"
-              placeholder="请输入数量"
+                v-model:value="number"
+                :max="100000"
+                :min="0.01"
+                placeholder="请输入数量"
+                style="width: 150px"
+                type="number"
             />
           </div>
           <div class="price">
             <div>设置分类</div>
             <a-select
-              class="select"
-              placeholder="请选择分类"
-              mode="multiple"
-              v-model:value="classification"
+                v-model:value="classification"
+                class="select"
+                mode="multiple"
+                placeholder="请选择分类"
             >
               <a-select-option
-                v-for="item in classData"
-                :key="item.id"
-                :value="item.id"
-                >{{ item.name }}</a-select-option
+                  v-for="item in classData"
+                  :key="item.id"
+                  :value="item.id"
+              >{{ item.name }}
+              </a-select-option
               >
             </a-select>
           </div>
           <div class="price">
             <div>开售时间</div>
             <a-date-picker
-              show-time
-              placeholder="请选择时间"
-              class="date-picker"
-              v-model:value="opening_time"
-              :bordered="false"
+                v-model:value="opening_time"
+                :bordered="false"
+                class="date-picker"
+                placeholder="请选择时间"
+                show-time
             />
           </div>
         </div>
@@ -93,82 +94,70 @@
           <div class="nft-des">
             <p>NFT介绍</p>
             <textarea
-              placeholder="在此输入藏品描述(建议200字以内)"
-              v-model="description"
+                v-model="description"
+                placeholder="在此输入藏品描述(建议200字以内)"
             />
           </div>
           <UploadCollection
-            ref="uploadCollection"
-            v-model:nft_background="nft_background"
-            v-model:doneImgType="nftAllImgType.nft_background_type"
-            @previewImgClick="handleUploadNftPreview"
+              ref="uploadCollection"
+              v-model:doneImgType="nftAllImgType.nft_background_type"
+              v-model:nft_background="nft_background"
+              @previewImgClick="handleUploadNftPreview"
           />
         </div>
         <div class="ope-act-b-l">
           <div class="opeAct-button" @click="handleEquityActivityClick">
-            <icon-svg icon="icon-duihao" v-if="equity_cover"></icon-svg>
-            <icon-svg icon="icon-a-bianzu34" v-else></icon-svg>
+            <icon-svg v-if="equity_cover" icon="icon-duihao"></icon-svg>
+            <icon-svg v-else icon="icon-a-bianzu34"></icon-svg>
             添加权益卡
           </div>
           <div class="opeAct-button" @click="handleShowOperationActivityClick">
-            <icon-svg icon="icon-qizi" class="icon"></icon-svg>
+            <icon-svg class="icon" icon="icon-qizi"></icon-svg>
             运营活动
           </div>
-          <div class="ope-tag" v-if="free_number">限量免费</div>
-          <div class="ope-tag" v-if="private_sale">私人发售</div>
+          <div v-if="free_number" class="ope-tag">限量免费</div>
+          <div v-if="private_sale" class="ope-tag">私人发售</div>
         </div>
       </div>
     </div>
     <div class="btns">
       <a-button
-        class="btn"
-        @click="handleUploadNftClick"
-        :loading="btnDisabled"
+          :loading="btnDisabled"
+          class="btn"
+          @click="handleUploadNftClick"
       >
         <template #icon>
-          <icon-svg icon="icon-icon4" class="icon"></icon-svg
-        ></template>
+          <icon-svg class="icon" icon="icon-icon4"></icon-svg
+          >
+        </template>
         <span>创作</span>
       </a-button>
     </div>
 
     <PreviewImg
-      :imgUrl="priviesImgComponentParams.imgUrl"
-      v-model:visible="priviesImgComponentParams.visible"
+        v-model:visible="priviesImgComponentParams.visible"
+        :imgUrl="priviesImgComponentParams.imgUrl"
     />
     <OperationActivity
-      v-show="isOperationActivity"
-      ref="operationActivity"
-      :nftNumber="number"
-      @close="handleOperationActivityClick"
+        v-show="isOperationActivity"
+        ref="operationActivity"
+        :nftNumber="number"
+        @close="handleOperationActivityClick"
     />
     <EquityActivity
-      ref="equityActivity"
-      v-show="isEquityActivity"
-      @close="handleCloseEquityActivityClick"
+        v-show="isEquityActivity"
+        ref="equityActivity"
+        @close="handleCloseEquityActivityClick"
     />
   </div>
 </template>
 
 <script>
-import {
-  defineComponent,
-  reactive,
-  ref,
-  toRefs,
-  onMounted,
-  getCurrentInstance,
-  onUnmounted,
-} from "vue";
+import {defineComponent, getCurrentInstance, onMounted, onUnmounted, reactive, ref, toRefs,} from "vue";
 import dayjs from "dayjs";
-import {
-  getSerisesIpApi,
-  uploadNftApi,
-  getClassificationApi,
-  uploadAliOssApi,
-} from "@api";
+import {getClassificationApi, getSerisesIpApi, uploadAliOssApi, uploadNftApi,} from "@api";
 
-import { warningNotify, successNotify, uuidToCreateHash } from "@/utils";
+import {successNotify, uuidToCreateHash, warningNotify} from "@/utils";
 
 import PreviewImg from "@/components/PreviewImg";
 import UploadCollection from "./UploadCollection";
@@ -200,7 +189,7 @@ export default defineComponent({
     EquityActivity,
   },
   setup() {
-    const { proxy } = getCurrentInstance();
+    const {proxy} = getCurrentInstance();
 
     const ipList = ref([]);
     const classData = ref([]);
@@ -238,7 +227,7 @@ export default defineComponent({
     };
 
     const getIpList = async () => {
-      const { err_code, result } = await getSerisesIpApi();
+      const {err_code, result} = await getSerisesIpApi();
       if (err_code === "0") {
         if (!result) return;
         ipList.value = result.filter((item) => item.status === "on");
@@ -246,7 +235,7 @@ export default defineComponent({
     };
 
     const getClassData = async () => {
-      const { result, err_code } = await getClassificationApi();
+      const {result, err_code} = await getClassificationApi();
       if (err_code === "0") {
         classData.value = result;
       }
@@ -286,14 +275,14 @@ export default defineComponent({
           uploadAliOssApi(nft_background_name, nft_background),
           uploadAliOssApi(nft_thumbnail_name, nft_thumbnail),
         ])
-          .then((result) => {
-            resolve({
-              nft_file: result[0].res.requestUrls[0],
-              nft_background: result[1].res.requestUrls[0],
-              nft_thumbnail: result[2].res.requestUrls[0],
-            });
-          })
-          .catch((err) => reject(err));
+            .then((result) => {
+              resolve({
+                nft_file: result[0].res.requestUrls[0],
+                nft_background: result[1].res.requestUrls[0],
+                nft_thumbnail: result[2].res.requestUrls[0],
+              });
+            })
+            .catch((err) => reject(err));
       });
     };
 
@@ -382,8 +371,8 @@ export default defineComponent({
       const ossResult = await uploadAllNftToOssApi(formData);
       setFormDateNft(formData, ossResult);
 
-      const { err_code } = await uploadNftApi(formData, {
-        headers: { "content-type": "application/x-www-form-urlencoded" },
+      const {err_code} = await uploadNftApi(formData, {
+        headers: {"content-type": "application/x-www-form-urlencoded"},
       });
       if (err_code === "0") {
         initParams();
@@ -462,20 +451,24 @@ export default defineComponent({
     font-size: 1rem;
     margin-left: 4px;
   }
+
   span {
     font-size: 14px;
     color: #000;
     font-weight: 400;
   }
 }
+
 .shelves {
   box-sizing: border-box;
   padding: 30px 23px;
   background: #fff;
   height: 89.59vh;
   position: relative;
+
   .top {
     display: flex;
+
     .user_search {
       flex: 1;
       text-align: left;
@@ -488,6 +481,7 @@ export default defineComponent({
         font-weight: 600;
         color: #2d2d2d;
         display: flex;
+
         input {
           display: inline-block;
           width: 100%;
@@ -499,6 +493,7 @@ export default defineComponent({
           font-size: 16px;
         }
       }
+
       .search-base {
         width: 100%;
         height: 118px;
@@ -510,6 +505,7 @@ export default defineComponent({
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .avator {
           display: flex;
           align-items: center;
@@ -517,11 +513,13 @@ export default defineComponent({
           margin-right: 4px;
           margin-left: 30px;
           margin-top: 20px;
+
           .header {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
+
             img {
               display: inline-block;
               width: 50px;
@@ -529,6 +527,7 @@ export default defineComponent({
               border-radius: 50%;
             }
           }
+
           .icon {
             margin-left: 9px;
             margin-bottom: 20px;
@@ -542,21 +541,25 @@ export default defineComponent({
             border-color: #686868 transparent transparent transparent;
           }
         }
+
         .price {
           display: flex;
           flex-direction: column;
           padding-right: 20px;
+
           div {
             text-align: center;
             font-size: 18px;
             color: #434343;
           }
+
           .date-picker {
             // font-size: 16px;
             // width: 90%;
             font-weight: 500;
             border: none;
             color: #000000;
+
             &::-webkit-input-placeholder {
               color: #999;
             }
@@ -567,11 +570,13 @@ export default defineComponent({
 
             display: inline-block;
           }
+
           input {
             font-size: 16px;
             width: 90%;
             // font-weight: 500;
             color: #000000;
+
             &::-webkit-input-placeholder {
               color: #999;
             }
@@ -582,10 +587,12 @@ export default defineComponent({
 
             display: inline-block;
           }
+
           .select {
             width: 200px;
           }
         }
+
         .select-headers {
           position: absolute;
           left: 27px;
@@ -598,6 +605,7 @@ export default defineComponent({
           display: flex;
           animation: upShow 0.3s ease-in;
           z-index: 111;
+
           .header {
             display: flex;
             flex-direction: column;
@@ -610,15 +618,18 @@ export default defineComponent({
             height: 70px;
             cursor: pointer;
             margin-left: 23px;
+
             img {
               display: inline-block;
               width: 34px;
               height: 34px;
               border-radius: 50%;
             }
+
             &:hover {
               background: #f7f7f7;
             }
+
             span {
               color: #000000;
               font-size: 14px;
@@ -626,6 +637,7 @@ export default defineComponent({
           }
         }
       }
+
       @keyframes upShow {
         0% {
           transform: translateY(-30px);
@@ -646,15 +658,18 @@ export default defineComponent({
           opacity: 0.4;
         }
       }
+
       .ups {
         display: flex;
         margin-top: 16px;
+
         .nft-des {
           width: 40%;
           border-radius: 8px;
           border: 1px solid #f3f1f1;
           height: calc(470px - 16px - 118px - 5px - 34px);
           position: relative;
+
           textarea {
             padding: 5px 5px 5px 20px;
             display: inline-block;
@@ -664,6 +679,7 @@ export default defineComponent({
             color: #000000;
             box-sizing: border-box;
           }
+
           p {
             margin: 0;
             padding: 0;
@@ -675,10 +691,12 @@ export default defineComponent({
           }
         }
       }
+
       .ope-act-b-l {
         display: flex;
         margin-top: 24px;
       }
+
       .opeAct-button {
         width: 134px;
         height: 40px;
@@ -692,6 +710,7 @@ export default defineComponent({
         margin: 0 10px;
 
         cursor: pointer;
+
         .icon {
           background: #fff;
           color: #eba030;
@@ -699,6 +718,7 @@ export default defineComponent({
           font-weight: 800;
         }
       }
+
       .ope-tag {
         width: 106px;
         height: 40px;
@@ -723,6 +743,7 @@ export default defineComponent({
     justify-content: center;
     align-items: center;
     cursor: pointer;
+
     .btn {
       width: 242px;
       height: 48px;
@@ -731,10 +752,12 @@ export default defineComponent({
       display: flex;
       justify-content: center;
       align-items: center;
+
       .icon {
         font-size: 2rem;
         color: #fff;
       }
+
       span {
         color: #ffffff;
         font-size: 16px;

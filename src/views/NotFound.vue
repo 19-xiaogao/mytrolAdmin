@@ -1,9 +1,9 @@
 <template>
   <div class="empty">
     <div class="perspective-container absolute-center">
-      <span class="card" />
-      <span class="card" />
-      <span class="card" />
+      <span class="card"/>
+      <span class="card"/>
+      <span class="card"/>
       <slot>
         <p class="tip txt-overflow">
           好像出错了！
@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { defineComponent } from "vue";
+import {defineComponent} from "vue";
 
 export default defineComponent({
   name: "Empty",
@@ -28,11 +28,13 @@ export default defineComponent({
   width: 100%;
   height: 100%;
   position: relative;
+
   .perspective-container {
     perspective: 500px;
     width: 100px;
     height: 100px;
     transform-origin: bottom center;
+
     .card {
       transform-style: preserve-3d;
       position: absolute;
@@ -44,11 +46,13 @@ export default defineComponent({
       border-radius: 20px;
       transform: rotateX(60deg) rotateZ(45deg);
       animation: cardRotate 2s ease-in-out infinite;
+
       &:nth-child(2) {
         background-color: rgba(0, 0, 0, 0.4);
         transform: rotateX(60deg) rotateZ(45deg) scale(0.8) translateZ(20px);
         animation: card2Bounce 2s ease infinite;
       }
+
       &:nth-child(3) {
         background-color: rgba(0, 0, 0, 0.2);
         transform: rotateX(60deg) rotateZ(45deg) scale(0.5) translateZ(50px);
@@ -97,6 +101,7 @@ export default defineComponent({
   &:nth-child(2) {
     background-color: rgba(255, 255, 255, 0.6);
   }
+
   &:nth-child(3) {
     background-color: rgba(255, 255, 255, 0.3);
   }

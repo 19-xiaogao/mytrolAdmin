@@ -1,11 +1,11 @@
 <template>
   <div class="overivew">
     <div class="edit-message">
-      <PersonSpace />
-      <EditBanner v-if="isMakerUserRules" />
-      <MakeQueryBox v-else />
+      <PersonSpace/>
+      <EditBanner v-if="isMakerUserRules"/>
+      <MakeQueryBox v-else/>
     </div>
-    <DateAnalysis />
+    <DateAnalysis/>
   </div>
 </template>
 
@@ -14,8 +14,9 @@ import PersonSpace from "./components/PersonalSpace";
 import EditBanner from "./components/EditBanner/index.vue";
 import DateAnalysis from "./components/DataAnalysis";
 import MakeQueryBox from "./components/MakeQueryBox";
-import { useStore } from "vuex";
-import { computed } from "vue";
+import {useStore} from "vuex";
+import {computed} from "vue";
+
 export default {
   components: {
     PersonSpace,
@@ -39,6 +40,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .edit-message {
   display: flex;
   justify-content: space-between;

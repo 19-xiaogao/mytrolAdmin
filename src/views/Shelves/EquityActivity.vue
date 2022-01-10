@@ -1,34 +1,34 @@
 <template>
-  <div class="operation-activity" ref="orderDetailRef">
+  <div ref="orderDetailRef" class="operation-activity">
     <div class="header">
       <span class="title">添加权益卡</span>
       <icon-svg
-        icon="icon-a-bianzu101"
-        class="icon"
-        @click="handleHideClick"
+          class="icon"
+          icon="icon-a-bianzu101"
+          @click="handleHideClick"
       ></icon-svg>
     </div>
     <div class="add-box">
       <UploadEquityImg
-        uploadName="权益卡封面"
-        ref="cover"
-        @uploadDone="handleEquityCoverDone"
+          ref="cover"
+          uploadName="权益卡封面"
+          @uploadDone="handleEquityCoverDone"
       />
       <UploadEquityImg
-        uploadName="权益卡内容"
-        ref="content"
-        @uploadDone="handleEquityContentDone"
+          ref="content"
+          uploadName="权益卡内容"
+          @uploadDone="handleEquityContentDone"
       />
       <UploadEquityImg
-        uploadName="权益卡二维码"
-        ref="code"
-        @uploadDone="handleEquityQrCodeDone"
+          ref="code"
+          uploadName="权益卡二维码"
+          @uploadDone="handleEquityQrCodeDone"
       />
     </div>
     <a-button
-      class="save-setting"
-      @click="handleSaveSettingClick"
-      :loading="loading"
+        :loading="loading"
+        class="save-setting"
+        @click="handleSaveSettingClick"
     >
       <icon-svg icon="icon-save"></icon-svg>
       添加
@@ -37,9 +37,9 @@
 </template>
 
 <script>
-import { ref, onUpdated, reactive, getCurrentInstance } from "vue";
-import { uploadAliOssApi } from "@api";
-import { warningNotify, uuidToCreateHash } from "@/utils";
+import {getCurrentInstance, onUpdated, reactive, ref} from "vue";
+import {uploadAliOssApi} from "@api";
+import {uuidToCreateHash, warningNotify} from "@/utils";
 import UploadEquityImg from "./UploadEquityImg";
 
 export default {
@@ -50,8 +50,8 @@ export default {
   props: {
     nftNumber: [Number, String],
   },
-  setup(props, { emit }) {
-    const { proxy } = getCurrentInstance();
+  setup(props, {emit}) {
+    const {proxy} = getCurrentInstance();
 
     const orderDetailRef = ref(null);
     const loading = ref(false);
@@ -102,27 +102,27 @@ export default {
       };
       if (formData.get("equity_cover")) {
         const fileName = `item/equity_cover${uuidToCreateHash()}.${
-          equityParams.equity_cover.type
+            equityParams.equity_cover.type
         }`;
         const result = await uploadAliOssApi(
-          fileName,
-          formData.get("equity_cover")
+            fileName,
+            formData.get("equity_cover")
         );
         callBackObj.equity_cover = result.res.requestUrls[0];
       }
       if (formData.get("equity_content")) {
         const fileName = `item/equity_cover${uuidToCreateHash()}.${
-          equityParams.equity_content.type
+            equityParams.equity_content.type
         }`;
         const result = await uploadAliOssApi(
-          fileName,
-          formData.get("equity_content")
+            fileName,
+            formData.get("equity_content")
         );
         callBackObj.equity_content = result.res.requestUrls[0];
       }
       if (formData.get("qr_code")) {
         const fileName = `item/qr_code${uuidToCreateHash()}.${
-          equityParams.qr_code.type
+            equityParams.qr_code.type
         }`;
         const result = await uploadAliOssApi(fileName, formData.get("qr_code"));
         callBackObj.qr_code = result.res.requestUrls[0];
@@ -192,6 +192,7 @@ export default {
   padding: 0 21px;
   animation: sliding-show 0.5s linear 0s;
   z-index: 11;
+
   .header {
     display: flex;
     align-items: center;
@@ -202,16 +203,19 @@ export default {
     background: #fff;
     height: 50px;
     width: 105%;
+
     .title {
       font-size: 18px;
       font-weight: 500;
       color: #000000;
     }
+
     .icon {
       font-size: 1.6rem;
       cursor: pointer;
     }
   }
+
   .add-box {
     height: 90%;
     overflow-y: auto;
@@ -234,6 +238,7 @@ export default {
     transform: translateX(-50%);
   }
 }
+
 @keyframes sliding-show {
   from {
     transform: translateX(500px);

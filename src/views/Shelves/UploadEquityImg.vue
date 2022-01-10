@@ -2,27 +2,28 @@
   <div class="add-equity-box">
     <h3>{{ uploadName }}</h3>
     <div class="equity-cover">
-      <icon-svg icon="icon-tianjia" class="icon"></icon-svg>
+      <icon-svg class="icon" icon="icon-tianjia"></icon-svg>
       <p>卡片尺寸1002*602，图片内容需要按照模版尺寸和元素</p>
       <input
-        type="file"
-        class="upload-file"
-        @change="handleEquityCoverChange"
+          class="upload-file"
+          type="file"
+          @change="handleEquityCoverChange"
       />
-      <img v-if="file.value" :src="file.value" alt="" />
+      <img v-if="file.value" :src="file.value" alt=""/>
     </div>
   </div>
 </template>
 
 <script>
-import { previewFile, backFileType } from "@/utils";
-import { reactive } from "vue";
+import {backFileType, previewFile} from "@/utils";
+import {reactive} from "vue";
+
 export default {
   props: {
     uploadName: String,
   },
-  setup(props, { emit }) {
-      
+  setup(props, {emit}) {
+
     const file = reactive({
       type: "",
       value: "",
@@ -48,11 +49,13 @@ export default {
 <style lang="scss" scoped>
 .add-equity-box {
   margin-top: 10px;
+
   h3 {
     font-size: 16px;
     font-weight: 500;
     color: #000000;
   }
+
   .equity-cover {
     position: relative;
     width: 100%;
@@ -60,6 +63,7 @@ export default {
     overflow: hidden;
     border-radius: 16px;
     background: #f1f1f1;
+
     .icon {
       position: absolute;
       font-size: 40px;
@@ -68,6 +72,7 @@ export default {
       left: 50%;
       transform: translate(-50%, -50%);
     }
+
     p {
       position: absolute;
       font-size: 40px;
@@ -81,6 +86,7 @@ export default {
       font-weight: 400;
       color: #979797;
     }
+
     img {
       position: absolute;
       width: 100%;
@@ -90,6 +96,7 @@ export default {
       object-fit: cover;
       object-position: center center;
     }
+
     .upload-file {
       position: absolute;
       width: 100%;

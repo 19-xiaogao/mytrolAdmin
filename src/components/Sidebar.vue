@@ -1,13 +1,13 @@
 <template>
   <ul class="sidebar">
-    <router-link v-for="item in menus" :to="item.path" :key="item.id">
+    <router-link v-for="item in menus" :key="item.id" :to="item.path">
       <li>
         <p :class="isOpacity(item.path)"></p>
         <div class="icons">
           <icon-svg
-            :icon="item.icon"
-            class="icon"
-            :style="isColor(item.path)"
+              :icon="item.icon"
+              :style="isColor(item.path)"
+              class="icon"
           ></icon-svg>
           <span :style="isColor(item.path)">{{ item.text }}</span>
         </div>
@@ -17,9 +17,10 @@
 </template>
 
 <script>
-import { useStore } from "vuex";
-import { computed } from "vue";
-import { useRoute } from "vue-router";
+import {useStore} from "vuex";
+import {computed} from "vue";
+import {useRoute} from "vue-router";
+
 const adminMenu = [
   {
     icon: "icon-icon2-hover1",
@@ -127,12 +128,12 @@ export default {
       }
     });
     const isOpacity = computed(() => (path) =>
-      path === currentPath.value ? "" : "opacity"
+        path === currentPath.value ? "" : "opacity"
     );
     const isColor = computed(() => (path) =>
-      path === currentPath.value ? "color:#ED6637" : ""
+        path === currentPath.value ? "color:#ED6637" : ""
     );
-    return { menus, isOpacity, isColor };
+    return {menus, isOpacity, isColor};
   },
 };
 </script>
@@ -145,21 +146,25 @@ export default {
   box-shadow: 4px 0px 8px 0px rgba(156, 156, 156, 0);
   overflow: hidden;
   padding-top: 80px;
+
   li {
     height: 60px;
     margin-bottom: 10px;
     display: flex;
     align-items: center;
+
     .icons {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: flex-start;
       cursor: pointer;
+
       .icon {
         font-size: 2rem;
         color: #adadad;
       }
+
       span {
         font-size: 12px;
         font-weight: 500;
@@ -176,9 +181,11 @@ export default {
     }
   }
 }
+
 .gradient {
   color: #ffca2a;
 }
+
 .opacity {
   opacity: 0;
 }

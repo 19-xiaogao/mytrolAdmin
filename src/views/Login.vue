@@ -1,44 +1,44 @@
 <template>
   <section class="login-container">
-    <div class="login-container-bg" />
-    <div class="login-container-bg" />
-    <div class="login-container-bg" />
+    <div class="login-container-bg"/>
+    <div class="login-container-bg"/>
+    <div class="login-container-bg"/>
     <div class="login-form flex-col fixed-center">
-      <span class="circle" />
-      <span class="circle" />
-      <span class="circle" />
-      <span class="circle" />
-      <span class="circle" />
+      <span class="circle"/>
+      <span class="circle"/>
+      <span class="circle"/>
+      <span class="circle"/>
+      <span class="circle"/>
       <div class="form-item login-header d-flex">
         <span class="avatar flex-center">
-          <img alt="author" src="@assets/images/mytrolLogo.png" />
+          <img alt="author" src="@assets/images/mytrolLogo.png"/>
         </span>
       </div>
       <div class="form-item">
         <label class="ipt-item">
-          <input v-model.trim="username" autocomplete="off" required type="text" />
+          <input v-model.trim="username" autocomplete="off" required type="text"/>
           <span class="tip-label">Username</span>
-          <span class="border-line" />
+          <span class="border-line"/>
         </label>
       </div>
       <div class="form-item">
         <label class="ipt-item">
           <input
-            v-model.trim="password"
-            autocomplete="off"
-            required
-            type="password"
-            @keydown.enter="handleLoginBtn"
+              v-model.trim="password"
+              autocomplete="off"
+              required
+              type="password"
+              @keydown.enter="handleLoginBtn"
           />
           <span class="tip-label">Password</span>
-          <span class="border-line" />
+          <span class="border-line"/>
         </label>
       </div>
       <div class="form-item">
         <button
-          class="btn btn-primary btn-login"
-          type="button"
-          @click="handleLoginBtn"
+            class="btn btn-primary btn-login"
+            type="button"
+            @click="handleLoginBtn"
         >
           GO
         </button>
@@ -61,8 +61,8 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const store = useStore();
-    const { proxy } = getCurrentInstance();
-    const loginParams = reactive({ username: "", password: "" });
+    const {proxy} = getCurrentInstance();
+    const loginParams = reactive({username: "", password: ""});
 
     const handleLoginBtn = async () => {
 
@@ -79,20 +79,20 @@ export default defineComponent({
 
         notify("提示", "欢迎回来", "success");
 
-        getUserInfoApi().then(({ err_code, result }) => {
+        getUserInfoApi().then(({err_code, result}) => {
           if (err_code === "0") {
             // 本地存一份，vuex 存一份
             const setPersonMessage = {
               ...result,
               avatar: proxy.joinPreviewUrl(result.avatar),
             };
-            
+
             setStorageRole(JSON.stringify(response.result));
             store.commit("setUser", response.result);
             store.commit("setPersonMessage", setPersonMessage);
             localStorage.setItem(
-              "personMessage",
-              JSON.stringify(setPersonMessage)
+                "personMessage",
+                JSON.stringify(setPersonMessage)
             );
             router.push("/");
           }

@@ -490,7 +490,6 @@ span.ant-input-affix-wrapper {
 }
 
 
-
 .mt-1 {
   margin-top: 10px;
 }
@@ -547,6 +546,7 @@ span.ant-input-affix-wrapper {
 
 .ant-table {
   height: 100%;
+
   tr {
     text-align: center;
   }
@@ -563,7 +563,7 @@ span.ant-input-affix-wrapper {
 }
 
 .ant-table {
-  .ant-table-tbody>tr>td {
+  .ant-table-tbody > tr > td {
     padding: 15px 8px;
   }
 }

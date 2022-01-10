@@ -9,7 +9,7 @@
           <span>用户注册量</span>
         </div>
         <div class="echart">
-          <v-chart :options="lineOption" />
+          <v-chart :options="lineOption"/>
         </div>
       </div>
       <div class="data-detail">
@@ -19,7 +19,7 @@
           <span>NFT创作量</span>
         </div>
         <div class="echart">
-          <v-chart :options="lineOption" />
+          <v-chart :options="lineOption"/>
         </div>
       </div>
       <div class="data-detail">
@@ -28,7 +28,7 @@
           <span>已成交NFT量</span>
         </div>
         <div class="echart">
-          <v-chart :options="lineOption" />
+          <v-chart :options="lineOption"/>
         </div>
       </div>
     </div>
@@ -37,27 +37,27 @@
         <h4>成交金额</h4>
         <span>总成交：-CNY </span>
       </div>
-      <v-chart :options="pieOption" />
+      <v-chart :options="pieOption"/>
     </div>
   </div>
 </template>
 
 <script>
 import VueEcharts from "@/components/VueEcharts/index.vue";
-import { defineComponent, onMounted, reactive, ref } from "vue";
-import { createPieOption, createLineOption } from "./useDataAnalysis";
+import {defineComponent, onMounted, reactive, ref} from "vue";
+import {createLineOption, createPieOption} from "./useDataAnalysis";
 // import { getTradeDataCountApi } from "@api";
 export default defineComponent({
   components: {
     "v-chart": VueEcharts,
   },
   setup() {
-    const statisticDatas = ref({ user_number: 0, nft_number: 0 });
+    const statisticDatas = ref({user_number: 0, nft_number: 0});
     const pieOption = reactive(
-      createPieOption([
-        { value: 735, name: "总成交量" },
-        { value: 1048, name: "昨日成交量" },
-      ])
+        createPieOption([
+          {value: 735, name: "总成交量"},
+          {value: 1048, name: "昨日成交量"},
+        ])
     );
     onMounted(() => {
       // getTradeDataCount();
@@ -90,14 +90,17 @@ export default defineComponent({
   box-sizing: border-box;
   display: flex;
   padding: 20px 30px;
+
   .data {
     width: 24.88%;
     text-align: left;
+
     h4 {
       font-size: 20px;
       font-weight: 500;
       color: #000000;
     }
+
     .data-detail {
       width: 100%;
       height: 28%;
@@ -109,6 +112,7 @@ export default defineComponent({
       justify-content: space-between;
       align-items: center;
       margin-bottom: 10px;
+
       .title {
         h3 {
           font-size: 34px;
@@ -118,32 +122,38 @@ export default defineComponent({
           margin: 0;
           padding: 0;
         }
+
         span {
           font-size: 14px;
           text-align: center;
         }
       }
+
       .echart {
         width: 80px;
         height: 100px;
       }
     }
   }
+
   .analysis {
     flex: 1;
     text-align: left;
     padding-left: 20px;
     box-sizing: border-box;
     overflow: hidden;
+
     .title {
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       h4 {
         font-size: 20px;
         font-weight: 500;
         color: #000000;
       }
+
       span {
         font-size: 16px;
         font-weight: 500;

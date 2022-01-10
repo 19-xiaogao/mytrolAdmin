@@ -3,26 +3,26 @@
     <div class="titles">
       <h3>藏品描述图片</h3>
       <div class="prew" @click="handlePreviewClick">
-        <icon-svg icon="icon-icon4-hover" class="icon"></icon-svg>
+        <icon-svg class="icon" icon="icon-icon4-hover"></icon-svg>
         <span>预览</span>
       </div>
     </div>
     <div class="upload-cot">
-      <img src="@assets/images/sheleves-add.png" alt="" v-if="!imgSrc" />
+      <img v-if="!imgSrc" alt="" src="@assets/images/sheleves-add.png"/>
       <p v-if="!imgSrc">
         在此添加藏品描述图片
-        <br />
+        <br/>
         (建议大小500KB以内,宽度1200px)
       </p>
-      <input type="file" alt="" @change="handleUploadFile" accept=".png,.jpg" />
-      <img :src="imgSrc" class="upload" v-if="imgSrc" alt="" />
+      <input accept=".png,.jpg" alt="" type="file" @change="handleUploadFile"/>
+      <img v-if="imgSrc" :src="imgSrc" alt="" class="upload"/>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref } from "vue";
-import { previewFile, warningNotify } from "@/utils";
+import {defineComponent, ref} from "vue";
+import {previewFile, warningNotify} from "@/utils";
 
 export default defineComponent({
   name: "uploadCollection",
@@ -31,7 +31,7 @@ export default defineComponent({
     doneImgType: String,
     previewImgClick: Function,
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const imgSrc = ref("");
     const handleUploadFile = (e) => {
       let imgFile = e.target.files;
@@ -62,7 +62,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .upload_collection {
   flex: 1;
   flex-direction: column;
@@ -72,6 +72,7 @@ export default defineComponent({
   border: 1px solid #f3f1f1;
   margin-left: 10px;
   padding: 10px;
+
   .titles {
     display: flex;
     justify-content: space-between;
@@ -84,6 +85,7 @@ export default defineComponent({
       padding: 0;
       margin: 0;
     }
+
     .prew {
       width: 74px;
       height: 40px;
@@ -93,10 +95,12 @@ export default defineComponent({
       background: #000000;
       border-radius: 8px;
       cursor: pointer;
+
       .icon {
         color: #fff;
         font-size: 1.4rem;
       }
+
       span {
         color: #fff;
       }
@@ -112,11 +116,13 @@ export default defineComponent({
     align-items: center;
     justify-content: center;
     position: relative;
+
     p {
       width: 277px;
       text-align: center;
       margin-top: 21px;
     }
+
     input {
       display: inline-block;
       width: 100%;
@@ -128,6 +134,7 @@ export default defineComponent({
       cursor: pointer;
       z-index: 1;
     }
+
     .upload {
       position: absolute;
       width: 100%;

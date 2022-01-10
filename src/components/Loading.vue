@@ -1,11 +1,11 @@
 <template>
   <div class="loader">
     <div class="loading">
-      <span />
-      <span />
-      <span />
-      <span />
-      <span />
+      <span/>
+      <span/>
+      <span/>
+      <span/>
+      <span/>
     </div>
     <p>加载中......</p>
   </div>
@@ -17,7 +17,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .loader {
   z-index: 100;
   background-color: #333;
@@ -32,13 +32,16 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+
   p {
     margin-top: 10px;
     color: #fff;
     font-size: 17px;
   }
+
   .loading {
     margin-top: calc(50vh);
+
     span {
       display: inline-block;
       width: 20px;
@@ -47,18 +50,23 @@ export default {
       background: #fff;
       transform-origin: right bottom;
       animation: load 1s ease infinite;
+
       &:first-child {
         animation-delay: 0.13s;
       }
+
       &:nth-child(2) {
         animation-delay: 0.26s;
       }
+
       &:nth-child(3) {
         animation-delay: 0.39s;
       }
+
       &:nth-child(4) {
         animation-delay: 0.52s;
       }
+
       &:last-child {
         animation-delay: 0.65s;
         margin-right: 0;
@@ -66,6 +74,7 @@ export default {
     }
   }
 }
+
 @keyframes load {
   0% {
     opacity: 1;

@@ -1,24 +1,25 @@
 <template>
   <a-modal
-    :visible="classVisible"
-    class="modal"
-    title="设置分类"
-    :footer="null"
+      :footer="null"
+      :visible="classVisible"
+      class="modal"
+      title="设置分类"
   >
     <div class="user-input">
       <div class="user">
         <span>添加分类</span>
-        <input type="text" placeholder="请输入分类名称" v-model="userClass" />
+        <input v-model="userClass" placeholder="请输入分类名称" type="text"/>
         <a-button class="btn" @click="handleAddClassClick">确定</a-button>
       </div>
       <div class="user">
         <span style="width: 80px">已有分类</span>
-        <a-select class="select" size="large" placeholder="查看分类请点击">
+        <a-select class="select" placeholder="查看分类请点击" size="large">
           <a-select-option
-            :value="item.name"
-            v-for="item in classData"
-            :key="item.id"
-            >{{ item.name }}</a-select-option
+              v-for="item in classData"
+              :key="item.id"
+              :value="item.name"
+          >{{ item.name }}
+          </a-select-option
           >
         </a-select>
       </div>
@@ -30,10 +31,11 @@
 </template>
 
 <script>
-import { defineComponent, ref, watchEffect } from "vue";
-import { getClassificationApi, addClassificationApi } from "@api";
-import { pollingClassApi } from "@/api/pllingApi";
-import { successNotify, warningNotify } from "@/utils";
+import {defineComponent, ref, watchEffect} from "vue";
+import {addClassificationApi, getClassificationApi} from "@api";
+import {pollingClassApi} from "@/api/pllingApi";
+import {successNotify, warningNotify} from "@/utils";
+
 export default defineComponent({
   props: {
     classVisible: {
@@ -43,7 +45,7 @@ export default defineComponent({
       type: [Number, String],
     },
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const currentStatus = ref(1);
     const userClass = ref("");
     const classData = ref([]);
@@ -55,12 +57,12 @@ export default defineComponent({
         return warningNotify("请输入分类的名称");
       }
       const exitClass = classData.value.find(
-        (item) => item.name === userClass.value
+          (item) => item.name === userClass.value
       );
       if (exitClass) {
         return warningNotify("分类名称已经存在");
       }
-      const { err_code } = await addClassificationApi(userClass.value);
+      const {err_code} = await addClassificationApi(userClass.value);
       if (err_code === "0") {
         pollingClassApi(classData.value.length, (result) => {
           classData.value = result;
@@ -69,7 +71,7 @@ export default defineComponent({
       }
     };
     const getClassData = async () => {
-      const { err_code, result } = await getClassificationApi();
+      const {err_code, result} = await getClassificationApi();
       if (err_code === "0") {
         classData.value = result;
       }
@@ -91,7 +93,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .modal-create-header {
   display: flex;
   justify-content: center;
@@ -102,6 +104,7 @@ export default defineComponent({
   border-radius: 8px;
   padding: 7px;
   transform: translateX(40%);
+
   div {
     width: 112px;
     height: 38px;
@@ -110,22 +113,27 @@ export default defineComponent({
     text-align: center;
     cursor: pointer;
   }
+
   .bgf {
     background: #fff;
   }
 }
+
 .user-input {
   margin-top: 20px;
+
   .user {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     margin-bottom: 10px;
+
     span {
       font-size: 14px;
       color: #000000;
       width: 100px;
     }
+
     input {
       height: 52px;
       background: #f7f7f7;
@@ -135,19 +143,23 @@ export default defineComponent({
       box-sizing: border-box;
       padding-left: 10px;
       font-size: 14px;
+
       &:focus {
         border: 1px solid #eee;
       }
     }
+
     .btn {
       height: 52px;
       margin-left: 20px;
     }
+
     .select {
       width: 100%;
     }
   }
 }
+
 .create-user {
   // width: 490px;
   width: 100%;
@@ -162,6 +174,7 @@ export default defineComponent({
   cursor: pointer;
   margin-bottom: 10px;
 }
+
 .close {
   font-weight: 400;
   color: #bcbcbc;

@@ -1,11 +1,12 @@
 <template>
-  <svg class="svg-icon" aria-hidden="true">
-    <use :xlink:href="iconName" />
+  <svg aria-hidden="true" class="svg-icon">
+    <use :xlink:href="iconName"/>
   </svg>
 </template>
 
 <script>
-import { computed } from "vue";
+import {computed} from "vue";
+
 export default {
   name: "icon-svg",
   props: {
@@ -34,9 +35,11 @@ export default {
   fill: currentColor;
   overflow: hidden;
 }
+
 .svg-icon._height_inherit {
   height: 100%;
 }
+
 .svg-icon._width_inherit {
   width: 100%;
 }

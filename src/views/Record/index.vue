@@ -2,10 +2,10 @@
   <div class="order page-height">
     <div class="header">
       <div class="switch-table">
-        <h4 @click="handleSwitchTableClick(0)" :class="renderCurrentActive(0)">
+        <h4 :class="renderCurrentActive(0)" @click="handleSwitchTableClick(0)">
           订单
         </h4>
-        <h4 @click="handleSwitchTableClick(1)" :class="renderCurrentActive(1)">
+        <h4 :class="renderCurrentActive(1)" @click="handleSwitchTableClick(1)">
           分析记录
         </h4>
       </div>
@@ -13,7 +13,7 @@
         <div class="dropdown">
           <div class="current-option">
             <a-dropdown class="text">
-              <template #overlay> </template>
+              <template #overlay></template>
               <a-button>
                 <span class="span">状态</span>
                 <div class="icon"></div>
@@ -23,22 +23,22 @@
         </div>
         <div class="search">
           <span class="line"></span>
-          <input type="text" class="input" />
+          <input class="input" type="text"/>
           <span class="icon">
-            <img src="@assets/images/search.png" alt="" />
+            <img alt="" src="@assets/images/search.png"/>
           </span>
         </div>
       </div>
     </div>
     <Order
-      v-show="currentTableIndex === 0"
-      @showOrderDetailComponent="handleShowOrderDetailComponent"
+        v-show="currentTableIndex === 0"
+        @showOrderDetailComponent="handleShowOrderDetailComponent"
     />
-    <ShareRecord v-show="currentTableIndex === 1" />
+    <ShareRecord v-show="currentTableIndex === 1"/>
     <OrderDetail
-      v-if="isOrderShow"
-      :orderItem="currentOrderItem"
-      @close="handleOrderDetailClick"
+        v-if="isOrderShow"
+        :orderItem="currentOrderItem"
+        @close="handleOrderDetailClick"
     />
   </div>
 </template>
@@ -47,7 +47,8 @@
 import OrderDetail from "./OrderDetail";
 import Order from "./Order";
 import ShareRecord from "./ShareRecord";
-import { computed, defineComponent, onMounted, ref } from "vue";
+import {computed, defineComponent, onMounted, ref} from "vue";
+
 export default defineComponent({
   name: "record",
   components: {
@@ -62,9 +63,10 @@ export default defineComponent({
     const handleOrderDetailClick = () => {
       isOrderShow.value = !isOrderShow.value;
     };
-    onMounted(() => {});
+    onMounted(() => {
+    });
     const renderCurrentActive = computed(
-      () => (index) => index === currentTableIndex.value ? "active" : ""
+        () => (index) => index === currentTableIndex.value ? "active" : ""
     );
     const handleSwitchTableClick = (index) => (currentTableIndex.value = index);
 
@@ -85,18 +87,20 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .order {
   border-radius: 8px;
   padding-top: 31px;
   padding-left: 44px;
   padding-right: 36px;
   box-sizing: border-box;
+
   .header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 4px;
+
     .search-box {
       width: 301px;
       height: 40px;
@@ -105,12 +109,15 @@ export default defineComponent({
       display: flex;
       justify-content: space-between;
       align-items: center;
+
       .dropdown {
         width: 20%;
+
         .current-option {
           display: flex;
           justify-content: center;
           align-items: center;
+
           .text {
             font-size: 14px;
             font-weight: 400;
@@ -136,12 +143,14 @@ export default defineComponent({
           }
         }
       }
+
       .search {
         flex: 1;
         text-align: left;
         padding-left: 4px;
         display: flex;
         align-items: center;
+
         .line {
           display: inline-block;
           width: 1px;
@@ -150,18 +159,22 @@ export default defineComponent({
           border-radius: 1px;
           border: 1px solid #c7c7c7;
         }
+
         .input {
           margin-left: 5px;
           width: 80%;
         }
+
         .icon {
           cursor: pointer;
         }
       }
     }
+
     .switch-table {
       display: flex;
       justify-content: space-between;
+
       h4 {
         font-size: 16px;
         font-weight: 500;
@@ -174,6 +187,7 @@ export default defineComponent({
         margin-right: 40px;
         cursor: pointer;
       }
+
       .active {
         font-weight: 500;
         border-bottom: 2px solid #ff451d;
@@ -182,6 +196,7 @@ export default defineComponent({
     }
   }
 }
+
 .ant-table-striped :deep(.table-striped) td {
   background-color: #fafafa;
 }

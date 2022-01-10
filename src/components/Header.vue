@@ -1,12 +1,12 @@
 <template>
   <header>
     <div class="logo" @click="handleRouteClick">
-      <img src="@assets/images/mytrolLogo.png" alt="" />
+      <img alt="" src="@assets/images/mytrolLogo.png"/>
     </div>
     <a-dropdown>
       <div class="avator-message">
         <div class="avator">
-          <img :src="personMessage.avatar" alt="" />
+          <img :src="personMessage.avatar" alt=""/>
         </div>
         <span class="select">{{ personMessage.nickname }} </span>
         <icon-svg icon="icon-xiangxia1"></icon-svg>
@@ -24,10 +24,11 @@
 </template>
 
 <script>
-import { computed } from "vue";
-import { useStore } from "vuex";
-import { useRouter } from "vue-router";
-import { logoutApi } from "@api";
+import {computed} from "vue";
+import {useStore} from "vuex";
+import {useRouter} from "vue-router";
+import {logoutApi} from "@api";
+
 export default {
   setup() {
     const router = useRouter();
@@ -37,7 +38,7 @@ export default {
       router.push("/");
     };
     const handleRouteLogin = async () => {
-      const { err_code } = await logoutApi();
+      const {err_code} = await logoutApi();
       if (err_code == 0) {
         router.push("/login");
         localStorage.clear();
@@ -62,22 +63,27 @@ header {
   width: 100vw;
   background: #ffffff;
   box-shadow: 0px 2px 10px 0px rgba(97, 97, 97, 0.16);
+
   .logo {
     display: flex;
     align-items: flex-end;
     margin-left: 10px;
     cursor: pointer;
   }
+
   .avator-message {
     display: flex;
     align-items: center;
     margin-right: 30px;
+
     :deep .ant-select-selector {
       border: none !important;
     }
+
     :deep .ant-select-selection-item {
       color: #000 !important;
     }
+
     .avator {
       width: 30px;
       height: 30px;
@@ -85,16 +91,19 @@ header {
       border-radius: 50%;
       overflow: hidden;
       cursor: pointer;
+
       img {
         width: 100%;
         height: 100%;
       }
     }
+
     .select {
       margin: 0 10px;
       cursor: pointer;
     }
   }
+
   .waring {
     cursor: pointer;
   }

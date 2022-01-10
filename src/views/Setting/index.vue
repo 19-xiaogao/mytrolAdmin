@@ -3,22 +3,22 @@
     <h3 class="title">设置</h3>
     <div class="setting_list">
       <div
-        :class="isShowActiveClass(index)"
-        v-for="(item, index) in settingLists"
-        :key="item.text"
-        @click="handleClick(index)"
+          v-for="(item, index) in settingLists"
+          :key="item.text"
+          :class="isShowActiveClass(index)"
+          @click="handleClick(index)"
       >
-        <icon-svg :icon="item.icon" class="icon" />
+        <icon-svg :icon="item.icon" class="icon"/>
         <span>{{ item.text }}</span>
       </div>
     </div>
-    <ModalUser v-model:createVisible="createVisible" />
+    <ModalUser v-model:createVisible="createVisible"/>
     <ModalSettingDay
-      v-model:dayVisible="dayVisible"
-      v-model:days="days"
-      @close="handleCloseEmit"
+        v-model:dayVisible="dayVisible"
+        v-model:days="days"
+        @close="handleCloseEmit"
     />
-    <ModalSettingClassVue v-model:classVisible="classVisible" />
+    <ModalSettingClassVue v-model:classVisible="classVisible"/>
   </div>
 </template>
 
@@ -45,12 +45,13 @@ const settingList = [
     text: "转赠天数",
   },
 ];
-import { computed, defineComponent, onMounted, reactive, ref } from "vue";
-import { queryGivingDayApi } from "@api";
-import { pollingGivingDaysApi } from "@/api/pllingApi";
+import {computed, defineComponent, onMounted, reactive, ref} from "vue";
+import {queryGivingDayApi} from "@api";
+import {pollingGivingDaysApi} from "@/api/pllingApi";
 import ModalUser from "./ModalUser";
 import ModalSettingDay from "./ModalSettingDay";
 import ModalSettingClassVue from "./ModalSettingClass";
+
 export default defineComponent({
   components: {
     ModalUser,
@@ -87,7 +88,7 @@ export default defineComponent({
       settingLists[settingLists.length - 1].text = `转赠天数(${days.value}天)`;
     };
     const queryDay = async () => {
-      const { result, err_code } = await queryGivingDayApi();
+      const {result, err_code} = await queryGivingDayApi();
       if (err_code === "0") {
         settingDays(result);
       }
@@ -114,13 +115,14 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .title {
   font-size: 20px;
   font-weight: 500;
   color: #000000;
   line-height: 30px;
 }
+
 .setting_list {
   margin-top: 24px;
   display: flex;
@@ -137,13 +139,16 @@ export default defineComponent({
     flex-direction: column;
     align-items: center;
     justify-content: center;
+
     &:hover {
       border: 1px solid #2f0088;
+
       span:last-child {
         font-size: 16px;
         color: #2f0088;
         font-weight: 400;
       }
+
       .icon {
         color: #2f0088;
       }
@@ -152,12 +157,14 @@ export default defineComponent({
     .icon {
       font-size: 3.4rem;
     }
+
     span:last-child {
       font-size: 16px;
       color: #000000;
       font-weight: 400;
     }
   }
+
   .active {
     background: #2f0088;
     border: 1px solid #2f0088;
@@ -166,16 +173,20 @@ export default defineComponent({
       font-size: 16px;
       color: #fff;
     }
+
     .icon {
       color: #fff;
     }
+
     &:hover {
       border: 1px solid #2f0088;
+
       span:last-child {
         font-size: 16px;
         color: #fff;
         font-weight: 400;
       }
+
       .icon {
         color: #fff;
       }

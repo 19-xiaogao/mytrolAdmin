@@ -1,12 +1,12 @@
 <template>
   <a-modal
-    :visible="visible"
-    class="modal"
-    @cancel="handleClick"
-    :centered="true"
-    :footer="null"
+      :centered="true"
+      :footer="null"
+      :visible="visible"
+      class="modal"
+      @cancel="handleClick"
   >
-    <img :src="imgUrl" class="img" />
+    <img :src="imgUrl" class="img"/>
   </a-modal>
 </template>
 
@@ -16,11 +16,11 @@ export default {
     visible: Boolean,
     imgUrl: String,
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const handleClick = () => {
       emit("update:visible", false);
     };
-    return { handleClick };
+    return {handleClick};
   },
 };
 </script>
@@ -29,6 +29,7 @@ export default {
 .modal {
   width: 520px;
   transform-origin: 421px 377px;
+
   .img {
     width: 100%;
   }

@@ -1,12 +1,12 @@
 <template>
   <div class="page-height">
     <CreateActivityModal
-      v-model:createVisible="createActivityVisible"
-      @ok="handleAddIpClick"
+        v-model:createVisible="createActivityVisible"
+        @ok="handleAddIpClick"
     />
     <IPDetail
-      v-model:visible="currentIpMessage.visible"
-      :params="currentIpMessage.params"
+        v-model:visible="currentIpMessage.visible"
+        :params="currentIpMessage.params"
     />
     <div v-if="!currentIpMessage.visible">
       <div class="header">
@@ -14,30 +14,31 @@
         <div class="button" @click="handleCreateActivityClick">创建IP主题</div>
       </div>
       <div class="card-list">
-        <div class="card-box" v-for="item in seriessList" :key="item.id">
+        <div v-for="item in seriessList" :key="item.id" class="card-box">
           <div class="card">
             <div class="header">
               <p>{{ item.name }}</p>
               <span :class="isShowStatus(item.status) ? 'off-span' : ''">{{
-                isShowStatus(item.status) ? "未运营" : "运营中"
-              }}</span>
+                  isShowStatus(item.status) ? "未运营" : "运营中"
+                }}</span>
             </div>
             <div class="img" @click="hanleCardClick(item)">
-              <img :src="item.file" alt="" />
+              <img :src="item.file" alt=""/>
             </div>
             <div class="footer">
               <div class="icons">
                 <a-tooltip>
                   <template #title>复制链接</template>
-                  <icon-svg icon="icon-a-bianzu10" class="icon"></icon-svg>
+                  <icon-svg class="icon" icon="icon-a-bianzu10"></icon-svg>
                 </a-tooltip>
                 <a-tooltip>
                   <template #title>{{
-                    isShowStatus(item.status) ? "上架" : "下架"
-                  }}</template>
+                      isShowStatus(item.status) ? "上架" : "下架"
+                    }}
+                  </template>
                   <icon-svg
-                    icon="icon-yiyouzhujici"
-                    @click="handleStatusClick(item)"
+                      icon="icon-yiyouzhujici"
+                      @click="handleStatusClick(item)"
                   ></icon-svg>
                 </a-tooltip>
               </div>
@@ -45,9 +46,9 @@
                 <template #overlay>
                   <a-menu>
                     <a-menu-item
-                      v-for="(k, index) in seriessList"
-                      :key="index"
-                      @click="handleDropdownIdClick(index + 1, item)"
+                        v-for="(k, index) in seriessList"
+                        :key="index"
+                        @click="handleDropdownIdClick(index + 1, item)"
                     >
                       序号{{ index + 1 }}
                     </a-menu-item>
@@ -58,13 +59,13 @@
                 </template>
                 <a-button>
                   <span>{{
-                    isShowStatus(item.status)
-                      ? "未运营"
-                      : !item.number
-                      ? "选择序号"
-                      : "序号" + item.number
-                  }}</span>
-                  <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
+                      isShowStatus(item.status)
+                          ? "未运营"
+                          : !item.number
+                              ? "选择序号"
+                              : "序号" + item.number
+                    }}</span>
+                  <icon-svg class="icon" icon="icon-a-bianzu13"></icon-svg>
                 </a-button>
               </a-dropdown>
             </div>
@@ -76,17 +77,13 @@
 </template>
 
 <script>
-import { ref, onMounted, computed, reactive } from "vue";
-import { getSeriesApi, addUpdateIpApi } from "@api";
+import {computed, onMounted, reactive, ref} from "vue";
+import {addUpdateIpApi, getSeriesApi} from "@api";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
-import {
-  joinPreviewUrl,
-  successNotify,
-  warningNotify,
-  sortOperation,
-} from "@/utils";
-import { Modal } from "ant-design-vue";
+import {joinPreviewUrl, sortOperation, successNotify, warningNotify,} from "@/utils";
+import {Modal} from "ant-design-vue";
+
 export default {
   components: {
     IPDetail,
@@ -107,15 +104,15 @@ export default {
     });
     const assignmentFunc = (result) => {
       const joinIpfsList = result
-        .map((item) => ({
-          ...item,
-          file: joinPreviewUrl(item.file),
-        }))
-        .reverse();
+          .map((item) => ({
+            ...item,
+            file: joinPreviewUrl(item.file),
+          }))
+          .reverse();
       seriessList.value = sortOperation(joinIpfsList);
     };
     const getSeriessListApi = async () => {
-      const { err_code, result } = await getSeriesApi();
+      const {err_code, result} = await getSeriesApi();
       if (err_code === "0") {
         if (!Array.isArray(result)) return;
         assignmentFunc(result);
@@ -153,7 +150,7 @@ export default {
     };
 
     const uploadStatus = async (item, paramsObj) => {
-      const { err_code } = await funcAddupdateIpApi(paramsObj);
+      const {err_code} = await funcAddupdateIpApi(paramsObj);
       if (err_code === "0") {
         setTimeout(() => {
           successNotify("更新IP成功。");
@@ -183,14 +180,14 @@ export default {
       }
 
       const isFindKey = seriessList.value
-        .filter((item) => item.status === "on")
-        .find((item) => item.number == key);
+          .filter((item) => item.status === "on")
+          .find((item) => item.number == key);
 
       if (isFindKey) {
         return warningNotify("序列号已被占用。");
       }
 
-      const { err_code } = await funcAddupdateIpApi({
+      const {err_code} = await funcAddupdateIpApi({
         name: item.name,
         status: item.status,
         number: String(key),
@@ -216,15 +213,17 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+
   h4 {
     color: #000000;
     font-size: 20px;
   }
+
   .button {
     width: 117px;
     height: 40px;
@@ -239,46 +238,56 @@ export default {
     font-size: 14px;
   }
 }
+
 .card-list {
   margin-top: 18px;
   display: flex;
   flex-wrap: wrap;
+
   .card-box {
     margin-right: 26px;
     margin-top: 10px;
+
     .card {
       width: 260px;
       height: 248px;
       background: #ffffff;
+
       &:hover {
         box-shadow: 0px 0px 12px 0px rgba(106, 106, 106, 0.2);
       }
+
       border-radius: 13px;
       border: 1px solid #e3e3e3;
       padding: 18px 18px 14px 18px;
       text-align: center;
       box-sizing: border-box;
+
       .header {
         display: flex;
         align-items: center;
         justify-content: space-between;
         color: #000000;
+
         p {
           margin: 0;
           padding: 0;
           font-size: 16px;
           font-weight: 500;
         }
+
         .off-span {
           &::before {
             background: red !important;
           }
         }
+
         span {
           font-size: 14px;
           font-weight: 400;
           display: inline-block;
           position: relative;
+
           &::before {
             position: relative;
             top: 50%;
@@ -292,12 +301,14 @@ export default {
           }
         }
       }
+
       .img {
         width: 224px;
         height: 142px;
         border-radius: 4px;
         overflow: hidden;
         cursor: pointer;
+
         img {
           width: 100%;
           height: 100%;
@@ -305,20 +316,24 @@ export default {
           object-position: 50% 50%;
         }
       }
+
       .footer {
         margin-top: 14px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .icons {
           font-size: 1.2rem;
           cursor: pointer;
           font-weight: 600;
+
           .icon {
             margin-right: 4px;
             font-weight: 600;
           }
         }
+
         .serial-number {
           width: 87px;
           height: 34px;
@@ -334,6 +349,7 @@ export default {
           .icon {
             font-size: 1rem;
           }
+
           span {
             font-size: 14px;
             color: #000;

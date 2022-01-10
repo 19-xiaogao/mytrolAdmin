@@ -1,19 +1,19 @@
 <template>
   <a-table
-    :columns="columns"
-    :row-key="(item, index) => index"
-    class="ant-table-striped"
-    v-model:pagination="pagination"
-    :data-source="data"
-    :position="false"
-    @change="handlePaginationChange"
-    :scroll="{ y: scrollHeight }"
-    :row-class-name="
+      v-model:pagination="pagination"
+      :columns="columns"
+      :data-source="data"
+      :position="false"
+      :row-class-name="
       (_record, index) => (index % 2 === 1 ? 'table-striped' : null)
     "
+      :row-key="(item, index) => index"
+      :scroll="{ y: scrollHeight }"
+      class="ant-table-striped"
+      @change="handlePaginationChange"
   >
     <template #nickname="{ record }">
-      <img :src="joinPreviewUrl(record.avatar)" class="avatar" alt="" />
+      <img :src="joinPreviewUrl(record.avatar)" alt="" class="avatar"/>
       <span>{{ record.nickname }}</span>
     </template>
     <template #created_at="{ text }">
@@ -37,66 +37,61 @@
     </template>
     <template #detail="{ record }">
       <a-button type="link" @click.stop="handleOrderDetailClick(record)"
-        >查看</a-button
+      >查看
+      </a-button
       >
     </template>
   </a-table>
 </template>
 
 <script>
-import {
-  defineComponent,
-  onMounted,
-  reactive,
-  ref,
-  onUnmounted,
-  getCurrentInstance,
-} from "vue";
-import { getAllOrderApi } from "@api";
+import {defineComponent, getCurrentInstance, onMounted, onUnmounted, reactive, ref,} from "vue";
+import {getAllOrderApi} from "@api";
 import dayjs from "dayjs";
+
 const columns = [
   {
     title: "创作者",
     key: "nickname",
     dataIndex: "nickname",
-    slots: { customRender: "nickname" },
+    slots: {customRender: "nickname"},
   },
   {
     title: "订单号",
     dataIndex: "vendor_payment_no",
     width: 250,
     key: "vendor_payment_no",
-    slots: { customRender: "vendor_payment_no" },
+    slots: {customRender: "vendor_payment_no"},
   },
   {
     title: "买家",
     dataIndex: "buyer",
     key: "buyer",
-    slots: { customRender: "buyer" },
+    slots: {customRender: "buyer"},
   },
   {
     title: "金额",
     dataIndex: "amount",
     key: "amount",
-    slots: { customRender: "amount" },
+    slots: {customRender: "amount"},
   },
   {
     title: "成交时间",
     dataIndex: "created_at",
     key: "created_at",
-    slots: { customRender: "created_at" },
+    slots: {customRender: "created_at"},
   },
   {
     title: "详情",
     dataIndex: "detail",
     key: "detail",
-    slots: { customRender: "detail" },
+    slots: {customRender: "detail"},
   },
 ];
 
 export default defineComponent({
-  setup(props, { emit }) {
-    const { proxy } = getCurrentInstance();
+  setup(props, {emit}) {
+    const {proxy} = getCurrentInstance();
     const data = ref([]);
     const pagination = reactive({
       current: 1,
@@ -124,7 +119,7 @@ export default defineComponent({
       window.removeEventListener("resize", calculateScroll);
     });
     const getUserOrderList = async (pagination) => {
-      const { err_code, result } = await getAllOrderApi(pagination);
+      const {err_code, result} = await getAllOrderApi(pagination);
       if (err_code === "0") {
         if (result && result.list) {
           data.value = result.list;
@@ -132,7 +127,7 @@ export default defineComponent({
         }
       }
     };
-    const handlePaginationChange = ({ current }) => {
+    const handlePaginationChange = ({current}) => {
       pagination.current = current;
       getUserOrderList(pagination);
     };
@@ -150,7 +145,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .avatar {
   width: 58px;
   height: 58px;

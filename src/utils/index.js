@@ -77,29 +77,25 @@ export function notify(message, description, type = "info", duration = 4.5) {
 
 export function infoNotify(description) {
     notification.info({
-        message: "Notice~",
-        description,
+        message: "Notice~", description,
     });
 }
 
 export function successNotify(description) {
     notification.success({
-        message: "提示~",
-        description,
+        message: "提示~", description,
     });
 }
 
 export function warningNotify(description) {
     notification.warning({
-        message: "提示~",
-        description,
+        message: "提示~", description,
     });
 }
 
 export function errorNotify(description, message = "有些错误~") {
     notification.error({
-        message,
-        description,
+        message, description,
     });
 }
 
@@ -143,32 +139,10 @@ export function backFileType(file) {
 
 // 导出xlsx表格
 export function exportXlsx(th, fileName) {
-    th.unshift([
-        "价格",
-        "买家hash地址",
-        "NFT编号",
-        "NFT名称",
-        "剩余数量",
-        "NFT卖方",
-        "NFT买方hash地址",
-        "NFT总数",
-        "交易hash",
-        "订单号"
-    ])
+    th.unshift(["价格", "买家hash地址", "NFT编号", "NFT名称", "剩余数量", "NFT卖方", "NFT买方hash地址", "NFT总数", "交易hash", "订单号"])
     const ws = XLSX.utils.aoa_to_sheet(th);
     const wb = XLSX.utils.book_new();
-    ws['!rows'] = [
-        {wch: 10},
-        {wch: 40},
-        {wch: 40},
-        {wch: 30},
-        {wch: 10},
-        {wch: 40},
-        {wch: 40},
-        {wch: 10},
-        {wch: 40},
-        {wch: 40},
-    ]
+    ws['!rows'] = [{wch: 10}, {wch: 40}, {wch: 40}, {wch: 30}, {wch: 10}, {wch: 40}, {wch: 40}, {wch: 10}, {wch: 40}, {wch: 40},]
     XLSX.utils.book_append_sheet(wb, ws, fileName);
 
     XLSX.writeFile(wb, `${fileName}.xlsx`);

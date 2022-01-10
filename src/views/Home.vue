@@ -1,15 +1,15 @@
 <template>
   <div class="home">
-    <Header />
-    <Sidebar />
-    <UserSettingModal v-if="!isShowEditModal" />
+    <Header/>
+    <Sidebar/>
+    <UserSettingModal v-if="!isShowEditModal"/>
     <div class="body">
-      <Loading v-show="loading" />
+      <Loading v-show="loading"/>
       <a-config-provider :locale="locale">
         <router-view v-slot="{ Component }">
           <keep-alive>
             <transition name="fadeRightIn">
-              <component :is="Component" />
+              <component :is="Component"/>
             </transition>
           </keep-alive>
         </router-view>
@@ -19,10 +19,10 @@
 </template>
 
 <script>
-import { computed } from "vue";
-import { useStore } from "vuex";
+import {computed} from "vue";
+import {useStore} from "vuex";
 
-import { getStorageRole } from "@/utils";
+import {getStorageRole} from "@/utils";
 
 import zhCN from "ant-design-vue/es/locale/zh_CN";
 
@@ -50,7 +50,7 @@ export default {
     const isShowEditModal = computed(() => !!person.value.nickname);
     const loading = computed(() => store.getters.getLoading);
 
-    return { isShowEditModal, locale: zhCN, loading };
+    return {isShowEditModal, locale: zhCN, loading};
   },
 };
 </script>
@@ -62,6 +62,7 @@ export default {
   overflow: hidden;
   position: relative;
   animation: backInUp 0.4s linear;
+
   .body {
     position: absolute;
     top: 60px;

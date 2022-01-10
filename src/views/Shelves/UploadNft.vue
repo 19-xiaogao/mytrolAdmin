@@ -1,42 +1,42 @@
 <template>
   <div class="upload-nft">
-    <img src="@assets/images/mytrolLogo.png" class="logo" alt="" />
+    <img alt="" class="logo" src="@assets/images/mytrolLogo.png"/>
     <div class="add-logo">
-      <img src="@assets/images/sheleves-add.png" alt="" />
+      <img alt="" src="@assets/images/sheleves-add.png"/>
       <p>{{ title }}</p>
       <span>{{ decs }}</span>
     </div>
-    <img class="upload-img" v-if="imgSrc" :src="imgSrc" />
+    <img v-if="imgSrc" :src="imgSrc" class="upload-img"/>
     <img
-      v-if="imgSrc"
-      src="@assets/images/expand.png"
-      class="icon"
-      @click="handleImgVisibleClick"
-      alt=""
+        v-if="imgSrc"
+        alt=""
+        class="icon"
+        src="@assets/images/expand.png"
+        @click="handleImgVisibleClick"
     />
     <input
-      type="file"
-      class="input-file"
-      style="z-index: 3"
-      :accept="uploadAccept"
-      @change="handleUploadFile"
+        :accept="uploadAccept"
+        class="input-file"
+        style="z-index: 3"
+        type="file"
+        @change="handleUploadFile"
     />
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, computed } from "vue";
-import { previewFile, warningNotify } from "@/utils";
+import {computed, defineComponent, ref} from "vue";
+import {previewFile, warningNotify} from "@/utils";
 
 // 这里实现上传的逻辑
 export default defineComponent({
   props: {
     doneImgFile: Object,
-    doneImgType:String,
+    doneImgType: String,
     previewImgClick: Function,
     type: String,
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const imgSrc = ref("");
     const handleImgVisibleClick = () => {
       emit("previewImgClick", imgSrc);
@@ -45,7 +45,7 @@ export default defineComponent({
     const typeBol = computed(() => props.type === "originalImage");
 
     const uploadAccept = computed(() =>
-      typeBol.value ? ".png,.jpg,.gif,.gift" : ".png,.jpg"
+        typeBol.value ? ".png,.jpg,.gif,.gift" : ".png,.jpg"
     );
 
     const title = computed(() => {
@@ -96,7 +96,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .upload-nft {
   width: 358px;
   height: 40vh;
@@ -104,27 +104,32 @@ export default defineComponent({
   border-radius: 8px;
   position: relative;
   z-index: 1;
+
   .logo {
     position: absolute;
     top: 26px;
     left: 26px;
   }
+
   .add-logo {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     text-align: center;
+
     p {
       padding: 0;
       margin: 20px 0 5px;
       font-size: 20px;
       color: #7d7d7d;
     }
+
     span {
       color: #7d7d7d;
     }
   }
+
   .input-file {
     width: 100%;
     position: absolute;
@@ -133,6 +138,7 @@ export default defineComponent({
     cursor: pointer;
     z-index: 11;
   }
+
   .upload-img {
     position: absolute;
     width: 100%;
@@ -145,6 +151,7 @@ export default defineComponent({
     cursor: pointer;
     z-index: 1;
   }
+
   .icon {
     z-index: 1;
     position: absolute;

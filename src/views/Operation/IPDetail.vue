@@ -1,11 +1,11 @@
 <template>
-  <div class="ip-detail" v-if="visible">
+  <div v-if="visible" class="ip-detail">
     <div class="ip-detail-title">
       <div class="title-l">
         <span class="icon" @click="handleReturnClick"></span>
         <div class="char">{{ params.name }}</div>
         <div
-          :class="isShowStatus(params.status) ? 'off-span status' : 'status'"
+            :class="isShowStatus(params.status) ? 'off-span status' : 'status'"
         >
           {{ isShowStatus(params.status) ? "未运营" : "运营中" }}
         </div>
@@ -14,14 +14,14 @@
     </div>
     <div class="ip-lists">
       <div
-        class="card"
-        @mouseover="() => handleMouseover(true, item.id)"
-        @mouseout="() => handleMouseover(false, item.id)"
-        v-for="item in workList"
-        :key="item.id"
+          v-for="item in workList"
+          :key="item.id"
+          class="card"
+          @mouseout="() => handleMouseover(false, item.id)"
+          @mouseover="() => handleMouseover(true, item.id)"
       >
-        <div class="img" :ref="item.id">
-          <img :src="item.file" alt="" />
+        <div :ref="item.id" class="img">
+          <img :src="item.file" alt=""/>
         </div>
 
         <div class="me">
@@ -29,8 +29,8 @@
             <h3>{{ item.name }}</h3>
             <div class="avator-des">
               <div class="imgs">
-                <img :src="item.avatar" alt="" />
-                <img src="@assets/images/v-icon.png" class="icon" alt="" />
+                <img :src="item.avatar" alt=""/>
+                <img alt="" class="icon" src="@assets/images/v-icon.png"/>
               </div>
               <span>{{ item.nickname }}</span>
             </div>
@@ -46,27 +46,21 @@
         <div class="mask"></div>
       </div>
     </div>
-    <p class="no-found" v-if="workList.length <= 0">暂无数据</p>
+    <p v-if="workList.length <= 0" class="no-found">暂无数据</p>
   </div>
 </template>
 
 <script>
-import {
-  defineComponent,
-  reactive,
-  ref,
-  watchEffect,
-  computed,
-  getCurrentInstance,
-} from "vue";
-import { getLatestNftApi } from "@api";
+import {computed, defineComponent, getCurrentInstance, reactive, ref, watchEffect,} from "vue";
+import {getLatestNftApi} from "@api";
+
 export default defineComponent({
   props: {
     visible: Boolean,
     params: Object,
   },
-  setup(props, { emit }) {
-    const { proxy } = getCurrentInstance();
+  setup(props, {emit}) {
+    const {proxy} = getCurrentInstance();
     const pagination = reactive({
       page: 1,
       numbers: 10,
@@ -74,8 +68,8 @@ export default defineComponent({
     const workList = ref([]);
     const handleMouseover = (bol, id) => {
       bol
-        ? (proxy.$refs[id].style.transform = "scale(1.2)")
-        : (proxy.$refs[id].style.transform = "scale(1)");
+          ? (proxy.$refs[id].style.transform = "scale(1.2)")
+          : (proxy.$refs[id].style.transform = "scale(1)");
     };
 
     const handleReturnClick = () => {
@@ -83,10 +77,10 @@ export default defineComponent({
     };
 
     const getLastetNftList = async (id, page, numbers) => {
-      const { err_code, result } = await getLatestNftApi(
-        id,
-        page,
-        String(numbers)
+      const {err_code, result} = await getLatestNftApi(
+          id,
+          page,
+          String(numbers)
       );
       if (err_code === "0") {
         workList.value = result.map((item) => ({
@@ -115,18 +109,21 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .ip-detail {
   position: relative;
   height: 98%;
+
   .ip-detail-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .title-l {
       display: flex;
       align-items: center;
       justify-content: center;
+
       .icon {
         width: 10px;
         height: 10px;
@@ -137,17 +134,20 @@ export default defineComponent({
         transform: rotate(40deg);
         cursor: pointer;
       }
+
       .char {
         font-size: 20px;
         font-weight: 500;
         color: #000000;
         margin: 0 17px;
       }
+
       .status {
         font-size: 14px;
         font-weight: 400;
         display: inline-block;
         position: relative;
+
         &::before {
           position: relative;
           top: 50%;
@@ -160,17 +160,21 @@ export default defineComponent({
           border-radius: 50%;
         }
       }
+
       .off-span {
         &::before {
           background: red !important;
         }
       }
     }
+
     .title-r {
       display: flex;
+
       .icons {
         font-size: 1.4rem;
         width: 70px;
+
         .icon {
           cursor: pointer;
           margin-left: 10px;
@@ -189,9 +193,11 @@ export default defineComponent({
         padding: 10px;
         cursor: pointer;
         margin-left: 91px;
+
         .icon {
           font-size: 1rem;
         }
+
         span {
           font-size: 14px;
           color: #000;
@@ -200,10 +206,12 @@ export default defineComponent({
       }
     }
   }
+
   .ip-lists {
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
+
     .card {
       width: 242px;
       height: 242px;
@@ -214,6 +222,7 @@ export default defineComponent({
       position: relative;
       margin-right: 6px;
       margin-bottom: 6px;
+
       .img {
         width: 100%;
         height: 100%;
@@ -228,6 +237,7 @@ export default defineComponent({
           object-position: 50% 50%;
         }
       }
+
       .options {
         position: absolute;
         top: 11px;
@@ -243,16 +253,19 @@ export default defineComponent({
         box-sizing: border-box;
         padding: 9px 10px;
         cursor: pointer;
+
         img {
           width: 16px;
           height: 16px;
         }
+
         span {
           font-size: 14px;
           font-weight: 400;
           color: #ffd36c;
         }
       }
+
       .me {
         display: flex;
         position: absolute;
@@ -263,6 +276,7 @@ export default defineComponent({
         left: 50%;
         transform: translateX(-50%);
         z-index: 2;
+
         .me-t {
           h3 {
             font-size: 14px;
@@ -271,14 +285,17 @@ export default defineComponent({
             margin: 0;
             padding: 0;
           }
+
           .avator-des {
             display: flex;
             align-items: center;
             margin-top: 6px;
+
             .imgs {
               position: relative;
               width: 20px;
               height: 20px;
+
               img:first-child {
                 width: 100%;
                 width: 100%;
@@ -287,6 +304,7 @@ export default defineComponent({
                 top: 0;
                 left: 0;
               }
+
               .icon {
                 width: 10px;
                 height: 10px;
@@ -296,6 +314,7 @@ export default defineComponent({
                 transform: translateX(-50%);
               }
             }
+
             span {
               font-size: 12px;
               color: #fff;
@@ -304,19 +323,23 @@ export default defineComponent({
             }
           }
         }
+
         .me-m {
           margin-left: 20px;
+
           .manay {
             font-size: 19px;
             color: #fff;
             font-weight: 500;
           }
+
           ._limit {
             height: 20px;
             border-radius: 6px;
             border: 1px solid #ffbd21;
             display: flex;
             text-align: right;
+
             ._t1 {
               display: block;
               font-size: 12px;
@@ -327,6 +350,7 @@ export default defineComponent({
               background: #ffbd21;
               padding: 0 4px;
             }
+
             ._t2 {
               display: block;
               height: 20px;
@@ -342,6 +366,7 @@ export default defineComponent({
           }
         }
       }
+
       .mask {
         width: 100%;
         height: 100%;
@@ -355,6 +380,7 @@ export default defineComponent({
       }
     }
   }
+
   .no-found {
     position: absolute;
     top: 50%;

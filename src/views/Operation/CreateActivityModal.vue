@@ -4,9 +4,9 @@
       <div class="upload-box">
         <div class="upload-btn">
           <span>上传图片</span>
-          <input type="file" alt="" @change="handleUploadFile" />
+          <input alt="" type="file" @change="handleUploadFile"/>
         </div>
-        <img :src="imgSrc.value" alt="" v-if="imgSrc.value" />
+        <img v-if="imgSrc.value" :src="imgSrc.value" alt=""/>
       </div>
       <p>温馨提示：尺寸为510*324，请按照特定模板的原则产图</p>
     </div>
@@ -14,9 +14,9 @@
       <div class="upload-box">
         <div class="upload-btn">
           <span>上传背景图片</span>
-          <input type="file" alt="" @change="handleBgUploadFile" />
+          <input alt="" type="file" @change="handleBgUploadFile"/>
         </div>
-        <img :src="bgImgSrc.value" alt="" v-if="bgImgSrc.value" />
+        <img v-if="bgImgSrc.value" :src="bgImgSrc.value" alt=""/>
       </div>
       <p>温馨提示：尺寸为510*1200，请按照特定模板的原则产图</p>
     </div>
@@ -24,10 +24,10 @@
       <div class="user">
         <span>IP系列名称</span>
         <input
-          type="text "
-          placeholder="请输入IP系列名称"
-          required
-          v-model="name"
+            v-model="name"
+            placeholder="请输入IP系列名称"
+            required
+            type="text "
         />
       </div>
     </div>
@@ -35,22 +35,18 @@
       <div class="close" @click="handleClose">取消</div>
     </template>
     <template #footer>
-      <a-button class="create-user" :loading="loading" @click="handleSureClick"
-        >确定</a-button
+      <a-button :loading="loading" class="create-user" @click="handleSureClick"
+      >确定
+      </a-button
       >
     </template>
   </a-modal>
 </template>
 
 <script>
-import { defineComponent, reactive, ref, toRefs } from "vue";
-import { addUpdateIpApi, uploadAliOssApi } from "@api";
-import {
-  previewFile,
-  uuidToCreateHash,
-  backFileType,
-  warningNotify,
-} from "@/utils";
+import {defineComponent, reactive, ref, toRefs} from "vue";
+import {addUpdateIpApi, uploadAliOssApi} from "@api";
+import {backFileType, previewFile, uuidToCreateHash, warningNotify,} from "@/utils";
 
 export default defineComponent({
   props: {
@@ -58,7 +54,7 @@ export default defineComponent({
       type: Boolean,
     },
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
     const loading = ref(false);
     const addIpParams = reactive({
       imgSrc: {
@@ -105,19 +101,19 @@ export default defineComponent({
       return new Promise((resolve, reject) => {
         const fileName = `ip/${uuidToCreateHash()}.${addIpParams.imgSrc.type}`;
         const fileBgName = `ip/${uuidToCreateHash()}.${
-          addIpParams.bgImgSrc.type
+            addIpParams.bgImgSrc.type
         }`;
         Promise.all([
           uploadAliOssApi(fileName, formData.get("file")),
           uploadAliOssApi(fileBgName, formData.get("bg_file")),
         ])
-          .then((result) => {
-            resolve({
-              file: result[0].res.requestUrls[0],
-              bg_file: result[1].res.requestUrls[0],
-            });
-          })
-          .catch((err) => reject(err));
+            .then((result) => {
+              resolve({
+                file: result[0].res.requestUrls[0],
+                bg_file: result[1].res.requestUrls[0],
+              });
+            })
+            .catch((err) => reject(err));
       });
     };
     const handleClose = () => {
@@ -139,12 +135,12 @@ export default defineComponent({
       formData.set("file", ossResult.file);
       formData.set("bg_file", ossResult.bg_file);
 
-      const { err_code } = await addUpdateIpApi(formData);
+      const {err_code} = await addUpdateIpApi(formData);
       if (err_code === "0") {
         emit("update:createVisible", false);
         emit("ok");
-        addIpParams.imgSrc = { type: "", value: "" };
-        addIpParams.bgImgSrc = { type: "", value: "" };
+        addIpParams.imgSrc = {type: "", value: ""};
+        addIpParams.bgImgSrc = {type: "", value: ""};
         addIpParams.name = "";
       }
       loading.value = false;
@@ -161,7 +157,7 @@ export default defineComponent({
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .modal-create-header {
   display: flex;
   justify-content: center;
@@ -172,6 +168,7 @@ export default defineComponent({
   border-radius: 8px;
   padding: 7px;
   transform: translateX(40%);
+
   div {
     width: 112px;
     height: 38px;
@@ -180,21 +177,26 @@ export default defineComponent({
     text-align: center;
     cursor: pointer;
   }
+
   .bgf {
     background: #fff;
   }
 }
+
 .user-input {
   margin-top: 20px;
+
   .user {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     margin-bottom: 10px;
+
     span {
       font-size: 14px;
       color: #000000;
     }
+
     input {
       height: 52px;
       background: #f7f7f7;
@@ -207,6 +209,7 @@ export default defineComponent({
     }
   }
 }
+
 .create-user {
   width: 100%;
   height: 52px;
@@ -220,11 +223,13 @@ export default defineComponent({
   cursor: pointer;
   margin-bottom: 10px;
 }
+
 .close {
   font-weight: 400;
   color: #bcbcbc;
   cursor: pointer;
 }
+
 .upload-img {
   display: flex;
   justify-content: space-between;
@@ -236,6 +241,7 @@ export default defineComponent({
     font-weight: 400;
     color: #2b2b2b;
   }
+
   .upload-box {
     position: relative;
     width: 224px;
@@ -243,12 +249,14 @@ export default defineComponent({
     border-radius: 4px;
     overflow: hidden;
     margin-right: 10px;
+
     img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       object-position: center center;
     }
+
     .upload-btn {
       position: absolute;
       top: 50%;
