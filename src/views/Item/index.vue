@@ -5,33 +5,35 @@
         <div class="char">作品</div>
       </div>
       <div class="title-r">
-        <TabBar :menuList="menuList" v-model:currentIndex="currentMenu" />
+        <TabBar v-model:currentIndex="currentMenu" :menuList="menuList"/>
       </div>
     </div>
     <div class="ip-lists">
       <div
-        class="card"
-        @mouseover="() => handleMouseover(true, item.id)"
-        @mouseout="() => handleMouseover(false, item.id)"
-        v-for="item in renderWorksList"
-        :key="item.id"
+          v-for="item in renderWorksList"
+          :key="item.id"
+          class="card"
+          @mouseout="() => handleMouseover(false, item.id)"
+          @mouseover="() => handleMouseover(true, item.id)"
       >
-        <div class="img" :ref="String(item.id)">
-          <img :src="item.file" alt="" />
+        <div :ref="String(item.id)" class="img">
+          <img :src="item.file" alt=""/>
         </div>
-        <a-dropdown class="options" v-if="showOptionsElement(item.publish)">
+        <a-dropdown v-if="showOptionsElement(item.publish)" class="options">
           <p>
             <span class="text">设置</span>
-            <icon-svg icon="icon-a-bianzu13" class="icon"></icon-svg>
+            <icon-svg class="icon" icon="icon-a-bianzu13"></icon-svg>
           </p>
           <template #overlay>
             <a-menu>
+              <a-menu-item v-if="item.publish == 2" @click="handleExportOrderClick(item.id,item.name)">导出数据
+              </a-menu-item>
               <a-menu-item @click="handleShelvesClick(item.id, item.publish)">
                 <span>{{ showSwitchShelves(item.publish) }}</span>
               </a-menu-item>
               <a-menu-item
-                v-if="showQrCode(item.free, item.publish)"
-                @click="handleQrCodeClick(item.id)"
+                  v-if="showQrCode(item.free, item.publish)"
+                  @click="handleQrCodeClick(item.id)"
               >
                 <span>小程序二维码</span>
               </a-menu-item>
@@ -39,8 +41,8 @@
           </template>
         </a-dropdown>
 
-        <div class="sale" v-if="showOpenTime(item)">
-          <icon-svg icon="icon-naozhong" class="icon"></icon-svg>
+        <div v-if="showOpenTime(item)" class="sale">
+          <icon-svg class="icon" icon="icon-naozhong"></icon-svg>
           <span>
             {{
               dayjs(item.opening_time * 1000).format("YYYY-MM-DD HH:mm")
@@ -53,16 +55,16 @@
             <h3>{{ item.name }}</h3>
             <div class="avator-des">
               <div class="imgs">
-                <img :src="item.author_avatar" alt="" />
-                <img src="@assets/images/v-icon.png" class="icon" alt="" />
+                <img :src="item.author_avatar" alt=""/>
+                <img alt="" class="icon" src="@assets/images/v-icon.png"/>
               </div>
               <span class="txt-overflow" style="width: 100px">{{
-                item.author_nickname
-              }}</span>
+                  item.author_nickname
+                }}</span>
             </div>
           </div>
           <div class="me-m">
-            <div class="manay" v-if="showPrice(item.publish)">
+            <div v-if="showPrice(item.publish)" class="manay">
               {{ showFreePrice(item.free, item.price) }}
             </div>
 
@@ -74,37 +76,29 @@
         </div>
         <div class="mask"></div>
       </div>
-      <p class="no-found" v-if="renderWorksList.length <= 0">暂无作品</p>
+      <p v-if="renderWorksList.length <= 0" class="no-found">暂无作品</p>
     </div>
     <ShelvesNft
-      @shelves="handelShelvesEmit"
-      :params="shelvesObject"
-      v-model:shelvesVisible="shelvesVisible"
-      @cancel="handleCancelEmit"
+        v-model:shelvesVisible="shelvesVisible"
+        :params="shelvesObject"
+        @cancel="handleCancelEmit"
+        @shelves="handelShelvesEmit"
     />
   </div>
 </template>
 
 <script>
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  reactive,
-  ref,
-  watchEffect,
-  getCurrentInstance,
-  createVNode,
-} from "vue";
+import {computed, createVNode, defineComponent, getCurrentInstance, onMounted, reactive, ref, watchEffect,} from "vue";
+import {useStore} from "vuex";
 import QRCode from "qrcode";
-import { getWorksApi, shelvesNftApi, redeemCodeApi, getBannerApi } from "@api";
-import { pollingItemsPublishApi } from "@/api/pllingApi";
+import dayjs from "dayjs";
+import {Modal} from "ant-design-vue";
+import {getBannerApi, getSuccessOrderApi, getWorksApi, redeemCodeApi, shelvesNftApi} from "@api";
+import {pollingItemsPublishApi} from "@/api/pllingApi";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
-import { Modal } from "ant-design-vue";
-import { useStore } from "vuex";
-import dayjs from "dayjs";
-import { successNotify } from "@/utils";
+import {exportXlsx, successNotify, warningNotify} from "@/utils";
+
 // publishStatusUnPublish = "0"; //下架
 // publishStatusPublishing = "1" //审核
 // publishStatusSuccess    = "2" //发布成功
@@ -129,7 +123,7 @@ export default defineComponent({
     ShelvesNft,
   },
   setup() {
-    const { proxy } = getCurrentInstance();
+    const {proxy} = getCurrentInstance();
     const currentMenu = ref("2");
     const menuList = reactive(menus);
     const worksList = ref([]);
@@ -143,8 +137,8 @@ export default defineComponent({
     const shelvesVisible = ref(false);
     const handleMouseover = (bol, id) => {
       bol
-        ? (proxy.$refs[id].style.transform = "scale(1.2)")
-        : (proxy.$refs[id].style.transform = "scale(1)");
+          ? (proxy.$refs[id].style.transform = "scale(1.2)")
+          : (proxy.$refs[id].style.transform = "scale(1)");
     };
     const user = computed(() => store.getters.getUser);
 
@@ -158,7 +152,7 @@ export default defineComponent({
 
     //是否免费
     const showFreePrice = computed(
-      () => (free, price) => free === "true" ? "免费" : "$" + price
+        () => (free, price) => free === "true" ? "免费" : "$" + price
     );
 
     //是否显示价格
@@ -166,24 +160,24 @@ export default defineComponent({
 
     //是否显示二维码
     const showQrCode = computed(
-      () => (free, publish) => free === "true" && publish !== "0"
+        () => (free, publish) => free === "true" && publish !== "0"
     );
 
     const showOpenTime = computed(() => {
       return (item) =>
-        item.publish === "2" &&
-        Date.parse(new Date()) / 1000 < Number(item.opening_time);
+          item.publish === "2" &&
+          Date.parse(new Date()) / 1000 < Number(item.opening_time);
     });
 
     // watchEffect listen table switch change event
     watchEffect(() => {
       renderWorksList.value = worksList.value
-        .filter((item) => item.publish === currentMenu.value)
-        .map((item) => ({
-          ...item,
-          file: proxy.joinPreviewUrl(item.file),
-          author_avatar: proxy.joinPreviewUrl(item.author_avatar),
-        }));
+          .filter((item) => item.publish === currentMenu.value)
+          .map((item) => ({
+            ...item,
+            file: proxy.joinPreviewUrl(item.file),
+            author_avatar: proxy.joinPreviewUrl(item.author_avatar),
+          }));
     }, [currentMenu, worksList]);
 
     onMounted(() => {
@@ -192,7 +186,7 @@ export default defineComponent({
     });
 
     const getWorksList = async () => {
-      const { err_code, result } = await getWorksApi(user.value.user_id);
+      const {err_code, result} = await getWorksApi(user.value.user_id);
       if (err_code === "0") {
         worksList.value = result;
       }
@@ -200,14 +194,44 @@ export default defineComponent({
 
     // 处理下架
     const handleUnShelvesNft = async (id) => {
-      const { err_code } = await shelvesNftApi(id);
+      const {err_code} = await shelvesNftApi(id);
       if (err_code === "0") {
         getWorksList();
         successNotify("操作成功。");
       }
     };
+
+    // 对导出数据做处理
+    const handleExportDataFile = (result) => {
+      if (!Array.isArray(result) && result.length < 0) return
+      result.forEach(item => {
+        delete item.avatar
+        delete item.created_at
+        delete item.description
+        delete item.nft_file
+      })
+      const td = result.map(item => Object.values(item))
+      return {
+        td
+      }
+    }
+
+    // 处理订单导出数据
+    const handleExportOrderClick = async (id, name) => {
+
+      const {err_code, result} = await getSuccessOrderApi(id)
+      if (err_code == '0' && result.length > 0) {
+        const {td} = handleExportDataFile(result)
+        exportXlsx(td, name)
+      } else {
+        warningNotify("暂无数据")
+      }
+
+    }
+
+    //获取小程序二维码
     const getSmellProgramBaseUrl = async () => {
-      const { result } = await getBannerApi();
+      const {result} = await getBannerApi();
       if (result.share_base_url) {
         smellProgramBaseUrl.value = JSON.parse(result.share_base_url);
       }
@@ -223,11 +247,11 @@ export default defineComponent({
       }
     };
     const handleQrCodeClick = async (id) => {
-      const { err_code, result } = await redeemCodeApi(id);
+      const {err_code, result} = await redeemCodeApi(id);
       if (err_code === "0") {
         let shellBaseUrl = "";
         if (
-          smellProgramBaseUrl.value.nft_url.indexOf("open.weixin.qq.com") == -1
+            smellProgramBaseUrl.value.nft_url.indexOf("open.weixin.qq.com") == -1
         ) {
           shellBaseUrl = `${smellProgramBaseUrl.value.nft_url}id${id}=${result.redeem_code}`;
         } else {
@@ -244,13 +268,13 @@ export default defineComponent({
       }
     };
 
-    const handelShelvesEmit = ({ id, publish }) => {
+    const handelShelvesEmit = ({id, publish}) => {
       shelvesVisible.value = false;
       pollingItemsPublishApi(
-        { userId: user.value.user_id, itemId: id, publish },
-        (result) => {
-          worksList.value = result;
-        }
+          {userId: user.value.user_id, itemId: id, publish},
+          (result) => {
+            worksList.value = result;
+          }
       );
     };
 
@@ -259,12 +283,9 @@ export default defineComponent({
     };
 
     return {
-      handleMouseover,
       currentMenu,
       menuList,
       renderWorksList,
-      handleShelvesClick,
-      handleQrCodeClick,
       showSwitchShelves,
       showOptionsElement,
       showFreePrice,
@@ -272,26 +293,32 @@ export default defineComponent({
       showQrCode,
       shelvesObject,
       showOpenTime,
+      shelvesVisible,
       handelShelvesEmit,
       handleCancelEmit,
-      shelvesVisible,
+      handleShelvesClick,
+      handleQrCodeClick,
+      handleMouseover,
+      handleExportOrderClick,
       dayjs,
     };
   },
 });
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
 .ip-detail {
   // overflow: hidden;
   .ip-detail-title {
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .title-l {
       display: flex;
       align-items: center;
       justify-content: center;
+
       .icon {
         width: 10px;
         height: 10px;
@@ -302,17 +329,20 @@ export default defineComponent({
         transform: rotate(40deg);
         cursor: pointer;
       }
+
       .char {
         font-size: 20px;
         font-weight: 500;
         color: #000000;
         margin: 0 17px;
       }
+
       .status {
         font-size: 14px;
         font-weight: 400;
         display: inline-block;
         position: relative;
+
         &::before {
           position: relative;
           top: 50%;
@@ -327,6 +357,7 @@ export default defineComponent({
       }
     }
   }
+
   .ip-lists {
     margin-top: 20px;
     overflow-y: auto;
@@ -336,6 +367,7 @@ export default defineComponent({
     position: relative;
     // justify-content: space-around;
     align-content: flex-start;
+
     .no-found {
       position: absolute;
       top: 50%;
@@ -344,6 +376,7 @@ export default defineComponent({
       margin: 0;
       padding: 0;
     }
+
     .card {
       width: 242px;
       height: 242px;
@@ -369,6 +402,7 @@ export default defineComponent({
           object-position: 50% 50%;
         }
       }
+
       .options {
         position: absolute;
         top: 11px;
@@ -384,19 +418,23 @@ export default defineComponent({
         box-sizing: border-box;
         padding: 9px 10px;
         cursor: pointer;
+
         img {
           width: 16px;
           height: 16px;
         }
+
         .text {
           font-size: 14px;
           font-weight: 400;
           color: #ffd36c !important;
         }
+
         .icon {
           color: #fff;
         }
       }
+
       .me {
         display: flex;
         position: absolute;
@@ -407,6 +445,7 @@ export default defineComponent({
         left: 50%;
         transform: translateX(-50%);
         z-index: 2;
+
         .me-t {
           h3 {
             font-size: 14px;
@@ -415,14 +454,17 @@ export default defineComponent({
             margin: 0;
             padding: 0;
           }
+
           .avator-des {
             display: flex;
             align-items: center;
             margin-top: 6px;
+
             .imgs {
               position: relative;
               width: 20px;
               height: 20px;
+
               img:first-child {
                 width: 100%;
                 width: 100%;
@@ -431,6 +473,7 @@ export default defineComponent({
                 top: 0;
                 left: 0;
               }
+
               .icon {
                 width: 10px;
                 height: 10px;
@@ -440,6 +483,7 @@ export default defineComponent({
                 transform: translateX(-50%);
               }
             }
+
             span {
               font-size: 12px;
               color: #fff;
@@ -448,6 +492,7 @@ export default defineComponent({
             }
           }
         }
+
         .me-m {
           margin-left: 20px;
 
@@ -457,12 +502,14 @@ export default defineComponent({
             font-weight: 500;
             text-align: right;
           }
+
           ._limit {
             height: 20px;
             border-radius: 6px;
             border: 1px solid #ffbd21;
             display: flex;
             text-align: right;
+
             ._t1 {
               display: block;
               font-size: 12px;
@@ -473,6 +520,7 @@ export default defineComponent({
               background: #ffbd21;
               padding: 0 4px;
             }
+
             ._t2 {
               display: block;
               height: 20px;
@@ -486,6 +534,7 @@ export default defineComponent({
               text-align: center;
             }
           }
+
           // .text {
           //   span:first-child {
           //     background: #ffbd21;
@@ -510,6 +559,7 @@ export default defineComponent({
           // }
         }
       }
+
       .sale {
         position: absolute;
         top: 11px;
@@ -524,16 +574,19 @@ export default defineComponent({
         display: flex;
         align-items: center;
         justify-content: space-between;
+
         .icon {
           color: #ffd36c;
           margin-right: 10px;
           font-size: 12px;
         }
+
         span {
           font-size: 12px;
           color: #ffd36c;
         }
       }
+
       .mask {
         width: 100%;
         height: 100%;

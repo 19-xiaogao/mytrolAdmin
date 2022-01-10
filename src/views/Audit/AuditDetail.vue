@@ -1,22 +1,22 @@
 <template>
-  <div class="order-detail" ref="orderDetailRef">
+  <div ref="orderDetailRef" class="order-detail">
     <div class="header">
-      <img src="@assets/images/mytrolLogo.png" alt="" class="mytrolLogo" />
+      <img alt="" class="mytrolLogo" src="@assets/images/mytrolLogo.png"/>
       <icon-svg
-        icon="icon-a-bianzu101"
-        class="icon"
-        @click="handleHideClick"
+          class="icon"
+          icon="icon-a-bianzu101"
+          @click="handleHideClick"
       ></icon-svg>
     </div>
     <div class="avator">
-      <img :src="messageDetail.avatar" alt="" />
+      <img :src="messageDetail.avatar" alt=""/>
       <span>{{ messageDetail.nickname }}</span>
     </div>
     <p class="des">
       {{ messageDetail.name }}
     </p>
     <div class="ikon">
-      <img :src="joinPreviewUrl(messageDetail.file)" alt="" />
+      <img :src="joinPreviewUrl(messageDetail.file)" alt=""/>
     </div>
     <div class="works-desc">
       <h3>作品介绍</h3>
@@ -24,15 +24,15 @@
     </div>
     <p class="des">{{ messageDetail.description }}</p>
     <div class="ikon">
-      <img :src="joinPreviewUrl(messageDetail.file_background)" alt="" />
+      <img :src="joinPreviewUrl(messageDetail.file_background)" alt=""/>
     </div>
     <div class="audit-box">
       <div @click="handleAuditClick(true)">
-        <icon-svg icon="icon-a-bianzu33" class="icon"></icon-svg>
+        <icon-svg class="icon" icon="icon-a-bianzu33"></icon-svg>
         <span>通过</span>
       </div>
       <div @click="handleAuditClick(false)">
-        <icon-svg icon="icon-x-circle-bold" class="icon"></icon-svg>
+        <icon-svg class="icon" icon="icon-x-circle-bold"></icon-svg>
         <span>不通过</span>
       </div>
     </div>
@@ -40,32 +40,36 @@
 </template>
 
 <script>
-import { ref, onUpdated, getCurrentInstance } from "vue";
-import { auditPassedApi } from "@api";
-import { errorNotify } from "@/utils";
+import {getCurrentInstance, onUpdated, ref} from "vue";
+import {auditPassedApi} from "@api";
+import {errorNotify} from "@/utils";
+
 export default {
   emits: ["clonse"],
   props: {
     messageDetail: Object,
   },
-  setup(props, { emit }) {
+  setup(props, {emit}) {
+    const {proxy} = getCurrentInstance();
+
     const orderDetailRef = ref(null);
-    const { proxy } = getCurrentInstance();
+
+    onUpdated(() => {
+      orderDetailRef.value.style.animation = "sliding-show 0.5s linear 0s";
+    });
+
     const handleHideClick = () => {
       orderDetailRef.value.style.animation = "sliding-hiden 0.5s linear 0s";
       setTimeout(() => {
         emit("clonse");
       }, 400);
     };
-    onUpdated(() => {
-      orderDetailRef.value.style.animation = "sliding-show 0.5s linear 0s";
-    });
     const handleAuditClick = (bol) => {
       const status = bol ? "success" : "failed";
       auditPassed(String(props.messageDetail.id), status);
     };
     const auditPassed = async (denom_id, status) => {
-      const { err_code } = await auditPassedApi({
+      const {err_code} = await auditPassedApi({
         denom_id: String(denom_id),
         status,
       });
@@ -76,10 +80,10 @@ export default {
       }
     };
     return {
-      handleHideClick,
       orderDetailRef,
       joinPreviewUrl: proxy.joinPreviewUrl,
       handleAuditClick,
+      handleHideClick,
     };
   },
 };
@@ -98,6 +102,7 @@ export default {
   box-sizing: border-box;
   padding: 0 21px;
   animation: sliding-show 0.5s linear 0s;
+
   .header {
     display: flex;
     align-items: center;
@@ -108,25 +113,30 @@ export default {
     background: #fff;
     height: 50px;
     width: 105%;
+
     .mytrolLogo {
       margin-right: 80px;
     }
+
     .icon {
       font-size: 1.4rem;
       cursor: pointer;
     }
   }
+
   .avator {
     margin-top: 18px;
     display: flex;
     justify-content: flex-start;
     align-items: center;
+
     img {
       display: inline-block;
       width: 38px;
       height: 38px;
       border-radius: 50%;
     }
+
     span {
       font-size: 16px;
       font-weight: 600;
@@ -134,6 +144,7 @@ export default {
       margin-left: 10px;
     }
   }
+
   .des {
     margin: 0;
     padding: 0;
@@ -144,12 +155,14 @@ export default {
     text-align: left;
     color: #434343;
   }
+
   .ikon {
     width: 348px;
     height: 261px;
     overflow: hidden;
     border-radius: 5px;
     margin-top: 10px;
+
     img {
       width: 100%;
       height: 100%;
@@ -157,17 +170,20 @@ export default {
       object-position: 50% 50%;
     }
   }
+
   .works-desc {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin-top: 22px;
+
     h3 {
       color: #434343;
       font-weight: 600;
       font-size: 20px;
     }
+
     p {
       margin: 0;
       padding: 0;
@@ -176,6 +192,7 @@ export default {
       font-size: 15px;
     }
   }
+
   .audit-box {
     position: sticky;
     bottom: 5px;
@@ -183,6 +200,7 @@ export default {
     transform: translateX(0);
     display: flex;
     justify-content: center;
+
     div {
       width: 154px;
       height: 48px;
@@ -196,19 +214,23 @@ export default {
       cursor: pointer;
       color: #ffffff;
       border-radius: 8px;
+
       .icon {
         font-size: 1.2rem;
         margin-right: 10px;
       }
+
       &:first-child {
         background-color: #54a44b;
       }
+
       &:last-child {
         background-color: #ff451d;
       }
     }
   }
 }
+
 @keyframes sliding-show {
   from {
     transform: translateX(500px);
