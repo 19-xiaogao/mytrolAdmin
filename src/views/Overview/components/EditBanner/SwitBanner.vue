@@ -57,6 +57,9 @@
               placeholder="请输入图片链接"
               type="text"
           />
+          <a-button :loading="btnLoading" class="switch-imgUrl" type="primary">上传背景图片
+            <input alt="" type="file" @change="handleSelectFileChange">
+          </a-button>
           <div class="save" @click="saveBannerClick">保存</div>
         </div>
       </div>
@@ -67,7 +70,7 @@
 <script>
 import {computed, onMounted, ref, toRaw} from "vue";
 import {getBannerApi, updateBannerApi, uploadAliOssApi} from "@api";
-import {successNotify, warningNotify} from "@/utils";
+import {backFileType, successNotify, warningNotify} from "@/utils";
 
 const defaultTabList = [
   {
@@ -92,7 +95,7 @@ export default {
   setup(props) {
     const currentParams = ref(defaultTabList[0]);
     const tableList = ref(defaultTabList);
-    const tx_hash = ref("");
+    const btnLoading = ref(false)
     const isSelectHoverClass = computed(
         () => (index) => index === currentParams.value.key ? "select-hover" : ""
     );
@@ -127,12 +130,20 @@ export default {
       currentParams.value = tableList.value[tableList.value.length - 1];
     };
     const assignment = (result) => {
-      tx_hash.value = result.tx_hash;
       let list = JSON.parse(result.banner_info);
       if (!list) return;
 
       tableList.value = list;
     };
+    const handleSelectFileChange = async (e) => {
+      const file = e.target.files[0];
+      const fileType = backFileType(file);
+      btnLoading.value = true
+      const result = await uploadAliOssApi(`banner/bg_${currentParams.value.key}.${fileType}`, file)
+      currentParams.value.imgUrl = result.res.requestUrls[0]
+      btnLoading.value = false
+      successNotify("上传banner背景图片成功")
+    }
     const saveBannerClick = async () => {
       let uploadData = [];
       if (tableList.value.length === 1) {
@@ -172,12 +183,14 @@ export default {
     return {
       showIpDom,
       currentParams,
+      btnLoading,
+      tableList,
       isSelectHoverClass,
       handleTabClick,
-      tableList,
       handleUploadChange,
       addBannerClick,
       saveBannerClick,
+      handleSelectFileChange
     };
   },
 };
@@ -320,6 +333,7 @@ export default {
       display: flex;
       margin-top: 30px;
       justify-content: space-between;
+      align-items: center;
 
       input {
         background: #f7f7f7;
@@ -366,4 +380,22 @@ export default {
   background: linear-gradient(270deg, #ff451d 0%, #ffca2a 100%);
   border-radius: 6px;
 }
+
+.switch-imgUrl {
+  margin: 0 10px;
+  position: relative;
+
+  input {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+    overflow: hidden;
+    z-index: 1;
+  }
+}
+
 </style>

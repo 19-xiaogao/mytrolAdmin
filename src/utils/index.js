@@ -133,6 +133,7 @@ export function uuidToCreateHash() {
 
 //返回文件类型
 export function backFileType(file) {
+    if (!file || !file.name) return ''
     const splitArr = file.name.split(".");
     return splitArr[splitArr.length - 1];
 }
