@@ -57,9 +57,6 @@ export default {
       }, 400);
     };
     const handleSaveSettingClick = () => {
-      if (free_number.value <= 0) {
-        return warningNotify("请输入大于0的数量");
-      }
       if (typeof props.nftNumber !== "number" || props.nftNumber <= 0) {
         return warningNotify("请先输入nft创作的数量");
       }
