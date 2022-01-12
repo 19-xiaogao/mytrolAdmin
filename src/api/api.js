@@ -91,3 +91,6 @@ export const addClassificationApi = (name) => server.post("/backend/add_classifi
 
 // 获取作品的所有订单
 export const getSuccessOrderApi = (id) => server.get('/denom_success_order/' + id);
+
+// 获取所有兑换码
+export const getAllPrivate = (id) => server.get('/nft_private_redeem_code/' + id);

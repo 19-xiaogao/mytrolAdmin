@@ -2,7 +2,8 @@
   <div class="ip-detail page-height">
     <div class="ip-detail-title">
       <div class="title-l">
-        <div class="char">作品</div>
+        <div :class="showPrivateClass(0)" @click="handleTitleClick(0)">作品</div>
+        <div :class="showPrivateClass(1)" @click="handleTitleClick(1)">私人发售</div>
       </div>
       <div class="title-r">
         <TabBar v-model:currentIndex="currentMenu" :menuList="menuList"/>
@@ -13,6 +14,7 @@
           v-for="item in renderWorksList"
           :key="item.id"
           class="card"
+          @click="handleItemCardClick(item.id)"
           @mouseout="() => handleMouseover(false, item.id)"
           @mouseover="() => handleMouseover(true, item.id)"
       >
@@ -84,6 +86,7 @@
         @cancel="handleCancelEmit"
         @shelves="handelShelvesEmit"
     />
+    <PrivatePosters v-model:postersVisible="postersVisible"/>
   </div>
 </template>
 
@@ -93,11 +96,12 @@ import {useStore} from "vuex";
 import QRCode from "qrcode";
 import dayjs from "dayjs";
 import {Modal} from "ant-design-vue";
-import {getSuccessOrderApi, getWorksApi, redeemCodeApi, shelvesNftApi} from "@api";
+import {getAllPrivate, getSuccessOrderApi, getWorksApi, redeemCodeApi, shelvesNftApi} from "@api";
 import {pollingItemsPublishApi} from "@/api/pllingApi";
+import {exportXlsx, successNotify, warningNotify} from "@/utils";
+import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
-import {exportXlsx, successNotify, warningNotify} from "@/utils";
 
 // publishStatusUnPublish = "0"; //下架
 // publishStatusPublishing = "1" //审核
@@ -121,6 +125,7 @@ export default defineComponent({
   components: {
     TabBar,
     ShelvesNft,
+    PrivatePosters
   },
   setup() {
     const {proxy} = getCurrentInstance();
@@ -134,6 +139,8 @@ export default defineComponent({
       publish: "",
     });
     const shelvesVisible = ref(false);
+    const currentIndex = ref(0);
+    const postersVisible = ref(false)
     const handleMouseover = (bol, id) => {
       bol
           ? (proxy.$refs[id].style.transform = "scale(1.2)")
@@ -145,6 +152,12 @@ export default defineComponent({
       if (publish === "0") return "上架";
       if (publish === "2") return "下架";
     });
+
+    //是否属于私人发售
+
+    const showPrivateClass = computed(() => {
+      return (index) => (currentIndex.value === index ? "char cover" : "char");
+    })
 
     // 是否显示设置元素
     const showOptionsElement = computed(() => (publish) => publish !== "1");
@@ -190,6 +203,16 @@ export default defineComponent({
       }
     };
 
+    const handleItemCardClick = (id) => {
+      if (!currentIndex.value) return
+      getAllPrivate(id).then(res =>{
+        console.log(res)
+      })
+      postersVisible.value = true;
+    }
+
+    const handleTitleClick = (index) => currentIndex.value = index;
+
     // 处理下架
     const handleUnShelvesNft = async (id) => {
       const {err_code} = await shelvesNftApi(id);
@@ -209,9 +232,7 @@ export default defineComponent({
         delete item.nft_file
       })
       const td = result.map(item => Object.values(item))
-      return {
-        td
-      }
+      return td
     }
 
     // 处理订单导出数据
@@ -219,7 +240,7 @@ export default defineComponent({
 
       const {err_code, result} = await getSuccessOrderApi(id)
       if (err_code == '0' && result.length > 0) {
-        const {td} = handleExportDataFile(result)
+        const td = handleExportDataFile(result)
         exportXlsx(td, name)
       } else {
         warningNotify("暂无数据")
@@ -276,6 +297,8 @@ export default defineComponent({
     return {
       currentMenu,
       menuList,
+      currentIndex,
+      postersVisible,
       renderWorksList,
       showSwitchShelves,
       showOptionsElement,
@@ -284,12 +307,15 @@ export default defineComponent({
       showQrCode,
       shelvesObject,
       showOpenTime,
+      showPrivateClass,
       shelvesVisible,
       handelShelvesEmit,
       handleCancelEmit,
       handleShelvesClick,
       handleQrCodeClick,
       handleMouseover,
+      handleTitleClick,
+      handleItemCardClick,
       handleExportOrderClick,
       dayjs,
     };
@@ -322,11 +348,18 @@ export default defineComponent({
       }
 
       .char {
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 500;
         color: #000000;
         margin: 0 17px;
+        cursor: pointer;
       }
+
+      .cover {
+        font-size: 20px;
+        border-bottom: 2px solid rgb(237, 102, 55);
+      }
+
 
       .status {
         font-size: 14px;
