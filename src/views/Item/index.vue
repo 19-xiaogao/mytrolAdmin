@@ -2,24 +2,28 @@
   <div class="ip-detail page-height">
     <div class="ip-detail-title">
       <div class="title-l">
-        <div :class="showPrivateClass(0)" @click="handleTitleClick(0)">作品</div>
-        <div :class="showPrivateClass(1)" @click="handleTitleClick(1)">私人发售</div>
+        <div :class="showPrivateClass(0)" @click="handleTitleClick(0)">
+          作品
+        </div>
+        <div :class="showPrivateClass(1)" @click="handleTitleClick(1)">
+          私人发售
+        </div>
       </div>
       <div class="title-r">
-        <TabBar v-model:currentIndex="currentMenu" :menuList="menuList"/>
+        <TabBar v-model:currentIndex="currentMenu" :menuList="menuList" />
       </div>
     </div>
     <div class="ip-lists">
       <div
-          v-for="item in renderWorksList"
-          :key="item.id"
-          class="card"
-          @click="handleItemCardClick(item)"
-          @mouseout="() => handleMouseover(false, item.id)"
-          @mouseover="() => handleMouseover(true, item.id)"
+        v-for="item in renderWorksList"
+        :key="item.id"
+        class="card"
+        @click="handleItemCardClick(item)"
+        @mouseout="() => handleMouseover(false, item.id)"
+        @mouseover="() => handleMouseover(true, item.id)"
       >
         <div :ref="String(item.id)" class="img">
-          <img :src="item.file" alt=""/>
+          <img :src="item.file" alt="" />
         </div>
         <a-dropdown v-if="showOptionsElement(item.publish)" class="options">
           <p>
@@ -28,14 +32,17 @@
           </p>
           <template #overlay>
             <a-menu>
-              <a-menu-item v-if="item.publish == 2" @click="handleExportOrderClick(item.id,item.name)">导出数据
+              <a-menu-item
+                v-if="item.publish == 2"
+                @click="handleExportOrderClick(item.id, item.name)"
+                >导出数据
               </a-menu-item>
               <a-menu-item @click="handleShelvesClick(item.id, item.publish)">
                 <span>{{ showSwitchShelves(item.publish) }}</span>
               </a-menu-item>
               <a-menu-item
-                  v-if="showQrCode(item.free, item.publish)"
-                  @click="handleQrCodeClick(item.id)"
+                v-if="showQrCode(item.free, item.publish)"
+                @click="handleQrCodeClick(item.id)"
               >
                 <span>小程序二维码</span>
               </a-menu-item>
@@ -57,12 +64,12 @@
             <h3>{{ item.name }}</h3>
             <div class="avator-des">
               <div class="imgs">
-                <img :src="item.author_avatar" alt=""/>
-                <img alt="" class="icon" src="@assets/images/v-icon.png"/>
+                <img :src="item.author_avatar" alt="" />
+                <img alt="" class="icon" src="@assets/images/v-icon.png" />
               </div>
               <span class="txt-overflow" style="width: 100px">{{
-                  item.author_nickname
-                }}</span>
+                item.author_nickname
+              }}</span>
             </div>
           </div>
           <div class="me-m">
@@ -81,23 +88,44 @@
       <p v-if="renderWorksList.length <= 0" class="no-found">暂无作品</p>
     </div>
     <ShelvesNft
-        v-model:shelvesVisible="shelvesVisible"
-        :params="shelvesObject"
-        @cancel="handleCancelEmit"
-        @shelves="handelShelvesEmit"
+      v-model:shelvesVisible="shelvesVisible"
+      :params="shelvesObject"
+      @cancel="handleCancelEmit"
+      @shelves="handelShelvesEmit"
     />
-    <PrivatePosters v-model:postersVisible="postersParams.postersVisible" :params="postersParams.params"/>
+    <PrivatePosters
+      v-model:postersVisible="postersParams.postersVisible"
+      :params="postersParams.params"
+    />
   </div>
 </template>
 
 <script>
-import {computed, createVNode, defineComponent, getCurrentInstance, onMounted, reactive, ref, watchEffect,} from "vue";
-import {useStore} from "vuex";
+import {
+  computed,
+  createVNode,
+  defineComponent,
+  getCurrentInstance,
+  onMounted,
+  reactive,
+  ref,
+  watchEffect,
+} from "vue";
+import { useStore } from "vuex";
 import dayjs from "dayjs";
-import {Modal} from "ant-design-vue";
-import {getSuccessOrderApi, getWorksApi, redeemCodeApi, shelvesNftApi} from "@api";
-import {pollingItemsPublishApi} from "@/api/pllingApi";
-import {exportXlsx, generatorQrCode, successNotify, warningNotify} from "@/utils";
+import { Modal } from "ant-design-vue";
+import {
+  getSuccessOrderApi,
+  getWorksApi,
+  redeemCodeApi,
+  shelvesNftApi,
+} from "@api";
+import {
+  exportXlsx,
+  generatorQrCode,
+  successNotify,
+  warningNotify,
+} from "@/utils";
 import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
@@ -124,10 +152,10 @@ export default defineComponent({
   components: {
     TabBar,
     ShelvesNft,
-    PrivatePosters
+    PrivatePosters,
   },
   setup() {
-    const {proxy} = getCurrentInstance();
+    const { proxy } = getCurrentInstance();
     const currentMenu = ref("2");
     const menuList = reactive(menus);
     const worksList = ref([]);
@@ -139,11 +167,11 @@ export default defineComponent({
     });
     const shelvesVisible = ref(false);
     const currentIndex = ref(0);
-    const postersParams = reactive({postersVisible: false, params: ""})
+    const postersParams = reactive({ postersVisible: false, params: "" });
     const handleMouseover = (bol, id) => {
       bol
-          ? (proxy.$refs[id].style.transform = "scale(1.2)")
-          : (proxy.$refs[id].style.transform = "scale(1)");
+        ? (proxy.$refs[id].style.transform = "scale(1.2)")
+        : (proxy.$refs[id].style.transform = "scale(1)");
     };
     const user = computed(() => store.getters.getUser);
 
@@ -156,14 +184,14 @@ export default defineComponent({
 
     const showPrivateClass = computed(() => {
       return (index) => (currentIndex.value === index ? "char cover" : "char");
-    })
+    });
 
     // 是否显示设置元素
     const showOptionsElement = computed(() => (publish) => publish !== "1");
 
     //是否免费
     const showFreePrice = computed(
-        () => (free, price) => free === "true" ? "免费" : "$" + price
+      () => (free, price) => free === "true" ? "免费" : "$" + price
     );
 
     //是否显示价格
@@ -171,24 +199,24 @@ export default defineComponent({
 
     //是否显示二维码
     const showQrCode = computed(
-        () => (free, publish) => free === "true" && publish !== "0"
+      () => (free, publish) => free === "true" && publish !== "0"
     );
 
     const showOpenTime = computed(() => {
       return (item) =>
-          item.publish === "2" &&
-          Date.parse(new Date()) / 1000 < Number(item.opening_time);
+        item.publish === "2" &&
+        Date.parse(new Date()) / 1000 < Number(item.opening_time);
     });
 
     // watchEffect listen table switch change event
     watchEffect(() => {
       renderWorksList.value = worksList.value
-          .filter((item) => item.publish === currentMenu.value)
-          .map((item) => ({
-            ...item,
-            file: proxy.joinPreviewUrl(item.file),
-            author_avatar: proxy.joinPreviewUrl(item.author_avatar),
-          }));
+        .filter((item) => item.publish === currentMenu.value)
+        .map((item) => ({
+          ...item,
+          file: proxy.joinPreviewUrl(item.file),
+          author_avatar: proxy.joinPreviewUrl(item.author_avatar),
+        }));
     }, [currentMenu, worksList]);
 
     onMounted(() => {
@@ -196,30 +224,32 @@ export default defineComponent({
     });
 
     const returnPrivateTableData = (result) => {
-      return result.filter(item => item.free === String(!!currentIndex.value))
-    }
+      return result.filter(
+        (item) => item.free === String(!!currentIndex.value)
+      );
+    };
     const getWorksList = async () => {
-      const {err_code, result} = await getWorksApi(user.value.user_id);
+      const { err_code, result } = await getWorksApi(user.value.user_id);
       if (err_code === "0") {
         worksList.value = returnPrivateTableData(result);
       }
     };
 
     const handleItemCardClick = (item) => {
-      if (!currentIndex.value) return
+      if (!currentIndex.value) return;
 
       postersParams.postersVisible = true;
       postersParams.params = item;
-    }
+    };
 
     const handleTitleClick = (index) => {
       currentIndex.value = index;
-      getWorksList()
+      getWorksList();
     };
 
     // 处理下架
     const handleUnShelvesNft = async (id) => {
-      const {err_code} = await shelvesNftApi(id);
+      const { err_code } = await shelvesNftApi(id);
       if (err_code === "0") {
         getWorksList();
         successNotify("操作成功。");
@@ -228,29 +258,38 @@ export default defineComponent({
 
     // 对导出数据做处理
     const handleExportDataFile = (result) => {
-      if (!Array.isArray(result) && result.length < 0) return
-      result.forEach(item => {
-        delete item.avatar
-        delete item.created_at
-        delete item.description
-        delete item.nft_file
-      })
-      return result.map(item => Object.values(item))
-    }
+      if (!Array.isArray(result) && result.length < 0) return;
+      result.forEach((item) => {
+        delete item.avatar;
+        delete item.created_at;
+        delete item.description;
+        delete item.nft_file;
+      });
+      return result.map((item) => Object.values(item));
+    };
 
     // 处理订单导出数据
     const handleExportOrderClick = async (id, name) => {
-
-      const {err_code, result} = await getSuccessOrderApi(id)
-      if (err_code == '0' && result.length > 0) {
-        const th = handleExportDataFile(result)
-        const td = ["价格", "买家hash地址", "NFT编号", "NFT名称", "剩余数量", "NFT卖方", "NFT买方hash地址", "NFT总数", "交易hash", "订单号"]
-        exportXlsx(td, th, name)
+      const { err_code, result } = await getSuccessOrderApi(id);
+      if (err_code == "0" && result.length > 0) {
+        const th = handleExportDataFile(result);
+        const td = [
+          "价格",
+          "买家hash地址",
+          "NFT编号",
+          "NFT名称",
+          "剩余数量",
+          "NFT卖方",
+          "NFT买方hash地址",
+          "NFT总数",
+          "交易hash",
+          "订单号",
+        ];
+        exportXlsx(td, th, name);
       } else {
-        warningNotify("暂无数据")
+        warningNotify("暂无数据");
       }
-
-    }
+    };
 
     const handleShelvesClick = (id, publish) => {
       if (publish === "2") {
@@ -263,7 +302,7 @@ export default defineComponent({
       }
     };
     const handleQrCodeClick = async (id) => {
-      const {err_code, result} = await redeemCodeApi(id);
+      const { err_code, result } = await redeemCodeApi(id);
       if (err_code === "0") {
         const qrCode = await generatorQrCode(id, result);
         Modal.success({
@@ -276,14 +315,11 @@ export default defineComponent({
       }
     };
 
-    const handelShelvesEmit = ({id, publish}) => {
+    const handelShelvesEmit = () => {
       shelvesVisible.value = false;
-      pollingItemsPublishApi(
-          {userId: user.value.user_id, itemId: id, publish},
-          (result) => {
-            worksList.value = result;
-          }
-      );
+      setTimeout(() => {
+        getWorksList();
+      }, 1000);
     };
 
     const handleCancelEmit = () => {
@@ -355,7 +391,6 @@ export default defineComponent({
         font-size: 20px;
         border-bottom: 2px solid rgb(237, 102, 55);
       }
-
 
       .status {
         font-size: 14px;
