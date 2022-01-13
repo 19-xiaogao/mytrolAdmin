@@ -35,7 +35,7 @@
               <a-menu-item
                 v-if="item.publish == 2"
                 @click="handleExportOrderClick(item.id, item.name)"
-                >导出数据
+                >导出订单数据
               </a-menu-item>
               <a-menu-item @click="handleShelvesClick(item.id, item.publish)">
                 <span>{{ showSwitchShelves(item.publish) }}</span>
