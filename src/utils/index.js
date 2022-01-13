@@ -1,8 +1,9 @@
 import {v4 as uuid} from "uuid";
 import sha256 from "sha256";
 import XLSX from 'xlsx'
-
+import QRCode from "qrcode";
 import {notification} from "ant-design-vue";
+import html2canvas from "html2canvas";
 
 const TOKEN = "ROLE";
 
@@ -139,8 +140,8 @@ export function backFileType(file) {
 }
 
 // 导出xlsx表格
-export function exportXlsx(th, fileName) {
-    th.unshift(["价格", "买家hash地址", "NFT编号", "NFT名称", "剩余数量", "NFT卖方", "NFT买方hash地址", "NFT总数", "交易hash", "订单号"])
+export function exportXlsx(td, th, fileName) {
+    th.unshift(td)
     const ws = XLSX.utils.aoa_to_sheet(th);
     const wb = XLSX.utils.book_new();
     ws['!rows'] = [{wch: 10}, {wch: 40}, {wch: 40}, {wch: 30}, {wch: 10}, {wch: 40}, {wch: 40}, {wch: 10}, {wch: 40}, {wch: 40},]
@@ -148,3 +149,33 @@ export function exportXlsx(th, fileName) {
 
     XLSX.writeFile(wb, `${fileName}.xlsx`);
 }
+
+// 生成二维码
+export async function generatorQrCode(id, result) {
+
+    const shareUrl = process.env.VUE_APP_BASE_SMELL_SHARE;
+    const local = process.env.NODE_ENV !== 'production';
+    const shellBaseUrl = local
+        ? `${shareUrl}?id${id}=${result.redeem_code}#wechat-redirect`
+        : `${shareUrl}?id${id}=${result.redeem_code}`;
+
+    return await QRCode.toDataURL(shellBaseUrl);
+}
+
+// 生成海报
+export async function generatorPosters(dom) {
+    const canvas = await html2canvas(dom, {
+        useCORS: true,
+        allowTaint: true,
+        taintTest: true,
+        scale: 4,
+    })
+    const pngCanvas = canvas.toDataURL('image/png')
+    const oA = document.createElement("a");
+    oA.download = '';
+    oA.href = pngCanvas;
+    document.body.appendChild(oA);
+    oA.click();
+    oA.remove();
+}
+

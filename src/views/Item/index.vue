@@ -14,7 +14,7 @@
           v-for="item in renderWorksList"
           :key="item.id"
           class="card"
-          @click="handleItemCardClick(item.id)"
+          @click="handleItemCardClick(item)"
           @mouseout="() => handleMouseover(false, item.id)"
           @mouseover="() => handleMouseover(true, item.id)"
       >
@@ -86,19 +86,18 @@
         @cancel="handleCancelEmit"
         @shelves="handelShelvesEmit"
     />
-    <PrivatePosters v-model:postersVisible="postersVisible"/>
+    <PrivatePosters v-model:postersVisible="postersParams.postersVisible" :params="postersParams.params"/>
   </div>
 </template>
 
 <script>
 import {computed, createVNode, defineComponent, getCurrentInstance, onMounted, reactive, ref, watchEffect,} from "vue";
 import {useStore} from "vuex";
-import QRCode from "qrcode";
 import dayjs from "dayjs";
 import {Modal} from "ant-design-vue";
-import {getAllPrivate, getSuccessOrderApi, getWorksApi, redeemCodeApi, shelvesNftApi} from "@api";
+import {getSuccessOrderApi, getWorksApi, redeemCodeApi, shelvesNftApi} from "@api";
 import {pollingItemsPublishApi} from "@/api/pllingApi";
-import {exportXlsx, successNotify, warningNotify} from "@/utils";
+import {exportXlsx, generatorQrCode, successNotify, warningNotify} from "@/utils";
 import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
@@ -140,7 +139,7 @@ export default defineComponent({
     });
     const shelvesVisible = ref(false);
     const currentIndex = ref(0);
-    const postersVisible = ref(false)
+    const postersParams = reactive({postersVisible: false, params: ""})
     const handleMouseover = (bol, id) => {
       bol
           ? (proxy.$refs[id].style.transform = "scale(1.2)")
@@ -196,22 +195,27 @@ export default defineComponent({
       getWorksList();
     });
 
+    const returnPrivateTableData = (result) => {
+      return result.filter(item => item.free === String(!!currentIndex.value))
+    }
     const getWorksList = async () => {
       const {err_code, result} = await getWorksApi(user.value.user_id);
       if (err_code === "0") {
-        worksList.value = result;
+        worksList.value = returnPrivateTableData(result);
       }
     };
 
-    const handleItemCardClick = (id) => {
+    const handleItemCardClick = (item) => {
       if (!currentIndex.value) return
-      getAllPrivate(id).then(res =>{
-        console.log(res)
-      })
-      postersVisible.value = true;
+
+      postersParams.postersVisible = true;
+      postersParams.params = item;
     }
 
-    const handleTitleClick = (index) => currentIndex.value = index;
+    const handleTitleClick = (index) => {
+      currentIndex.value = index;
+      getWorksList()
+    };
 
     // 处理下架
     const handleUnShelvesNft = async (id) => {
@@ -231,8 +235,7 @@ export default defineComponent({
         delete item.description
         delete item.nft_file
       })
-      const td = result.map(item => Object.values(item))
-      return td
+      return result.map(item => Object.values(item))
     }
 
     // 处理订单导出数据
@@ -240,8 +243,9 @@ export default defineComponent({
 
       const {err_code, result} = await getSuccessOrderApi(id)
       if (err_code == '0' && result.length > 0) {
-        const td = handleExportDataFile(result)
-        exportXlsx(td, name)
+        const th = handleExportDataFile(result)
+        const td = ["价格", "买家hash地址", "NFT编号", "NFT名称", "剩余数量", "NFT卖方", "NFT买方hash地址", "NFT总数", "交易hash", "订单号"]
+        exportXlsx(td, th, name)
       } else {
         warningNotify("暂无数据")
       }
@@ -261,15 +265,7 @@ export default defineComponent({
     const handleQrCodeClick = async (id) => {
       const {err_code, result} = await redeemCodeApi(id);
       if (err_code === "0") {
-        const shareUrl = process.env.VUE_APP_BASE_SMELL_SHARE;
-        const local = process.env.NODE_ENV !== 'production';
-        let shellBaseUrl = '';
-
-        shellBaseUrl = local
-            ? `${shareUrl}?id${id}=${result.redeem_code}#wechat-redirect`
-            : `${shareUrl}?id${id}=${result.redeem_code}`;
-
-        const qrCode = await QRCode.toDataURL(shellBaseUrl);
+        const qrCode = await generatorQrCode(id, result);
         Modal.success({
           title: "二维码生成成功",
           content: createVNode("img", {
@@ -298,7 +294,7 @@ export default defineComponent({
       currentMenu,
       menuList,
       currentIndex,
-      postersVisible,
+      postersParams,
       renderWorksList,
       showSwitchShelves,
       showOptionsElement,
