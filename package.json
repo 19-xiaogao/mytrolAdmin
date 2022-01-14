@@ -5,7 +5,8 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "prettier": "npx prettier --write ."
   },
   "dependencies": {
     "ali-oss": "^6.16.0",
@@ -16,6 +17,7 @@
     "echarts": "^5.2.1",
     "html2canvas": "^1.4.0",
     "image-webpack-loader": "^8.0.1",
+    "prettier": "^2.5.1",
     "qrcode": "^1.5.0",
     "sha256": "^0.2.0",
     "uuid": "^8.3.2",
