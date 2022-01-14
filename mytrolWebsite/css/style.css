@@ -15,7 +15,6 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-
 }
 
 .record {
@@ -31,15 +30,14 @@
     display: inline-block;
     font-size: 16px;
     font-weight: 500;
-    color: #6A6A6A;
+    color: #6a6a6a;
     height: 30px;
-
 }
 
 .active {
     width: 80%;
     height: 6px;
-    background: linear-gradient(270deg, #FF451D 0%, #FFCA2A 100%);
+    background: linear-gradient(270deg, #ff451d 0%, #ffca2a 100%);
     border-radius: 3px;
 }
 
@@ -115,7 +113,8 @@
     font-weight: 400;
     color: #000000;
 }
-html,body{
+html,
+body {
     margin: 0;
     padding: 0;
 }

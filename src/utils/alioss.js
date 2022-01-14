@@ -11,7 +11,6 @@ const client = new OSS({
     // accessKeyId: "LTAI5tJJw9WL4LRVP4WbybU3",
     // accessKeySecret: "ifycUIZnfXPwrVnKLJ8a3lcIrkZim3",
     // bucket: "apply-sign",
-
 });
 
 export default client;

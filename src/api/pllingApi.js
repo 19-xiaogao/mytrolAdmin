@@ -1,4 +1,4 @@
-import {pollingServer} from "./axios";
+import { pollingServer } from "./axios";
 import store from "@/store";
 
 const ASeconds = 1.5 * 1000;
@@ -6,9 +6,7 @@ const ASeconds = 1.5 * 1000;
 // 轮询审核列表数据
 export const pollingQueryPublishingApi = async (params, id, fc) => {
     store.commit("setLoading", true);
-    const {result} = await pollingServer.get(
-        "/publishing/" + params.current + "/" + params.numbers
-    );
+    const { result } = await pollingServer.get("/publishing/" + params.current + "/" + params.numbers);
     if (Array.isArray(result) && result.length === 0) {
         store.commit("setLoading", false);
         return fc && fc(result);
@@ -24,7 +22,7 @@ export const pollingQueryPublishingApi = async (params, id, fc) => {
 // 轮询运营列表
 export const pollingGetSerisesIpApi = async (length, fc) => {
     store.commit("setLoading", true);
-    const {result} = await pollingServer.get("/backend/get_serises_ip");
+    const { result } = await pollingServer.get("/backend/get_serises_ip");
     if (result.length !== length) {
         store.commit("setLoading", false);
         return fc && fc(result);
@@ -34,7 +32,7 @@ export const pollingGetSerisesIpApi = async (length, fc) => {
 // 查询name
 export const pollingAddUpdateIpApi = async (diffParams, fc) => {
     store.commit("setLoading", true);
-    const {result} = await pollingServer.get("/backend/get_serises_ip");
+    const { result } = await pollingServer.get("/backend/get_serises_ip");
     const targetFind = result.find((item) => item.name === diffParams.name);
     if (targetFind.status !== diffParams.status) {
         store.commit("setLoading", false);
@@ -45,7 +43,7 @@ export const pollingAddUpdateIpApi = async (diffParams, fc) => {
 // 查询status
 export const pollingUpdateNumberApi = async (diffParams, fc) => {
     store.commit("setLoading", true);
-    const {result} = await pollingServer.get("/backend/get_serises_ip");
+    const { result } = await pollingServer.get("/backend/get_serises_ip");
     const targetFind = result.find((item) => item.name === diffParams.name);
     if (Number(targetFind.number) === diffParams.number) {
         store.commit("setLoading", false);
@@ -57,9 +55,7 @@ export const pollingUpdateNumberApi = async (diffParams, fc) => {
 // 查询作品
 export const pollingItemsPublishApi = async (diffParams, fc) => {
     store.commit("setLoading", true);
-    const {result} = await pollingServer.get(
-        "/nfts_of_user_make/all/" + diffParams.userId
-    );
+    const { result } = await pollingServer.get("/nfts_of_user_make/all/" + diffParams.userId);
     const targetFind = result.find((item) => item.id === diffParams.itemId);
     if (targetFind.publish !== diffParams.publish) {
         store.commit("setLoading", false);
@@ -72,7 +68,7 @@ export const pollingItemsPublishApi = async (diffParams, fc) => {
 export const pollingGivingDaysApi = async (days, fc) => {
     store.commit("setLoading", true);
 
-    const {result} = await pollingServer.get("/backend/get_give_time");
+    const { result } = await pollingServer.get("/backend/get_give_time");
 
     if (days !== result.days) {
         store.commit("setLoading", false);
@@ -86,7 +82,7 @@ export const pollingGivingDaysApi = async (days, fc) => {
 export const pollingBannerApi = async (tx_hash, fc) => {
     store.commit("setLoading", true);
 
-    const {result} = await pollingServer.get("/get_banner");
+    const { result } = await pollingServer.get("/get_banner");
 
     if (tx_hash !== result.tx_hash) {
         store.commit("setLoading", false);
@@ -101,7 +97,7 @@ export const pollingBannerApi = async (tx_hash, fc) => {
 export const pollingClassApi = async (length, fc) => {
     store.commit("setLoading", true);
 
-    const {result} = await pollingServer.get("/backend/get_classification");
+    const { result } = await pollingServer.get("/backend/get_classification");
 
     if (length !== result.length) {
         store.commit("setLoading", false);

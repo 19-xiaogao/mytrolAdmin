@@ -1,8 +1,8 @@
-import {v4 as uuid} from "uuid";
+import { v4 as uuid } from "uuid";
 import sha256 from "sha256";
-import XLSX from 'xlsx'
+import XLSX from "xlsx";
 import QRCode from "qrcode";
-import {notification} from "ant-design-vue";
+import { notification } from "ant-design-vue";
 import html2canvas from "html2canvas";
 
 const TOKEN = "ROLE";
@@ -73,30 +73,34 @@ export const joinPreviewUrl = (url) => {
 
 // 提示框
 export function notify(message, description, type = "info", duration = 4.5) {
-    notification[type]({message, description, duration});
+    notification[type]({ message, description, duration });
 }
 
 export function infoNotify(description) {
     notification.info({
-        message: "Notice~", description,
+        message: "Notice~",
+        description,
     });
 }
 
 export function successNotify(description) {
     notification.success({
-        message: "提示~", description,
+        message: "提示~",
+        description,
     });
 }
 
 export function warningNotify(description) {
     notification.warning({
-        message: "提示~", description,
+        message: "提示~",
+        description,
     });
 }
 
 export function errorNotify(description, message = "有些错误~") {
     notification.error({
-        message, description,
+        message,
+        description,
     });
 }
 
@@ -134,17 +138,28 @@ export function uuidToCreateHash() {
 
 //返回文件类型
 export function backFileType(file) {
-    if (!file || !file.name) return ''
+    if (!file || !file.name) return "";
     const splitArr = file.name.split(".");
     return splitArr[splitArr.length - 1];
 }
 
 // 导出xlsx表格
 export function exportXlsx(td, th, fileName) {
-    th.unshift(td)
+    th.unshift(td);
     const ws = XLSX.utils.aoa_to_sheet(th);
     const wb = XLSX.utils.book_new();
-    ws['!rows'] = [{wch: 10}, {wch: 40}, {wch: 40}, {wch: 30}, {wch: 10}, {wch: 40}, {wch: 40}, {wch: 10}, {wch: 40}, {wch: 40},]
+    ws["!rows"] = [
+        { wch: 10 },
+        { wch: 40 },
+        { wch: 40 },
+        { wch: 30 },
+        { wch: 10 },
+        { wch: 40 },
+        { wch: 40 },
+        { wch: 10 },
+        { wch: 40 },
+        { wch: 40 },
+    ];
     XLSX.utils.book_append_sheet(wb, ws, fileName);
 
     XLSX.writeFile(wb, `${fileName}.xlsx`);
@@ -152,9 +167,8 @@ export function exportXlsx(td, th, fileName) {
 
 // 生成二维码
 export async function generatorQrCode(id, result) {
-
     const shareUrl = process.env.VUE_APP_BASE_SMELL_SHARE;
-    const local = process.env.NODE_ENV !== 'production';
+    const local = process.env.NODE_ENV !== "production";
     const shellBaseUrl = local
         ? `${shareUrl}?id${id}=${result.redeem_code}#wechat-redirect`
         : `${shareUrl}?id${id}=${result.redeem_code}`;
@@ -169,13 +183,12 @@ export async function generatorPosters(dom) {
         allowTaint: true,
         taintTest: true,
         scale: 4,
-    })
-    const pngCanvas = canvas.toDataURL('image/png')
+    });
+    const pngCanvas = canvas.toDataURL("image/png");
     const oA = document.createElement("a");
-    oA.download = '';
+    oA.download = "";
     oA.href = pngCanvas;
     document.body.appendChild(oA);
     oA.click();
     oA.remove();
 }
-

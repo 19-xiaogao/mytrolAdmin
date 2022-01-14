@@ -12,12 +12,12 @@ import {
     Switch,
     Table,
     Tag,
-    Tooltip
+    Tooltip,
 } from "ant-design-vue";
 
 import IconSvg from "@/components/IconSvg";
 
-const {Item: MenuItem} = Menu;
+const { Item: MenuItem } = Menu;
 
 export default function (app) {
     app.component("icon-svg", IconSvg);

@@ -1,6 +1,6 @@
 import axios from "axios";
-import {Modal} from "ant-design-vue";
-import {errorNotify} from "@/utils";
+import { Modal } from "ant-design-vue";
+import { errorNotify } from "@/utils";
 import router from "@/router";
 import store from "@/store";
 
@@ -27,7 +27,7 @@ const handleError = (err) => {
         return Promise.reject(err);
     }
     if (err.response) {
-        const {data, status} = err.response;
+        const { data, status } = err.response;
 
         switch (status) {
             case 404:

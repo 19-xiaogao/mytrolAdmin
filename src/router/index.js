@@ -1,55 +1,96 @@
-import {createRouter, createWebHistory} from "vue-router";
+import { createRouter, createWebHistory } from "vue-router";
 import store from "@/store";
-import {getStorageRole} from "@/utils";
+import { getStorageRole } from "@/utils";
 
 import Home from "@/views/Home";
 
-const routes = [{
-    path: "/", name: "Mytrol", redirect: "/overview", component: Home, children: [{
-        path: "/overview", name: "overview", meta: {
-            title: "总揽",
-        }, component: () => import(
-            /* webpackChunkName: 'overview' */ "@/views/Overview/index.vue"
-            ),
-    }, {
-        path: "/record", name: "record", meta: {
-            title: "记录",
-        }, component: () => import(/* webpackChunkName: 'record' */ "@/views/Record/index.vue"),
-    }, {
-        path: "/audit", name: "audit", meta: {
-            title: "审核",
-        }, component: () => import(/* webpackChunkName: 'Audit' */ "@/views/Audit/index.vue"),
-    }, {
-        path: "/shelves", name: "shelves", meta: {
-            title: "上架",
-        }, component: () => import(/* webpackChunkName: 'Shelves' */ "@/views/Shelves/index.vue"),
-    }, {
-        path: "/operation", name: "operation", meta: {
-            title: "运营",
-        }, component: () => import(
-            /*webpackChunkName:'Operation'*/ "@/views/Operation/index.vue"
-            ),
-    }, {
-        path: "/items", name: "item", meta: {
-            title: "作品",
-        }, component: () => import(/*webpackChunkName:'item'*/ "@/views/Item/index.vue"),
-    }, {
-        path: "/setting", name: "setting", meta: {
-            title: "设置",
-        }, component: () => import(/*webpackChunkName:'Setting'*/ "@/views/Setting/index.vue"), children: [],
-    },],
-}, {
-    path: "/login", name: "login", meta: {
-        title: "登录",
-    }, component: () => import(/* webpackChunkName: 'Login' */ "@/views/Login.vue"),
-}, {
-    path: "/:catchAll(.*)", name: "NotFound", meta: {
-        title: "Not Found",
-    }, component: () => import(/* webpackChunkName: 'NotFound' */ "@/views/NotFound"),
-},];
+const routes = [
+    {
+        path: "/",
+        name: "Mytrol",
+        redirect: "/overview",
+        component: Home,
+        children: [
+            {
+                path: "/overview",
+                name: "overview",
+                meta: {
+                    title: "总揽",
+                },
+                component: () => import(/* webpackChunkName: 'overview' */ "@/views/Overview/index.vue"),
+            },
+            {
+                path: "/record",
+                name: "record",
+                meta: {
+                    title: "记录",
+                },
+                component: () => import(/* webpackChunkName: 'record' */ "@/views/Record/index.vue"),
+            },
+            {
+                path: "/audit",
+                name: "audit",
+                meta: {
+                    title: "审核",
+                },
+                component: () => import(/* webpackChunkName: 'Audit' */ "@/views/Audit/index.vue"),
+            },
+            {
+                path: "/shelves",
+                name: "shelves",
+                meta: {
+                    title: "上架",
+                },
+                component: () => import(/* webpackChunkName: 'Shelves' */ "@/views/Shelves/index.vue"),
+            },
+            {
+                path: "/operation",
+                name: "operation",
+                meta: {
+                    title: "运营",
+                },
+                component: () => import(/*webpackChunkName:'Operation'*/ "@/views/Operation/index.vue"),
+            },
+            {
+                path: "/items",
+                name: "item",
+                meta: {
+                    title: "作品",
+                },
+                component: () => import(/*webpackChunkName:'item'*/ "@/views/Item/index.vue"),
+            },
+            {
+                path: "/setting",
+                name: "setting",
+                meta: {
+                    title: "设置",
+                },
+                component: () => import(/*webpackChunkName:'Setting'*/ "@/views/Setting/index.vue"),
+                children: [],
+            },
+        ],
+    },
+    {
+        path: "/login",
+        name: "login",
+        meta: {
+            title: "登录",
+        },
+        component: () => import(/* webpackChunkName: 'Login' */ "@/views/Login.vue"),
+    },
+    {
+        path: "/:catchAll(.*)",
+        name: "NotFound",
+        meta: {
+            title: "Not Found",
+        },
+        component: () => import(/* webpackChunkName: 'NotFound' */ "@/views/NotFound"),
+    },
+];
 
 const router = createRouter({
-    history: createWebHistory(), routes,
+    history: createWebHistory(),
+    routes,
 });
 
 // 前置路由拦截

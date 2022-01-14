@@ -21,7 +21,7 @@ module.exports = {
             .test(/\.(png|jpe?g|gif)(\?.*)?$/)
             .use("image-webpack-loader")
             .loader("image-webpack-loader")
-            .options({bypassOnDebug: true})
+            .options({ bypassOnDebug: true })
             .end();
     },
     devServer: {
