@@ -23,7 +23,7 @@ const routes = [
                 path: "/record",
                 name: "record",
                 meta: {
-                    title: "记录",
+                    title: "订单",
                 },
                 component: () => import(/* webpackChunkName: 'record' */ "@/views/Record/index.vue"),
             },

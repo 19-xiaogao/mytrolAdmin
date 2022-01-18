@@ -57,7 +57,7 @@ const adminMenu = [
     },
     {
         icon: "icon-a-bianzu4",
-        text: "记录",
+        text: "订单",
         path: "/record",
         id: 2,
     },

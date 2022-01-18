@@ -2,10 +2,10 @@
     <div class="order page-height">
         <div class="header">
             <div class="switch-table">
-                <h4 :class="renderCurrentActive(0)" @click="handleSwitchTableClick(0)">订单</h4>
-                <h4 :class="renderCurrentActive(1)" @click="handleSwitchTableClick(1)">分析记录</h4>
+                <h4 :class="renderCurrentActive(0)" @click="handleSwitchTableClick(0)">全部订单</h4>
+                <h4 :class="renderCurrentActive(1)" @click="handleSwitchTableClick(1)">作品订单分类</h4>
             </div>
-            <div class="search-box">
+            <!-- <div class="search-box">
                 <div class="dropdown">
                     <div class="current-option">
                         <a-dropdown class="text">
@@ -24,7 +24,7 @@
                         <img alt="" src="@assets/images/search.png" />
                     </span>
                 </div>
-            </div>
+            </div> -->
         </div>
         <Order v-show="currentTableIndex === 0" @showOrderDetailComponent="handleShowOrderDetailComponent" />
         <ShareRecord v-show="currentTableIndex === 1" />
@@ -49,6 +49,7 @@ export default defineComponent({
         const currentTableIndex = ref(0);
         const isOrderShow = ref(false);
         const currentOrderItem = ref({});
+
         const handleOrderDetailClick = () => {
             isOrderShow.value = !isOrderShow.value;
         };

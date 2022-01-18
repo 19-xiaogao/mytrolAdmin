@@ -41,7 +41,7 @@
 
 <script>
 import { defineComponent, getCurrentInstance, onMounted, onUnmounted, reactive, ref } from "vue";
-import { getAllOrderApi } from "@api";
+import { getAllOrderApi, getSuccessOrderApi } from "@api";
 import dayjs from "dayjs";
 
 const columns = [
@@ -85,6 +85,9 @@ const columns = [
 ];
 
 export default defineComponent({
+    props: {
+        id: String,
+    },
     setup(props, { emit }) {
         const { proxy } = getCurrentInstance();
         const data = ref([]);
@@ -114,16 +117,24 @@ export default defineComponent({
             window.removeEventListener("resize", calculateScroll);
         });
         const getUserOrderList = async (pagination) => {
-            const { err_code, result } = await getAllOrderApi(pagination);
-            if (err_code === "0") {
-                if (result && result.list) {
-                    data.value = result.list;
-                    pagination.total = Number(result.total);
+            if (props.id) {
+                const { err_code, result } = await getSuccessOrderApi(props.id);
+                if (err_code === "0") {
+                    data.value = result;
+                }
+            } else {
+                const { err_code, result } = await getAllOrderApi(pagination);
+                if (err_code === "0") {
+                    if (result && result.list) {
+                        data.value = result.list;
+                        pagination.total = Number(result.total);
+                    }
                 }
             }
         };
         const handlePaginationChange = ({ current }) => {
             pagination.current = current;
+            if (props.id) return;
             getUserOrderList(pagination);
         };
         return {

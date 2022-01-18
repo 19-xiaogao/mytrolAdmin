@@ -28,11 +28,11 @@
                     </p>
                     <template #overlay>
                         <a-menu>
-                            <a-menu-item
+                            <!-- <a-menu-item
                                 v-if="item.publish == 2"
                                 @click="handleExportOrderClick(item.id, item.name)"
                                 >导出订单数据
-                            </a-menu-item>
+                            </a-menu-item> -->
                             <a-menu-item @click="handleShelvesClick(item.id, item.publish)">
                                 <span>{{ showSwitchShelves(item.publish) }}</span>
                             </a-menu-item>
@@ -139,7 +139,7 @@ export default defineComponent({
         const currentMenu = ref("2");
         const menuList = reactive(menus);
         const worksList = ref([]);
-        const renderWorksList = ref();
+        const renderWorksList = ref([]);
         const store = useStore();
         const shelvesObject = reactive({
             id: "",
@@ -150,8 +150,8 @@ export default defineComponent({
         const postersParams = reactive({ postersVisible: false, params: "" });
         const handleMouseover = (bol, id) => {
             bol
-                ? (proxy.$refs[id].style.transform = "scale(1.2)")
-                : (proxy.$refs[id].style.transform = "scale(1)");
+                ? (proxy.$refs[id][0].style.transform = "scale(1.2)")
+                : (proxy.$refs[id][0].style.transform = "scale(1)");
         };
         const user = computed(() => store.getters.getUser);
 
