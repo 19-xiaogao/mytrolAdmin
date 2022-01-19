@@ -86,7 +86,7 @@ const columns = [
 
 export default defineComponent({
     props: {
-        id: String,
+        id: [String, Number],
     },
     setup(props, { emit }) {
         const { proxy } = getCurrentInstance();

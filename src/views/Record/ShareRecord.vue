@@ -115,7 +115,6 @@ export default defineComponent({
     setup() {
         const { proxy } = getCurrentInstance();
         const renderWorksList = ref([]);
-        const currentMenu = ref("2");
         const pagination = reactive({ current: 1, pageSize: 10, total: 0 });
 
         const currentNftParams = ref({});
@@ -135,12 +134,6 @@ export default defineComponent({
         // 是否显示设置元素
         const showOptionsElement = computed(() => (publish) => publish !== "1");
 
-        //是否免费
-        const showFreePrice = computed(() => (free, price) => free === "true" ? "免费" : "$" + price);
-
-        //是否显示价格
-        const showPrice = computed(() => (publish) => publish !== "0");
-
         const showOpenTime = computed(() => {
             return (item) =>
                 item.publish === "2" && Date.parse(new Date()) / 1000 < Number(item.opening_time);
@@ -148,8 +141,8 @@ export default defineComponent({
 
         const showOrderComponent = computed(() => Object.keys(currentNftParams.value).length > 0);
         onMounted(() => {
+            shareLink.value = `${window.origin}/share?`;
             getWorksList();
-            shareLink.value = window.origin + "/share?";
         });
 
         const handleShowOrderDetailComponent = (item) => {
@@ -202,8 +195,8 @@ export default defineComponent({
                     "NFT编号",
                     "NFT名称",
                     "剩余数量",
-                    "NFT卖方",
-                    "NFT买方hash地址",
+                    "NFT卖方名称",
+                    "NFT卖方地址",
                     "NFT总数",
                     "交易hash",
                     "订单号",
@@ -224,20 +217,17 @@ export default defineComponent({
         };
         const handleBlockClick = () => {
             currentNftParams.value = {};
+            shareLink.value = `${window.origin}/share?`;
+            shareTime.value = "";
         };
 
         const handleSureClick = async () => {
             const pastTime = dayjs(shareTime.value).unix();
             const item = currentNftParams.value;
             const accessTokenResult = await getShareAccessToken(pastTime, item.id);
-            shareLink.value = window.origin + "/share?" + accessTokenResult;
             if (accessTokenResult.err_code === "0") {
                 const { result } = accessTokenResult;
-                shareLink.value = window.origin + "/share?" + result.access_token;
-
-                // getSuccessOrderApi(`${item.id}?access_token=${result.access_token}`).then((res) => {
-                //     console.log(res);
-                // });
+                shareLink.value = `${window.origin}/share?id=${item.id}&access_token=${result.access_token}`;
             }
         };
         const copyClick = () => {
@@ -250,10 +240,7 @@ export default defineComponent({
             renderWorksList,
             showOptionsElement,
             pagination,
-            showFreePrice,
-            showPrice,
             showOpenTime,
-            currentMenu,
             isOrderShow,
             currentOrderItem,
             handleMouseover,

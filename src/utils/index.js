@@ -1,8 +1,12 @@
-import { v4 as uuid } from "uuid";
+import {
+    v4 as uuid
+} from "uuid";
 import sha256 from "sha256";
 import XLSX from "xlsx";
 import QRCode from "qrcode";
-import { notification } from "ant-design-vue";
+import {
+    notification
+} from "ant-design-vue";
 import html2canvas from "html2canvas";
 
 const TOKEN = "ROLE";
@@ -73,7 +77,11 @@ export const joinPreviewUrl = (url) => {
 
 // 提示框
 export function notify(message, description, type = "info", duration = 4.5) {
-    notification[type]({ message, description, duration });
+    notification[type]({
+        message,
+        description,
+        duration
+    });
 }
 
 export function infoNotify(description) {
@@ -148,17 +156,36 @@ export function exportXlsx(td, th, fileName) {
     th.unshift(td);
     const ws = XLSX.utils.aoa_to_sheet(th);
     const wb = XLSX.utils.book_new();
-    ws["!rows"] = [
-        { wch: 10 },
-        { wch: 40 },
-        { wch: 40 },
-        { wch: 30 },
-        { wch: 10 },
-        { wch: 40 },
-        { wch: 40 },
-        { wch: 10 },
-        { wch: 40 },
-        { wch: 40 },
+    ws["!rows"] = [{
+            wch: 10
+        },
+        {
+            wch: 40
+        },
+        {
+            wch: 40
+        },
+        {
+            wch: 30
+        },
+        {
+            wch: 10
+        },
+        {
+            wch: 40
+        },
+        {
+            wch: 40
+        },
+        {
+            wch: 10
+        },
+        {
+            wch: 40
+        },
+        {
+            wch: 40
+        },
     ];
     XLSX.utils.book_append_sheet(wb, ws, fileName);
 
@@ -169,9 +196,9 @@ export function exportXlsx(td, th, fileName) {
 export async function generatorQrCode(id, result) {
     const shareUrl = process.env.VUE_APP_BASE_SMELL_SHARE;
     const local = process.env.NODE_ENV !== "production";
-    const shellBaseUrl = local
-        ? `${shareUrl}?id${id}=${result.redeem_code}#wechat-redirect`
-        : `${shareUrl}?id${id}=${result.redeem_code}`;
+    const shellBaseUrl = local ?
+        `${shareUrl}?id${id}=${result.redeem_code}#wechat-redirect` :
+        `${shareUrl}?id${id}=${result.redeem_code}`;
 
     return await QRCode.toDataURL(shellBaseUrl);
 }
@@ -191,4 +218,17 @@ export async function generatorPosters(dom) {
     document.body.appendChild(oA);
     oA.click();
     oA.remove();
+}
+
+// 获取url参数
+export function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split("&");
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split("=");
+        if (pair[0] == variable) {
+            return pair[1];
+        }
+    }
+    return (false);
 }

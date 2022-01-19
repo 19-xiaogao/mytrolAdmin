@@ -52,7 +52,7 @@ import { warningNotify } from "@/utils";
 export default defineComponent({
     props: {
         params: {
-            type: Object,
+            type: [Object, String],
         },
         shelvesVisible: {
             type: Boolean,
