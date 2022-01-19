@@ -28,11 +28,6 @@
                     </p>
                     <template #overlay>
                         <a-menu>
-                            <!-- <a-menu-item
-                                v-if="item.publish == 2"
-                                @click="handleExportOrderClick(item.id, item.name)"
-                                >导出订单数据
-                            </a-menu-item> -->
                             <a-menu-item @click="handleShelvesClick(item.id, item.publish)">
                                 <span>{{ showSwitchShelves(item.publish) }}</span>
                             </a-menu-item>
@@ -104,8 +99,8 @@ import {
 import { useStore } from "vuex";
 import dayjs from "dayjs";
 import { Modal } from "ant-design-vue";
-import { getSuccessOrderApi, getWorksApi, redeemCodeApi, shelvesNftApi } from "@api";
-import { exportXlsx, generatorQrCode, successNotify, warningNotify } from "@/utils";
+import { getWorksApi, redeemCodeApi, shelvesNftApi } from "@api";
+import { generatorQrCode, successNotify } from "@/utils";
 import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
@@ -229,41 +224,6 @@ export default defineComponent({
             }
         };
 
-        // 对导出数据做处理
-        const handleExportDataFile = (result) => {
-            if (!Array.isArray(result) && result.length < 0) return;
-            result.forEach((item) => {
-                delete item.avatar;
-                delete item.created_at;
-                delete item.description;
-                delete item.nft_file;
-            });
-            return result.map((item) => Object.values(item));
-        };
-
-        // 处理订单导出数据
-        const handleExportOrderClick = async (id, name) => {
-            const { err_code, result } = await getSuccessOrderApi(id);
-            if (err_code == "0" && result.length > 0) {
-                const th = handleExportDataFile(result);
-                const td = [
-                    "价格",
-                    "买家hash地址",
-                    "NFT编号",
-                    "NFT名称",
-                    "剩余数量",
-                    "NFT卖方",
-                    "NFT买方hash地址",
-                    "NFT总数",
-                    "交易hash",
-                    "订单号",
-                ];
-                exportXlsx(td, th, name);
-            } else {
-                warningNotify("暂无数据");
-            }
-        };
-
         const handleShelvesClick = (id, publish) => {
             if (publish === "2") {
                 handleUnShelvesNft(id, publish);
@@ -321,7 +281,6 @@ export default defineComponent({
             handleMouseover,
             handleTitleClick,
             handleItemCardClick,
-            handleExportOrderClick,
             dayjs,
         };
     },
