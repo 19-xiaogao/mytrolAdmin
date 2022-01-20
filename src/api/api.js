@@ -19,7 +19,7 @@ export const addUserApi = (data) => server.post("/backend/add_user", data);
 export const uploadNftApi = (data) =>
     server.post("/nft_make_without_money", data, {
         headers: {
-            "content-type": "application/x-www-form-urlencoded"
+            "content-type": "application/x-www-form-urlencoded",
         },
     });
 
@@ -37,7 +37,7 @@ export const auditPassedApi = (data) => server.post("/review", data);
 export const editPersonApi = (data) =>
     server.post("/nft_edit_personnal_information", data, {
         headers: {
-            "content-type": "application/x-www-form-urlencoded"
+            "content-type": "application/x-www-form-urlencoded",
         },
     });
 
@@ -48,7 +48,7 @@ export const getUserInfoApi = () => server.get("/user_info");
 export const addUpdateIpApi = (data) =>
     server.post("/backend/add_update_ip", data, {
         headers: {
-            "content-type": "application/x-www-form-urlencoded"
+            "content-type": "application/x-www-form-urlencoded",
         },
     });
 
@@ -66,9 +66,10 @@ export const getLatestNftApi = (ip, page, numbers) =>
     server.get("/lastest_nft/" + ip + "/" + page + "/" + numbers);
 
 // 下架作品
-export const shelvesNftApi = (id) => server.post("/nft_withdraw", {
-    denom_id: String(id)
-});
+export const shelvesNftApi = (id) =>
+    server.post("/nft_withdraw", {
+        denom_id: String(id),
+    });
 
 // 查看兑换码
 export const redeemCodeApi = (id) => server.get("/redeem_code/" + id);
@@ -80,14 +81,15 @@ export const onShelvesNftApi = (data) => server.post("/nft_public", data);
 export const queryGivingDayApi = () => server.get("/backend/get_give_time");
 
 // 设置转赠天数
-export const setGivingDayApi = (days) => server.post("/backend/set_give_time", {
-    days
-});
+export const setGivingDayApi = (days) =>
+    server.post("/backend/set_give_time", {
+        days,
+    });
 
 // 更新banner
 export const updateBannerApi = (bannerInfo) => {
     server.post("/update_banner", {
-        banner_info: bannerInfo
+        banner_info: bannerInfo,
     });
 };
 
@@ -105,9 +107,10 @@ export const getAllOrderApi = (params) =>
 export const getClassificationApi = () => server.get("/backend/get_classification");
 
 // 添加分类
-export const addClassificationApi = (name) => server.post("/backend/add_classification", {
-    name
-});
+export const addClassificationApi = (name) =>
+    server.post("/backend/add_classification", {
+        name,
+    });
 
 // 获取作品的所有订单
 export const getSuccessOrderApi = (id) => server.get("/denom_success_order/" + id);
@@ -116,8 +119,9 @@ export const getSuccessOrderApi = (id) => server.get("/denom_success_order/" + i
 export const getAllPrivate = (id) => server.get("/nft_private_redeem_code/" + id);
 
 // 管理员获取所有作品数据
-export const GetAdminAllNftApi = (page, size) => server.get('/admin_get_all_nft/' + page + '/' + size);
+export const GetAdminAllNftApi = (page, size) => server.get("/admin_get_all_nft/" + page + "/" + size);
 
 // 获取分享链接
 
-export const getShareAccessToken = (expirationTime, id) => server.get('/get_share_accesstoken/' + expirationTime + '/' + id);
+export const getShareAccessToken = (expirationTime, id) =>
+    server.get("/get_share_accesstoken/" + expirationTime + "/" + id);

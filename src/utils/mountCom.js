@@ -14,14 +14,12 @@ import {
     Tag,
     Tooltip,
     Pagination,
-    Popover
+    Popover,
 } from "ant-design-vue";
 
 import IconSvg from "@/components/IconSvg";
 
-const {
-    Item: MenuItem
-} = Menu;
+const { Item: MenuItem } = Menu;
 
 export default function (app) {
     app.component("icon-svg", IconSvg);
@@ -41,6 +39,6 @@ export default function (app) {
     app.component("a-select", Select);
     app.component("a-select-option", Select.Option);
     app.component("a-tag", Tag);
-    app.component('a-pagination', Pagination)
-    app.component('a-popover', Popover)
+    app.component("a-pagination", Pagination);
+    app.component("a-popover", Popover);
 }
