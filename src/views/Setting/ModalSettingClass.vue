@@ -24,7 +24,6 @@
 <script>
 import { defineComponent, ref, watchEffect } from "vue";
 import { addClassificationApi, getClassificationApi } from "@api";
-import { pollingClassApi } from "@/api/pllingApi";
 import { successNotify, warningNotify } from "@/utils";
 
 export default defineComponent({
@@ -53,10 +52,8 @@ export default defineComponent({
             }
             const { err_code } = await addClassificationApi(userClass.value);
             if (err_code === "0") {
-                pollingClassApi(classData.value.length, (result) => {
-                    classData.value = result;
-                    successNotify("添加成功");
-                });
+                getClassData();
+                successNotify("添加成功");
             }
         };
         const getClassData = async () => {
