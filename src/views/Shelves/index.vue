@@ -96,6 +96,11 @@
                     />
                 </div>
                 <div class="ope-act-b-l">
+                    <div class="opeAct-button" @click="handleAssociatedFusionClick">
+                        <icon-svg v-if="equity_cover" icon="icon-duihao"></icon-svg>
+                        <icon-svg v-else icon="icon-a-bianzu34"></icon-svg>
+                        添加兑换关联
+                    </div>
                     <div class="opeAct-button" @click="handleEquityActivityClick">
                         <icon-svg v-if="equity_cover" icon="icon-duihao"></icon-svg>
                         <icon-svg v-else icon="icon-a-bianzu34"></icon-svg>
@@ -134,6 +139,7 @@
             ref="equityActivity"
             @close="handleCloseEquityActivityClick"
         />
+        <ConversionActivity v-show="isConversionActivity" ref="ConversionActivity" @close="handleConversionActivityClick" />
     </div>
 </template>
 
@@ -148,6 +154,7 @@ import PreviewImg from "@/components/PreviewImg";
 import UploadCollection from "./UploadCollection";
 import OperationActivity from "./OperationActivity";
 import EquityActivity from "./EquityActivity";
+import ConversionActivity from "./ConversionActivity.vue";
 import UploadNft from "./UploadNft";
 
 let shelvesParams = {
@@ -172,6 +179,7 @@ export default defineComponent({
         PreviewImg,
         OperationActivity,
         EquityActivity,
+        ConversionActivity,
     },
     setup() {
         const { proxy } = getCurrentInstance();
@@ -196,7 +204,7 @@ export default defineComponent({
         const btnDisabled = ref(false);
         const isOperationActivity = ref(false);
         const isEquityActivity = ref(false);
-
+        const isConversionActivity = ref(false);
         onMounted(() => {
             getIpList();
             getClassData();
@@ -382,11 +390,20 @@ export default defineComponent({
                 uploadParams.private_sale = item.private_sale;
             }
         };
+        const handleConversionActivityClick = (item) =>{
+            console.log(item)
+            isConversionActivity.value =false;
+        }
+
         const handleShowOperationActivityClick = () => {
             isOperationActivity.value = true;
         };
         const handleEquityActivityClick = () => {
             isEquityActivity.value = true;
+        };
+
+        const handleAssociatedFusionClick = () => {
+           isConversionActivity.value = true;
         };
 
         const handleCloseEquityActivityClick = (item) => {
@@ -407,11 +424,14 @@ export default defineComponent({
             handleShowOperationActivityClick,
             handleEquityActivityClick,
             handleCloseEquityActivityClick,
+            handleAssociatedFusionClick,
+            handleConversionActivityClick,
             isEquityActivity,
             nftAllImgType,
             priviesImgComponentParams,
             btnDisabled,
             isOperationActivity,
+            isConversionActivity,
             classData,
             currentIpName,
             ipList,
