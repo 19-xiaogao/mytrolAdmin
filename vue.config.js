@@ -5,6 +5,7 @@ function resolve(dir) {
 }
 
 module.exports = {
+   
     configureWebpack: (config) => {
         config.module.noParse =
             /^(vu|vue-router|vuex|vuex-router-sync|lodash|echarts|axios|antd-design-vue)$/;
@@ -25,6 +26,7 @@ module.exports = {
             .end();
     },
     devServer: {
+        port: 3001,
         proxy: {
             // 本地开发环境地址....
             "/relay/dbchain/oracle/nft": {
