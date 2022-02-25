@@ -36,7 +36,7 @@ module.exports = {
             },
             // 沙盒测试环境地址....
             "/nft_relay/dbchain/oracle/nft": {
-                target: "https://controlpanel.dbchain.cloud",
+                target: "https://mytroladmin.dbchain.cloud",
                 ws: true,
                 changeOrigin: true,
             },

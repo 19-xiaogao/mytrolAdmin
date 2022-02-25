@@ -15,6 +15,7 @@
         <ModalUser v-model:createVisible="createVisible" />
         <ModalSettingDay v-model:dayVisible="dayVisible" v-model:days="days" @close="handleCloseEmit" />
         <ModalSettingClassVue v-model:classVisible="classVisible" />
+        <ModalSend v-model:sendVisible="sendVisible" />
     </div>
 </template>
 
@@ -30,7 +31,7 @@ const settingList = [
     },
     {
         icon: "icon-setting-icon3",
-        text: "二级密码",
+        text: "送积分",
     },
     {
         icon: "icon-a-bianzu9beifen4",
@@ -47,12 +48,13 @@ import { pollingGivingDaysApi } from "@/api/pllingApi";
 import ModalUser from "./ModalUser";
 import ModalSettingDay from "./ModalSettingDay";
 import ModalSettingClassVue from "./ModalSettingClass";
-
+import ModalSend from "./sendModal.vue";
 export default defineComponent({
     components: {
         ModalUser,
         ModalSettingDay,
         ModalSettingClassVue,
+        ModalSend,
     },
     setup() {
         const currentIndex = ref(-1);
@@ -61,6 +63,7 @@ export default defineComponent({
         const days = ref(0);
         const dayVisible = ref(false);
         const classVisible = ref(false);
+        const sendVisible = ref(false);
         const isShowActiveClass = computed(() => {
             return (index) => (currentIndex.value === index ? "ms active" : "ms");
         });
@@ -68,6 +71,9 @@ export default defineComponent({
             currentIndex.value = index;
             if (index === 0) {
                 createVisible.value = true;
+            }
+            if (index === 2) {
+                sendVisible.value = true;
             }
             if (index === 3) {
                 classVisible.value = true;
@@ -106,6 +112,7 @@ export default defineComponent({
             days,
             classVisible,
             handleCloseEmit,
+            sendVisible,
         };
     },
 });

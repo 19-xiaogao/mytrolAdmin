@@ -121,7 +121,10 @@ export const getAllPrivate = (id) => server.get("/nft_private_redeem_code/" + id
 // 管理员获取所有作品数据
 export const GetAdminAllNftApi = (page, size) => server.get("/admin_get_all_nft/" + page + "/" + size);
 
-// 获取分享链接
+// 发送积分
+export const postSendTokenApi = (data) => server.post('/backend/send_token', data)
 
+
+// 获取分享链接
 export const getShareAccessToken = (expirationTime, id) =>
     server.get("/get_share_accesstoken/" + expirationTime + "/" + id);
