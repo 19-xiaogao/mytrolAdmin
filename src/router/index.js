@@ -68,6 +68,15 @@ const routes = [
                 component: () => import(/*webpackChunkName:'Setting'*/ "@/views/Setting/index.vue"),
                 children: [],
             },
+            {
+                path: "/query",
+                name: "query",
+                meta: {
+                    title: "查询",
+                },
+                component: () => import(/*webpackChunkName:'Setting'*/ "@/views/Query/index.vue"),
+                children: [],
+            },
         ],
     },
     {

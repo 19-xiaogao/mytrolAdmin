@@ -15,12 +15,13 @@ import {
     Tooltip,
     Pagination,
     Popover,
+    Tabs
 } from "ant-design-vue";
 
 import IconSvg from "@/components/IconSvg";
 
 const { Item: MenuItem } = Menu;
-
+const { TabPane } = Tabs;
 export default function (app) {
     app.component("icon-svg", IconSvg);
     app.component("a-dropdown", Dropdown);
@@ -41,4 +42,7 @@ export default function (app) {
     app.component("a-tag", Tag);
     app.component("a-pagination", Pagination);
     app.component("a-popover", Popover);
+    app.component("a-tabs", Tabs);
+    app.component("a-tab-pane", TabPane);
+    
 }

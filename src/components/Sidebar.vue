@@ -61,6 +61,12 @@ const adminMenu = [
         path: "/record",
         id: 2,
     },
+    {
+        icon: "icon-a-bianzu4",
+        text: "查询",
+        path: "/query",
+        id: 8,
+    },
 ];
 const makeMenu = [
     {

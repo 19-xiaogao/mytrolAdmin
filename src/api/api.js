@@ -128,3 +128,6 @@ export const postSendTokenApi = (data) => server.post('/backend/send_token', dat
 // 获取分享链接
 export const getShareAccessToken = (expirationTime, id) =>
     server.get("/get_share_accesstoken/" + expirationTime + "/" + id);
+
+//通过地址查询用户信息
+export const getAddressUserInfoApi = (address) => server.get('/backend/get_user_all_info/' + address)
