@@ -187,6 +187,7 @@ export default defineComponent({
         // 处理订单导出数据
         const handleExportOrderClick = async (id, name) => {
             const { err_code, result } = await getSuccessOrderApi(id);
+            console.log(result);
             if (err_code == "0" && result.length > 0) {
                 const th = handleExportDataFile(result);
                 const td = [
@@ -196,6 +197,7 @@ export default defineComponent({
                     "NFT名称",
                     "剩余数量",
                     "NFT卖方名称",
+                    "mytrol订单号",
                     "NFT卖方地址",
                     "NFT总数",
                     "交易hash",
