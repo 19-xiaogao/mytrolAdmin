@@ -131,3 +131,12 @@ export const getShareAccessToken = (expirationTime, id) =>
 
 //通过地址查询用户信息
 export const getAddressUserInfoApi = (address) => server.get('/backend/get_user_all_info/' + address)
+
+// 添加或删除白名单用户
+export const actionWhiteListApi = (data) => server.post('/whitelist_modify', data);
+
+// 查询白名单
+export const queryWhiteListApi = (address) => server.get('/whitelist/' + address);
+
+// 更改nft购买白名单许可
+export const setPermissionApi = (params) => server.post('/set_donom_sell_status', params)
