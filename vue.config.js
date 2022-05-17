@@ -5,7 +5,7 @@ function resolve(dir) {
 }
 
 module.exports = {
-   
+
     configureWebpack: (config) => {
         config.module.noParse =
             /^(vu|vue-router|vuex|vuex-router-sync|lodash|echarts|axios|antd-design-vue)$/;
@@ -34,11 +34,23 @@ module.exports = {
                 ws: true,
                 changeOrigin: true,
             },
-            // 沙盒测试环境地址....
-            "/nft_relay/dbchain/oracle/nft": {
-                target: "https://mytroladmin.dbchain.cloud",
+            //沙盒环境地址
+            "/dev_relay/dbchain/oracle/nft": {
+                target: "https://controlpanel.dbchain.cloud/nft_relay",
                 ws: true,
                 changeOrigin: true,
+                pathRewrite: {
+                    '^/dev_relay': ''
+                }
+            },
+            // 线上环境地址
+            "/pro_relay/dbchain/oracle/nft": {
+                target: "https://mytroladmin.dbchain.cloud/nft_relay",
+                ws: true,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/pro_relay': ''
+                }
             },
         },
     },
