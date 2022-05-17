@@ -77,6 +77,15 @@ const routes = [
                 component: () => import(/*webpackChunkName:'Setting'*/ "@/views/Query/index.vue"),
                 children: [],
             },
+            {
+                path: "/write_list",
+                name: "writeList",
+                meta: {
+                    title: "白名单",
+                },
+                component: () => import(/*webpackChunkName:'writeList'*/ "@/views/WriteList/index.vue"),
+                children: [],
+            },
         ],
     },
     {

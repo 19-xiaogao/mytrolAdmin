@@ -67,6 +67,12 @@ const adminMenu = [
         path: "/query",
         id: 8,
     },
+    {
+        icon: "icon-a-bianzu8",
+        text: "白名单",
+        path: "/write_list",
+        id: 9,
+    },
 ];
 const makeMenu = [
     {
