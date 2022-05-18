@@ -145,3 +145,5 @@ export const setPermissionApi = (params) => server.post('/set_donom_sell_status'
 export const setNftTransferStatusApi = (params) => server.post('backend/set_demon_transfer_status', params)
 
 
+//新增一个白名单
+export const addNewWhiteListApi = (params) => server.post('backend/add_new_whitelist', params)
