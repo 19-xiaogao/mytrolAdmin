@@ -142,4 +142,6 @@ export const queryWhiteListApi = (address) => server.get('/whitelist/' + address
 export const setPermissionApi = (params) => server.post('/set_donom_sell_status', params)
 
 // 设置nft 转增状态
-export const setNftTransferStatus = (params) => server.post('backend/set_demon_transfer_status', params)
+export const setNftTransferStatusApi = (params) => server.post('backend/set_demon_transfer_status', params)
+
+

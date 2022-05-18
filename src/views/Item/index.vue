@@ -102,7 +102,7 @@ import {
 import { useStore } from "vuex";
 import dayjs from "dayjs";
 import { Modal } from "ant-design-vue";
-import { getWorksApi, redeemCodeApi, shelvesNftApi, setNftTransferStatus } from "@api";
+import { getWorksApi, redeemCodeApi, shelvesNftApi, setNftTransferStatusApi } from "@api";
 import { generatorQrCode, successNotify } from "@/utils";
 import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
@@ -219,7 +219,7 @@ export default defineComponent({
         };
 
         const handleNftTransferStatusClick = async (id, can_transfer) => {
-            const result = await setNftTransferStatus({ denom_id: String(id), status: String(can_transfer) });
+            const result = await setNftTransferStatusApi({ denom_id: String(id), status: String(can_transfer) });
             if (result.err_code == "0") {
                 successNotify("设置成功");
                 getWorksList();
