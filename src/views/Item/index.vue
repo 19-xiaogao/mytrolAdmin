@@ -31,6 +31,9 @@
                             <a-menu-item @click="handleShelvesClick(item.id, item.publish)">
                                 <span>{{ showSwitchShelves(item.publish) }}</span>
                             </a-menu-item>
+                            <a-menu-item @click="handleNftTransferStatusClick(item.id, item.can_transfer)">
+                                <span> {{ item.can_transfer ? "关闭转赠" : "开启转赠" }} </span>
+                            </a-menu-item>
                             <a-menu-item
                                 v-if="showQrCode(item.free, item.publish)"
                                 @click="handleQrCodeClick(item.id)"
@@ -99,7 +102,7 @@ import {
 import { useStore } from "vuex";
 import dayjs from "dayjs";
 import { Modal } from "ant-design-vue";
-import { getWorksApi, redeemCodeApi, shelvesNftApi } from "@api";
+import { getWorksApi, redeemCodeApi, shelvesNftApi, setNftTransferStatus } from "@api";
 import { generatorQrCode, successNotify } from "@/utils";
 import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
@@ -215,6 +218,14 @@ export default defineComponent({
             getWorksList();
         };
 
+        const handleNftTransferStatusClick = async (id, can_transfer) => {
+            const result = await setNftTransferStatus({ denom_id: String(id), status: String(can_transfer) });
+            if (result.err_code == "0") {
+                successNotify("设置成功");
+                getWorksList();
+            }
+        };
+
         // 处理下架
         const handleUnShelvesNft = async (id) => {
             const { err_code } = await shelvesNftApi(id);
@@ -281,6 +292,7 @@ export default defineComponent({
             handleMouseover,
             handleTitleClick,
             handleItemCardClick,
+            handleNftTransferStatusClick,
             dayjs,
         };
     },
