@@ -78,12 +78,12 @@ const routes = [
                 children: [],
             },
             {
-                path: "/write_list",
-                name: "writeList",
+                path: "/whitelist",
+                name: "Whitelist",
                 meta: {
                     title: "白名单",
                 },
-                component: () => import(/*webpackChunkName:'writeList'*/ "@/views/WriteList/index.vue"),
+                component: () => import(/*webpackChunkName:'whitelist'*/ "@/views/Whitelist/index.vue"),
                 children: [],
             },
         ],

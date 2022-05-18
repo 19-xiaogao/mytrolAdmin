@@ -135,6 +135,9 @@ export const getAddressUserInfoApi = (address) => server.get('/backend/get_user_
 // 添加或删除白名单用户
 export const actionWhiteListApi = (data) => server.post('/whitelist_modify', data);
 
+// 1. address
+// 2. all
+// 3. whitelist_id
 // 查询白名单
 export const queryWhiteListApi = (address) => server.get('/whitelist/' + address);
 
@@ -142,8 +145,14 @@ export const queryWhiteListApi = (address) => server.get('/whitelist/' + address
 export const setPermissionApi = (params) => server.post('/set_donom_sell_status', params)
 
 // 设置nft 转增状态
-export const setNftTransferStatusApi = (params) => server.post('backend/set_demon_transfer_status', params)
-
+export const setNftTransferStatusApi = (params) => server.post('/backend/set_demon_transfer_status', params)
 
 //新增一个白名单
-export const addNewWhiteListApi = (params) => server.post('backend/add_new_whitelist', params)
+export const addNewWhiteListApi = (params) => server.post('/backend/add_new_whitelist', params)
+
+//查询所有白名单
+export const queryAllWhiteListApi = () => server.get('/backend/get_all_whitelist');
+
+// "action"  : "", //"add" or "remove"
+//将用户加到一个白名单
+export const addUserToWhiteListApi = (params) => server.post('/backend/add_user_to_new_whitelist', params)
