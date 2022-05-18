@@ -42,13 +42,13 @@
         <AddUserModal
             v-model:createVisible="addUserVisible"
             :whitelistId="currentWhiteData.id"
-            @ok="handleAddIpClick"
+            @ok="handleSureAddUserClick"
         />
     </div>
 </template>
 
 <script>
-import { onMounted, ref, watchEffect } from "vue";
+import { onMounted, ref } from "vue";
 import AddGroupModal from "./AddGroupModal.vue";
 import AddUserModal from "./AddUserModal.vue";
 import { queryAllWhiteListApi, queryWhiteListApi, addUserToWhiteListApi } from "@/api/api.js";
@@ -116,9 +116,9 @@ export default {
             }
         };
 
-        watchEffect(() => {
-            // handleWhiteListClick(currentWhiteData);
-        }, [addUserVisible]);
+        const handleSureAddUserClick = () => {
+            queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
+        };
 
         const handleRemoteToWhiteClick = (item) => {
             Modal.confirm({
@@ -164,6 +164,7 @@ export default {
             handleWhiteListClick,
             handleAddUserClick,
             handleRemoteToWhiteClick,
+            handleSureAddUserClick,
             txColumns,
         };
     },

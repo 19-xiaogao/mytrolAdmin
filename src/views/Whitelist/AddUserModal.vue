@@ -52,6 +52,7 @@ export default defineComponent({
                 setTimeout(() => {
                     address.value = "";
                     emit("update:createVisible", false);
+                    emit("ok", false);
                 }, 1000);
             }
         };
