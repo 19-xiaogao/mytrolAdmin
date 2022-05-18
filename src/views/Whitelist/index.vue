@@ -38,7 +38,7 @@
                 </div>
             </div>
         </div>
-        <AddGroupModal v-model:createVisible="createWhiteVisible" @ok="handleAddIpClick" />
+        <AddGroupModal v-model:createVisible="createWhiteVisible" @ok="handleAddWhiteListClick" />
         <AddUserModal
             v-model:createVisible="addUserVisible"
             :whitelistId="currentWhiteData.id"
@@ -149,8 +149,8 @@ export default {
             console.log("添加分组");
             createWhiteVisible.value = true;
         };
-        const handleAddIpClick = () => {
-            console.log("+-=");
+        const handleAddWhiteListClick = () => {
+              queryAllWhiteList();
         };
         return {
             queryAddress,
@@ -160,7 +160,7 @@ export default {
             currentWhiteData,
             currentWhiteUserData,
             handleGroupWhiteClick,
-            handleAddIpClick,
+            handleAddWhiteListClick,
             handleWhiteListClick,
             handleAddUserClick,
             handleRemoteToWhiteClick,

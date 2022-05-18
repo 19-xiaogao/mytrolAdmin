@@ -54,6 +54,7 @@ export default defineComponent({
                     groupName.value = "";
                     groupDesc.value = "";
                     emit("update:createVisible", false);
+                    emit("ok", false);
                 }, 1000);
             }
         };
