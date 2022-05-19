@@ -1,6 +1,10 @@
 <template>
     <a-modal :visible="visible" class="modal" title="关联白名单">
         <div class="user-input">
+            <div class="title">已经关联的白名单</div>
+            <p>{{ exitWhiteList }}</p>
+        </div>
+        <div class="user-input">
             <div class="title">选择白名单</div>
             <a-select ref="select" class="user-input" v-model:value="selectValue">
                 <a-select-option v-for="item in whiteList" :value="item.id" :key="item.id">{{
@@ -18,8 +22,8 @@
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from "vue";
-import { queryAllWhiteListApi, denomBindWhitelistApi } from "@/api/api.js";
+import { defineComponent, onMounted, ref, watchEffect } from "vue";
+import { queryAllWhiteListApi, denomBindWhitelistApi, queryDenomBindWhiteListApi } from "@/api/api.js";
 import { successNotify } from "@/utils";
 export default defineComponent({
     props: {
@@ -35,9 +39,20 @@ export default defineComponent({
         const address = ref("");
         const whiteList = ref([]);
         const selectValue = ref("");
+        const exitWhiteList = ref();
         onMounted(() => {
             queryAllWhiteList();
         });
+
+        watchEffect(() => {
+            if (props.denomId) {
+                queryDenomBindWhiteListApi(props.denomId).then((res) => {
+                    if (res.err_code === "0") {
+                        exitWhiteList.value = res.result.join("-");
+                    }
+                });
+            }
+        }, [props.denomId]);
         const handleClose = () => {
             emit("update:visible", false);
         };
@@ -69,6 +84,7 @@ export default defineComponent({
             whiteList,
             selectValue,
             handleSureClick,
+            exitWhiteList,
             loading,
         };
     },
@@ -102,7 +118,7 @@ export default defineComponent({
 }
 
 .user-input {
-    margin-top: 20px;
+    margin-top: 10px;
     width: 100%;
 }
 .title {
