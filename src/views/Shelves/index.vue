@@ -112,6 +112,9 @@
                     </div>
                     <div v-if="free_number" class="ope-tag">限量免费</div>
                     <div v-if="private_sale" class="ope-tag">私人发售</div>
+                    <a-checkbox v-model:checked="is_whitelisted" style="font-size: 20px"
+                        >是否需要白名单</a-checkbox
+                    >
                 </div>
             </div>
         </div>
@@ -139,7 +142,11 @@
             ref="equityActivity"
             @close="handleCloseEquityActivityClick"
         />
-        <ConversionActivity v-show="isConversionActivity" ref="ConversionActivity" @close="handleConversionActivityClick" />
+        <ConversionActivity
+            v-show="isConversionActivity"
+            ref="ConversionActivity"
+            @close="handleConversionActivityClick"
+        />
     </div>
 </template>
 
@@ -171,6 +178,7 @@ let shelvesParams = {
     private_sale: "",
     classification: [],
     equity_cover: "",
+    is_whitelisted: false,
 };
 export default defineComponent({
     components: {
@@ -286,9 +294,11 @@ export default defineComponent({
         };
 
         const handleUploadNftClick = async () => {
+            console.log(uploadParams.is_whitelisted);
             btnDisabled.value = true;
             const userSelectTime = dayjs(uploadParams.opening_time).unix();
             if (userSelectTime < dayjs(Date.now()).unix()) {
+                btnDisabled.value = false;
                 return warningNotify("请选择正确的开售时间，当前你选择的时间已过。");
             }
             if (!uploadParams.name.trim()) {
@@ -352,7 +362,7 @@ export default defineComponent({
             const formData = new FormData();
 
             uploadParams.classification = uploadParams.classification.join();
-
+            uploadParams.is_whitelisted = String(uploadParams.is_whitelisted);
             for (let key in uploadParams) {
                 formData.append(key, uploadParams[key]);
             }
@@ -390,10 +400,10 @@ export default defineComponent({
                 uploadParams.private_sale = item.private_sale;
             }
         };
-        const handleConversionActivityClick = (item) =>{
-            console.log(item)
-            isConversionActivity.value =false;
-        }
+        const handleConversionActivityClick = (item) => {
+            console.log(item);
+            isConversionActivity.value = false;
+        };
 
         const handleShowOperationActivityClick = () => {
             isOperationActivity.value = true;
@@ -403,7 +413,7 @@ export default defineComponent({
         };
 
         const handleAssociatedFusionClick = () => {
-           isConversionActivity.value = true;
+            isConversionActivity.value = true;
         };
 
         const handleCloseEquityActivityClick = (item) => {

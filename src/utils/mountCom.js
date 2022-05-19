@@ -15,7 +15,8 @@ import {
     Tooltip,
     Pagination,
     Popover,
-    Tabs
+    Tabs,
+    Checkbox
 } from "ant-design-vue";
 
 import IconSvg from "@/components/IconSvg";
@@ -44,5 +45,7 @@ export default function (app) {
     app.component("a-popover", Popover);
     app.component("a-tabs", Tabs);
     app.component("a-tab-pane", TabPane);
+    app.component("a-checkbox", Checkbox);
+    
     
 }
