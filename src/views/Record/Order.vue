@@ -106,7 +106,7 @@ export default defineComponent({
         };
 
         const calculateScroll = function () {
-            scrollHeight.value = document.body.clientWidth <= 1440 ? 470 : 650;
+            scrollHeight.value = document.body.clientWidth <= 1440 ? 470 : 550;
         };
         onMounted(() => {
             getUserOrderList(pagination);

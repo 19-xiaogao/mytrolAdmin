@@ -9,9 +9,23 @@
                 <span>积分:</span>
                 <span>{{ queryResult.token }}</span>
             </div>
-            <div>
+            <div class="ms1">
                 <span>手机号码:</span>
                 <span>{{ queryResult.phone_number ? queryResult.phone_number : "暂无" }}</span>
+            </div>
+            <div>
+                <span>状态:</span>
+                <span v-if="queryResult.freezeStatus">{{
+                    queryResult.freezeStatus === "false" ? "正常" : "已被冻结"
+                }}</span>
+                <a-button
+                    v-if="queryResult.freezeStatus"
+                    type="primary"
+                    class="btns"
+                    @click="handleFreeClick"
+                    :danger="queryResult.freezeStatus === 'false'"
+                    >{{ queryResult.freezeStatus === "false" ? "冻结" : "解冻" }}</a-button
+                >
             </div>
         </div>
         <a-tabs>
@@ -65,14 +79,28 @@
                     </a-table>
                 </div>
             </a-tab-pane>
+            <a-tab-pane key="3" tab="白名单">
+                <p>当前用户在已下白名单中</p>
+                <div class="white_list">
+                    <div v-for="(item, index) in whiteList" :key="index" class="row">
+                        <span>{{ item }}</span>
+                    </div>
+                </div>
+            </a-tab-pane>
         </a-tabs>
     </div>
 </template>
 
 <script>
-import { getAddressUserInfoApi } from "@/api/api.js";
+import {
+    getAddressUserInfoApi,
+    queryUserFreezeStatusApi,
+    setUserFreezeStatusApi,
+    queryWhiteListApi,
+} from "@/api/api.js";
 import { reactive, ref, getCurrentInstance, onMounted, onUnmounted } from "vue";
 import dayjs from "dayjs";
+import { successNotify } from "@/utils";
 
 const columns = [
     {
@@ -127,15 +155,57 @@ const txColumns = [
         slots: { customRender: "time" },
     },
 ];
-
+const whiteColumns = [
+    {
+        title: "id",
+        key: "id",
+        dataIndex: "id",
+        slots: { customRender: "id" },
+    },
+    {
+        title: "用户地址",
+        key: "address",
+        dataIndex: "address",
+        slots: { customRender: "address" },
+    },
+    {
+        title: "设置",
+        dataIndex: "setting",
+        key: "setting",
+        slots: { customRender: "setting" },
+    },
+];
 export default {
     setup() {
         const { proxy } = getCurrentInstance();
 
         const queryAddress = ref("");
         const txData = ref([]);
-        const queryResult = reactive({ nfts: [], phone_number: "", token: "", transform: [] });
+        const queryResult = reactive({
+            nfts: [],
+            phone_number: "",
+            token: "",
+            transform: [],
+            freezeStatus: false,
+        });
+        const scrollHeight = ref();
+        const whiteList = ref([]);
         const handleQueryAddressClick = () => {
+            queryUserData();
+        };
+
+        const queryUserData = async () => {
+            queryUserFreezeStatusApi(queryAddress.value.trim()).then((res) => {
+                if (res.err_code === "0") {
+                    queryResult.freezeStatus = res.result.freeze_status;
+                }
+            });
+            queryWhiteListApi(queryAddress.value.trim()).then((res) => {
+                if (res.err_code === "0") {
+                    console.log(res.result);
+                    whiteList.value = res.result;
+                }
+            });
             getAddressUserInfoApi(queryAddress.value.trim()).then((res) => {
                 if (res.err_code === "0") {
                     queryResult.nfts = res.result.nfts;
@@ -148,7 +218,6 @@ export default {
         const handleQueryTxClick = (item) => {
             txData.value = item.transferInfo;
         };
-        const scrollHeight = ref();
 
         onMounted(() => {
             calculateScroll();
@@ -158,19 +227,33 @@ export default {
             window.removeEventListener("resize", calculateScroll);
         });
 
+        const handleFreeClick = async () => {
+            const result = await setUserFreezeStatusApi({
+                address: queryAddress.value.trim(),
+                status: String(queryResult.freezeStatus === "false" ? "true" : "false"),
+            });
+            if (result.err_code === "0") {
+                successNotify("设置成功");
+                queryUserData();
+            }
+        };
+
         const calculateScroll = function () {
-            scrollHeight.value = document.body.clientWidth <= 1440 ? 470 : 650;
+            scrollHeight.value = document.body.clientWidth <= 1440 ? 470 : 550;
         };
         return {
             queryAddress,
             queryResult,
+            whiteList,
             columns,
             txColumns,
+            whiteColumns,
             dayjs,
             scrollHeight,
             txData,
             joinPreviewUrl: proxy.joinPreviewUrl,
             handleQueryAddressClick,
+            handleFreeClick,
             handleQueryTxClick,
         };
     },
@@ -195,8 +278,12 @@ export default {
 .ms {
     margin-top: 10px;
     display: flex;
+    align-items: center;
     .ms1 {
         margin-right: 10px;
+    }
+    .btns {
+        margin-left: 20px;
     }
 }
 .avatar {
@@ -238,6 +325,21 @@ export default {
     .tx-table {
         flex: 1;
         margin-left: 10px;
+    }
+}
+.white_list {
+    height: 70vh;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    overflow-y: auto;
+
+    .row {
+        width: 100%;
+        height: 40px;
+        border-bottom: 1px solid #eee;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
     }
 }
 </style>

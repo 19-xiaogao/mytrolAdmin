@@ -159,3 +159,9 @@ export const addUserToWhiteListApi = (params) => server.post('/backend/add_user_
 
 // 藏品 绑定 白名单
 export const denomBindWhitelistApi = (params) => server.post('/backend/denom_bind_whitelist', params)
+
+// 查询用户冻结状态
+export const queryUserFreezeStatusApi = (address) => server.get('/backend/get_user_freeze_status/' + address)
+
+//冻结用户
+export const setUserFreezeStatusApi = (params) => server.post('/backend/set_user_freeze_status', params)
