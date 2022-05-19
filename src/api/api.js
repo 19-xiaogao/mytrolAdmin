@@ -169,3 +169,9 @@ export const setUserFreezeStatusApi = (params) => server.post('/backend/set_user
 
 // 获取nft拥有者
 export const queryNftHoldersApi = (denom_id) => server.get('/backend/get_nft_holders/' + denom_id)
+
+// 查询作品绑定的白名单
+export const queryDenomBindWhiteListApi = (denom_id) => server.get('/backend/show_denom_bind_whitelist/' + denom_id)
+
+// 删除ip
+export const remoteIpApi = (params) => server.post('backend/drop_ip', params)

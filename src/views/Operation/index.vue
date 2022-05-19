@@ -22,8 +22,12 @@
                         <div class="footer">
                             <div class="icons">
                                 <a-tooltip>
-                                    <template #title>复制链接</template>
-                                    <icon-svg class="icon" icon="icon-a-bianzu10"></icon-svg>
+                                    <template #title>删除</template>
+                                    <icon-svg
+                                        class="icon"
+                                        icon="icon-remove"
+                                        @click="handleRemoveClick(item.id)"
+                                    ></icon-svg>
                                 </a-tooltip>
                                 <a-tooltip>
                                     <template #title
@@ -71,7 +75,7 @@
 
 <script>
 import { computed, onMounted, reactive, ref } from "vue";
-import { addUpdateIpApi, getSeriesApi } from "@api";
+import { addUpdateIpApi, getSeriesApi, remoteIpApi } from "@api";
 import IPDetail from "./IPDetail";
 import CreateActivityModal from "./CreateActivityModal";
 import { joinPreviewUrl, sortOperation, successNotify, warningNotify } from "@/utils";
@@ -152,6 +156,25 @@ export default {
             }
         };
 
+        const handleRemoveClick = (id) => {
+            Modal.confirm({
+                title: "提示",
+                content: "确定删除吗？",
+                maskClosable: false,
+                okText: "确定",
+                onOk() {
+                    remoteIpApi({
+                        ip_id: String(id),
+                    }).then((res) => {
+                        if (res.err_code === "0") {
+                            getSeriessListApi();
+                            successNotify("删除成功。");
+                        }
+                    });
+                },
+            });
+        };
+
         const funcAddupdateIpApi = (obj) => {
             const formData = new FormData();
             for (let key in obj) {
@@ -200,6 +223,7 @@ export default {
             hanleCardClick,
             currentIpMessage,
             handleDropdownIdClick,
+            handleRemoveClick,
             handleAddIpClick,
         };
     },
@@ -236,7 +260,8 @@ export default {
     margin-top: 18px;
     display: flex;
     flex-wrap: wrap;
-
+    overflow-y: auto;
+    height: 75vh;
     .card-box {
         margin-right: 26px;
         margin-top: 10px;
