@@ -165,3 +165,7 @@ export const queryUserFreezeStatusApi = (address) => server.get('/backend/get_us
 
 //冻结用户
 export const setUserFreezeStatusApi = (params) => server.post('/backend/set_user_freeze_status', params)
+
+
+// 获取nft拥有者
+export const queryNftHoldersApi = (denom_id) => server.get('/backend/get_nft_holders/' + denom_id)

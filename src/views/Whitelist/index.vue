@@ -10,6 +10,7 @@
                         v-for="item in whiteList"
                         :key="item.id"
                         class="row"
+                        :class="currentWhiteData.id === item.id ? 'select' : ''"
                         @click="handleWhiteListClick(item)"
                     >
                         <h4>{{ item.name }}</h4>
@@ -18,7 +19,12 @@
                 </div>
                 <div class="white-content">
                     <div class="btns">
-                        <a-button type="primary">导入数据</a-button>
+                        <a-input
+                            class="input"
+                            placeholder="请输入需要查询的地址"
+                            @keydown.enter="handleQueryAddressEnter"
+                        ></a-input>
+                        <a-button type="primary" @click="handleExportClick">导入数据</a-button>
                         <a-button type="primary" class="btn2" @click="handleAddUserClick">添加用户</a-button>
                     </div>
                     <a-table
@@ -44,13 +50,20 @@
             :whitelistId="currentWhiteData.id"
             @ok="handleSureAddUserClick"
         />
+        <ExportUserModal
+            v-show="isConversionActivity"
+            ref="ConversionActivity"
+            :whitelistId="currentWhiteData.id"
+            @close="handleConversionActivityClick"
+        />
     </div>
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, onUnmounted } from "vue";
 import AddGroupModal from "./AddGroupModal.vue";
 import AddUserModal from "./AddUserModal.vue";
+import ExportUserModal from "./ExportUserModal.vue";
 import { queryAllWhiteListApi, queryWhiteListApi, addUserToWhiteListApi } from "@/api/api.js";
 import { Modal } from "ant-design-vue";
 const txColumns = [
@@ -77,6 +90,7 @@ export default {
     components: {
         AddGroupModal,
         AddUserModal,
+        ExportUserModal,
     },
     setup() {
         const queryAddress = ref("");
@@ -85,9 +99,27 @@ export default {
         const whiteList = ref([]);
         const currentWhiteUserData = ref([]);
         const currentWhiteData = ref({});
+        const scrollHeight = ref();
+        const isConversionActivity = ref(false);
+
         onMounted(() => {
-            queryAllWhiteList();
+            queryAllWhiteList().then(() => {
+                currentWhiteData.value = whiteList.value[0];
+                queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
+            });
         });
+
+        onMounted(() => {
+            calculateScroll();
+            window.addEventListener("resize", calculateScroll);
+        });
+        onUnmounted(() => {
+            window.removeEventListener("resize", calculateScroll);
+        });
+
+        const calculateScroll = function () {
+            scrollHeight.value = document.body.clientWidth <= 1440 ? 470 : 550;
+        };
 
         const queryAllWhiteList = async () => {
             const result = await queryAllWhiteListApi();
@@ -99,6 +131,16 @@ export default {
         const handleWhiteListClick = async (item) => {
             currentWhiteData.value = item;
             queryWhiteList(item.id, item.name);
+        };
+
+        const handleQueryAddressEnter = (e) => {
+            if (e.target.value === "") {
+                return queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
+            } else {
+                currentWhiteUserData.value = currentWhiteUserData.value.filter(
+                    (v) => e.target.value === v.address
+                );
+            }
         };
 
         const queryWhiteList = async (id, name) => {
@@ -120,6 +162,13 @@ export default {
             queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
         };
 
+        const handleExportClick = () => {
+            isConversionActivity.value = true;
+        };
+        const handleConversionActivityClick = () => {
+            isConversionActivity.value = false;
+            queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
+        };
         const handleRemoteToWhiteClick = (item) => {
             Modal.confirm({
                 title: "你确定想移除该用户嘛？",
@@ -146,25 +195,29 @@ export default {
             addUserVisible.value = true;
         };
         const handleGroupWhiteClick = () => {
-            console.log("添加分组");
             createWhiteVisible.value = true;
         };
         const handleAddWhiteListClick = () => {
-              queryAllWhiteList();
+            queryAllWhiteList();
         };
         return {
             queryAddress,
             whiteList,
             createWhiteVisible,
+            scrollHeight,
             addUserVisible,
             currentWhiteData,
             currentWhiteUserData,
+            isConversionActivity,
             handleGroupWhiteClick,
             handleAddWhiteListClick,
             handleWhiteListClick,
             handleAddUserClick,
             handleRemoteToWhiteClick,
             handleSureAddUserClick,
+            handleConversionActivityClick,
+            handleQueryAddressEnter,
+            handleExportClick,
             txColumns,
         };
     },
@@ -173,6 +226,9 @@ export default {
 
 
 <style lang="scss" scoped>
+.select {
+    background: #f9f9f9;
+}
 .h-r {
     display: flex;
     justify-content: start;
@@ -201,7 +257,7 @@ export default {
             border-bottom: 1px solid #eee;
             align-items: center;
             cursor: pointer;
-            padding: 4px;
+            padding: 5px;
             h4 {
                 margin-bottom: 4px;
                 color: #000000d9;
@@ -221,6 +277,10 @@ export default {
         flex-direction: column;
         align-items: flex-end;
         .btns {
+            display: flex;
+            .input {
+                margin-right: 10px;
+            }
             .btn2 {
                 margin-left: 10px;
             }

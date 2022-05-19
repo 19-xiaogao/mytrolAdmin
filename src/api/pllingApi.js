@@ -32,5 +32,5 @@ export const pollingGivingDaysApi = async (days, fc) => {
 
     setTimeout(() => pollingGivingDaysApi(days, fc), ASeconds);
 };
-
+export const addUserToWhiteListPollingApi = (params) => pollingServer.post('/backend/add_user_to_new_whitelist', params)
 
