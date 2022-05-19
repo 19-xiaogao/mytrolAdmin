@@ -156,3 +156,6 @@ export const queryAllWhiteListApi = () => server.get('/backend/get_all_whitelist
 // "action"  : "", //"add" or "remove"
 //将用户加到一个白名单
 export const addUserToWhiteListApi = (params) => server.post('/backend/add_user_to_new_whitelist', params)
+
+// 藏品 绑定 白名单
+export const denomBindWhitelistApi = (params) => server.post('/backend/denom_bind_whitelist', params)

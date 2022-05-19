@@ -34,6 +34,9 @@
                             <a-menu-item @click="handleNftTransferStatusClick(item.id, item.can_transfer)">
                                 <span> {{ item.can_transfer ? "关闭转赠" : "开启转赠" }} </span>
                             </a-menu-item>
+                            <a-menu-item @click="handleAddWhiteListClick(item.id, item.can_transfer)">
+                                <span> 关联白名单 </span>
+                            </a-menu-item>
                             <a-menu-item
                                 v-if="showQrCode(item.free, item.publish)"
                                 @click="handleQrCodeClick(item.id)"
@@ -85,6 +88,7 @@
             v-model:postersVisible="postersParams.postersVisible"
             :params="postersParams.params"
         />
+        <AddWhiteList v-model:visible="addWhiteVisible" :denomId="shelvesObject.id" />
     </div>
 </template>
 
@@ -107,6 +111,7 @@ import { generatorQrCode, successNotify } from "@/utils";
 import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
+import AddWhiteList from "./AddWhiteList.vue";
 
 // publishStatusUnPublish = "0"; //下架
 // publishStatusPublishing = "1" //审核
@@ -131,6 +136,7 @@ export default defineComponent({
         TabBar,
         ShelvesNft,
         PrivatePosters,
+        AddWhiteList,
     },
     setup() {
         const { proxy } = getCurrentInstance();
@@ -146,6 +152,8 @@ export default defineComponent({
         const shelvesVisible = ref(false);
         const currentIndex = ref(0);
         const postersParams = reactive({ postersVisible: false, params: "" });
+        const addWhiteVisible = ref(false);
+
         const handleMouseover = (bol, id) => {
             bol
                 ? (proxy.$refs[id][0].style.transform = "scale(1.2)")
@@ -206,6 +214,12 @@ export default defineComponent({
             }
         };
 
+        const handleAddWhiteListClick = (id, publish) => {
+            shelvesObject.id = id;
+            shelvesObject.publish = publish;
+            addWhiteVisible.value = true;
+        };
+
         const handleItemCardClick = (item) => {
             if (!currentIndex.value) return;
 
@@ -219,7 +233,10 @@ export default defineComponent({
         };
 
         const handleNftTransferStatusClick = async (id, can_transfer) => {
-            const result = await setNftTransferStatusApi({ denom_id: String(id), status: String(can_transfer) });
+            const result = await setNftTransferStatusApi({
+                denom_id: String(id),
+                status: String(can_transfer),
+            });
             if (result.err_code == "0") {
                 successNotify("设置成功");
                 getWorksList();
@@ -285,6 +302,7 @@ export default defineComponent({
             showOpenTime,
             showPrivateClass,
             shelvesVisible,
+            addWhiteVisible,
             handelShelvesEmit,
             handleCancelEmit,
             handleShelvesClick,
@@ -293,6 +311,7 @@ export default defineComponent({
             handleTitleClick,
             handleItemCardClick,
             handleNftTransferStatusClick,
+            handleAddWhiteListClick,
             dayjs,
         };
     },
