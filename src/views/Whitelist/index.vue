@@ -1,114 +1,85 @@
 <template>
     <div class="order page-height">
+        <a-breadcrumb>
+            <a-breadcrumb-item>Mytrol</a-breadcrumb-item>
+            <a-breadcrumb-item><router-link to="/whitelist">白名单</router-link></a-breadcrumb-item>
+        </a-breadcrumb>
         <div class="h-r">
             <a-button class="btn" type="primary" @click="handleGroupWhiteClick">添加白名单分组</a-button>
         </div>
         <div class="content">
-            <div class="tx">
-                <div class="transform-nft">
-                    <div
-                        v-for="item in whiteList"
-                        :key="item.id"
-                        class="row"
-                        :class="currentWhiteData.id === item.id ? 'select' : ''"
-                        @click="handleWhiteListClick(item)"
+            <a-table
+                :columns="whiteListColumns"
+                :data-source="whiteList"
+                :pagination="false"
+                bordered
+                :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
+                :row-key="(item, index) => index"
+                :scroll="{ y: scrollHeight }"
+                class="tx-table"
+            >
+                <template #setting="{ record }">
+                    <a-button type="link" @click.stop="handleDetailClick(record.id, record.name)"
+                        >查看详情</a-button
                     >
-                        <h4>{{ item.name }}</h4>
-                        <p>{{ item.memo }}</p>
-                    </div>
-                </div>
-                <div class="white-content">
-                    <div class="btns">
-                        <a-input
-                            class="input"
-                            placeholder="请输入需要查询的地址"
-                            @keydown.enter="handleQueryAddressEnter"
-                        ></a-input>
-                        <a-button type="primary" @click="handleExportClick">导入数据</a-button>
-                        <a-button type="primary" class="btn2" @click="handleAddUserClick">添加用户</a-button>
-                    </div>
-                    <a-table
-                        :columns="txColumns"
-                        :data-source="currentWhiteUserData"
-                        :pagination="false"
-                        :row-class-name="(_record, index) => (index % 2 === 1 ? 'table-striped' : null)"
-                        :row-key="(item, index) => index"
-                        class="tx-table"
-                    >
-                        <template #setting="{ record }">
-                            <a-button type="link" @click.stop="handleRemoteToWhiteClick(record)"
-                                >删除
-                            </a-button>
-                        </template>
-                    </a-table>
-                </div>
-            </div>
+                    <a-button type="link" @click.stop="handleRenewClick(record.id)">修改白名单名称</a-button>
+                </template>
+            </a-table>
         </div>
         <AddGroupModal v-model:createVisible="createWhiteVisible" @ok="handleAddWhiteListClick" />
-        <AddUserModal
-            v-if="currentWhiteData.id"
-            v-model:createVisible="addUserVisible"
-            :whitelistId="currentWhiteData.id ? currentWhiteData.id : ''"
-            @ok="handleSureAddUserClick"
-        />
-        <ExportUserModal
-            v-if="currentWhiteData.id"
-            v-show="isConversionActivity"
-            :whitelistId="currentWhiteData.id ? currentWhiteData.id : ''"
-            @close="handleConversionActivityClick"
-        />
     </div>
 </template>
 
 <script>
 import { onMounted, ref, onUnmounted } from "vue";
+import { useRouter } from "vue-router";
 import AddGroupModal from "./AddGroupModal.vue";
-import AddUserModal from "./AddUserModal.vue";
-import ExportUserModal from "./ExportUserModal.vue";
-import { queryAllWhiteListApi, queryWhiteListApi, addUserToWhiteListApi } from "@/api/api.js";
-import { Modal } from "ant-design-vue";
-const txColumns = [
+import { queryAllWhiteListApi } from "@/api/api.js";
+
+const whiteListColumns = [
     {
         title: "id",
+        width: "10%",
         key: "id",
         dataIndex: "id",
         slots: { customRender: "id" },
     },
     {
-        title: "用户地址",
-        key: "address",
-        dataIndex: "address",
-        slots: { customRender: "address" },
+        title: "白名单名称",
+        key: "name",
+        width: "30%",
+        dataIndex: "name",
+        slots: { customRender: "name" },
     },
     {
-        title: "设置",
+        title: "白名单描述",
+        dataIndex: "memo",
+        width: "50%",
+        key: "memo",
+        slots: { customRender: "memo" },
+    },
+    {
+        title: "操作",
         dataIndex: "setting",
         key: "setting",
+        width: "20%",
         slots: { customRender: "setting" },
     },
 ];
 export default {
     components: {
         AddGroupModal,
-        AddUserModal,
-        ExportUserModal,
     },
     setup() {
         const queryAddress = ref("");
         const createWhiteVisible = ref(false);
-        const addUserVisible = ref(false);
         const whiteList = ref([]);
-        const currentWhiteUserData = ref([]);
         const currentWhiteData = ref({});
         const scrollHeight = ref();
-        const isConversionActivity = ref(false);
 
+        const router = useRouter();
         onMounted(() => {
-            queryAllWhiteList().then(() => {
-                if (whiteList.value.length === 0) return;
-                currentWhiteData.value = whiteList.value[0];
-                queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
-            });
+            queryAllWhiteList();
         });
 
         onMounted(() => {
@@ -130,72 +101,10 @@ export default {
             }
         };
 
-        const handleWhiteListClick = async (item) => {
-            currentWhiteData.value = item;
-            queryWhiteList(item.id, item.name);
+        const handleDetailClick = (id, name) => {
+            router.push(`/whitelist/detail?id=${id}&name=${name}`);
         };
 
-        const handleQueryAddressEnter = (e) => {
-            if (e.target.value === "") {
-                return queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
-            } else {
-                currentWhiteUserData.value = currentWhiteUserData.value.filter(
-                    (v) => e.target.value === v.address
-                );
-            }
-        };
-
-        const queryWhiteList = async (id, name) => {
-            const result = await queryWhiteListApi(id);
-
-            if (result.err_code === "0") {
-                if (result.result[name]) {
-                    currentWhiteUserData.value = result.result[name].map((item, index) => ({
-                        id: index + 1,
-                        address: item,
-                    }));
-                } else {
-                    currentWhiteUserData.value = [];
-                }
-            }
-        };
-
-        const handleSureAddUserClick = () => {
-            queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
-        };
-
-        const handleExportClick = () => {
-            isConversionActivity.value = true;
-        };
-        const handleConversionActivityClick = () => {
-            isConversionActivity.value = false;
-            queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
-        };
-        const handleRemoteToWhiteClick = (item) => {
-            Modal.confirm({
-                title: "你确定想移除该用户嘛？",
-                onOk() {
-                    return new Promise((resolve, reject) => {
-                        addUserToWhiteListApi({
-                            address: item.address,
-                            whitelist_id: String(currentWhiteData.value.id),
-                            action: "remove",
-                        })
-                            .then((res) => {
-                                if (res.err_code === "0") {
-                                    queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
-                                    resolve();
-                                }
-                            })
-                            .catch((err) => reject(err));
-                    }).catch(() => console.log("Oops errors!"));
-                },
-                onCancel() {},
-            });
-        };
-        const handleAddUserClick = () => {
-            addUserVisible.value = true;
-        };
         const handleGroupWhiteClick = () => {
             createWhiteVisible.value = true;
         };
@@ -207,20 +116,11 @@ export default {
             whiteList,
             createWhiteVisible,
             scrollHeight,
-            addUserVisible,
             currentWhiteData,
-            currentWhiteUserData,
-            isConversionActivity,
+            whiteListColumns,
             handleGroupWhiteClick,
             handleAddWhiteListClick,
-            handleWhiteListClick,
-            handleAddUserClick,
-            handleRemoteToWhiteClick,
-            handleSureAddUserClick,
-            handleConversionActivityClick,
-            handleQueryAddressEnter,
-            handleExportClick,
-            txColumns,
+            handleDetailClick,
         };
     },
 };
@@ -233,7 +133,7 @@ export default {
 }
 .h-r {
     display: flex;
-    justify-content: start;
+    justify-content: end;
     height: 40px;
     .btn {
         margin-left: 20px;
@@ -284,7 +184,7 @@ export default {
                 margin-right: 10px;
             }
             .btn2 {
-                margin-left: 10px;
+                margin: 0 10px;
             }
         }
         .tx-table {

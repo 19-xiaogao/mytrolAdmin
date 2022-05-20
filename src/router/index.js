@@ -86,6 +86,15 @@ const routes = [
                 component: () => import(/*webpackChunkName:'whitelist'*/ "@/views/Whitelist/index.vue"),
                 children: [],
             },
+            {
+                path: "/whitelist/detail",
+                name: "Whitelist_detail",
+                meta: {
+                    title: "白名单详情",
+                },
+                component: () => import(/*webpackChunkName:'WhitelistDetail'*/ "@/views/Whitelist/WhiteDetail.vue"),
+                children: [],
+            },
         ],
     },
     {

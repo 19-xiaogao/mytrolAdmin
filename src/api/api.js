@@ -175,3 +175,6 @@ export const queryDenomBindWhiteListApi = (denom_id) => server.get('/backend/sho
 
 // 删除ip
 export const remoteIpApi = (params) => server.post('backend/drop_ip', params)
+
+//查询nft数据
+export const queryNftApi = (params) => server.get(`/admin_seach_all_nft/${params.field}/${params.value}`)

@@ -16,13 +16,15 @@ import {
     Pagination,
     Popover,
     Tabs,
-    Checkbox
+    Checkbox,
+    Breadcrumb
 } from "ant-design-vue";
 
 import IconSvg from "@/components/IconSvg";
 
 const { Item: MenuItem } = Menu;
 const { TabPane } = Tabs;
+const { Item: BreadcrumbItem } = Breadcrumb
 export default function (app) {
     app.component("icon-svg", IconSvg);
     app.component("a-dropdown", Dropdown);
@@ -46,6 +48,6 @@ export default function (app) {
     app.component("a-tabs", Tabs);
     app.component("a-tab-pane", TabPane);
     app.component("a-checkbox", Checkbox);
-    
-    
+    app.component("a-breadcrumb", Breadcrumb);
+    app.component("a-breadcrumb-item", BreadcrumbItem);
 }

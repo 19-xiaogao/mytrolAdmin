@@ -4,6 +4,14 @@
             <span class="title">将用户数据导入白名单</span>
             <icon-svg class="icon" icon="icon-a-bianzu101" @click="handleHideClick"></icon-svg>
         </div>
+        <div class="input-search">
+            <a-input
+                placeholder="输入需要查找的nft"
+                v-model:value="searchValue"
+                @keydown.enter="handleEnterClick"
+            ></a-input>
+            <a-button type="primary" @click="handleEnterClick">查询</a-button>
+        </div>
         <div class="nft-list">
             <div
                 class="card"
@@ -42,16 +50,16 @@
         </div>
         <a-button :loading="loading" class="save-setting" @click="handleSaveSettingClick">
             <icon-svg icon="icon-save"></icon-svg>
-            导入
+            {{ btnType === "add" ? "导入" : "删除" }}
         </a-button>
     </div>
 </template>
 
 <script>
-import { onMounted, onUpdated, ref, getCurrentInstance, computed } from "vue";
-import { getWorksApi, queryNftHoldersApi } from "@/api/api.js";
+import { onMounted, onUpdated, ref, getCurrentInstance } from "vue";
+import { GetAdminAllNftApi, queryNftHoldersApi, queryNftApi } from "@/api/api.js";
 import { addUserToWhiteListPollingApi } from "@/api/pllingApi.js";
-import { useStore } from "vuex";
+// import { useStore } from "vuex";
 import { successNotify, warningNotify } from "@/utils";
 export default {
     emits: ["close"],
@@ -60,25 +68,30 @@ export default {
         whitelistId: {
             type: Number || String,
         },
+        btnType: {
+            type: String,
+        },
     },
     setup(props, { emit }) {
         const { proxy } = getCurrentInstance();
-        const store = useStore();
+        // const store = useStore();
 
         const conversionRef = ref(null);
         const loading = ref(false);
         const worksList = ref([]);
+        const searchValue = ref("");
         const handleHideClick = () => {
             conversionRef.value.style.animation = "sliding-hiden 0.5s linear 0s";
             worksList.value.forEach((item) => {
                 item.selected = false;
             });
+            searchValue.value = "";
             setTimeout(() => {
-                emit("close");
+                emit("close", "close");
             }, 400);
         };
 
-        const user = computed(() => store.getters.getUser);
+        // const user = computed(() => store.getters.getUser);
 
         onUpdated(() => {
             conversionRef.value.style.animation = "sliding-show 0.5s linear 0s";
@@ -99,13 +112,27 @@ export default {
         };
 
         const getWorksList = async () => {
-            const { err_code, result } = await getWorksApi(user.value.user_id);
+            const { err_code, result } = await GetAdminAllNftApi(1, 30);
             if (err_code === "0") {
-                worksList.value = returnPrivateTableData(result);
+                worksList.value = returnPrivateTableData(result.list);
+            }
+        };
+
+        const handleEnterClick = async () => {
+            if (searchValue.value.trim() === "") {
+                return getWorksList();
+            }
+            const { err_code, result } = await queryNftApi({
+                field: "name",
+                value: searchValue.value,
+            });
+            if (err_code === "0") {
+                worksList.value = returnPrivateTableData(result.list);
             }
         };
 
         const handleSaveSettingClick = async () => {
+            loading.value = true;
             const findData = worksList.value.find((item) => item.selected);
             if (!findData) return warningNotify("请选择作品");
             const result = await queryNftHoldersApi(String(findData.id));
@@ -114,7 +141,7 @@ export default {
                 for await (let item of deduplicationData) {
                     try {
                         await addUserToWhiteListPollingApi({
-                            action: "add",
+                            action: props.btnType,
                             address: item, // 用户id
                             whitelist_id: String(props.whitelistId), // 白名单列表
                         });
@@ -122,8 +149,14 @@ export default {
                         console.log(error);
                     }
                 }
-                successNotify("导入成功");
-
+                loading.value = false;
+                if (props.btnType === "add") {
+                    successNotify("导入成功");
+                } else {
+                    successNotify("删除成功");
+                }
+                searchValue.value = "";
+                getWorksList();
                 emit("close");
             }
         };
@@ -140,11 +173,13 @@ export default {
         };
 
         return {
+            searchValue,
             handleHideClick,
             conversionRef,
             loading,
             worksList,
             handleSaveSettingClick,
+            handleEnterClick,
             handleSelectedClick,
         };
     },
@@ -187,12 +222,15 @@ export default {
             cursor: pointer;
         }
     }
-
+    .input-search {
+        margin: 10px;
+        display: flex;
+    }
     .nft-list {
         display: flex;
         width: 100%;
         flex-wrap: wrap;
-        height: 88%;
+        height: 80%;
         overflow-y: auto;
         .card {
             width: 242px;
