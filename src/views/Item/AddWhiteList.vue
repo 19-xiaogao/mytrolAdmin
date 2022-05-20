@@ -66,6 +66,7 @@ export default defineComponent({
             if (result.err_code === "0") {
                 successNotify("关联成功");
                 setTimeout(() => {
+                    emit("close");
                     emit("update:visible", false);
                 }, 1000);
             }

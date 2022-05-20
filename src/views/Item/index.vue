@@ -88,7 +88,11 @@
             v-model:postersVisible="postersParams.postersVisible"
             :params="postersParams.params"
         />
-        <AddWhiteList v-model:visible="addWhiteVisible" :denomId="shelvesObject.id" />
+        <AddWhiteList
+            v-model:visible="addWhiteVisible"
+            :denomId="shelvesObject.id"
+            @close="handleCloseClick"
+        />
     </div>
 </template>
 
@@ -252,6 +256,10 @@ export default defineComponent({
             }
         };
 
+        const handleCloseClick = () => {
+            getWorksList();
+        };
+
         const handleShelvesClick = (id, publish) => {
             if (publish === "2") {
                 handleUnShelvesNft(id, publish);
@@ -312,6 +320,7 @@ export default defineComponent({
             handleItemCardClick,
             handleNftTransferStatusClick,
             handleAddWhiteListClick,
+            handleCloseClick,
             dayjs,
         };
     },
