@@ -5,6 +5,7 @@
             <a-breadcrumb-item><router-link to="/whitelist">白名单</router-link></a-breadcrumb-item>
         </a-breadcrumb>
         <div class="h-r">
+            <a-input placeholder="搜索白名单" class="input" @keydown.enter="handleSearchEnter"></a-input>
             <a-button class="btn" type="primary" @click="handleGroupWhiteClick">添加白名单分组</a-button>
         </div>
         <div class="content">
@@ -22,7 +23,14 @@
                     <a-button type="link" @click.stop="handleDetailClick(record.id, record.name)"
                         >查看详情</a-button
                     >
-                    <a-button type="link" @click.stop="handleRenewClick(record.id)">修改白名单名称</a-button>
+                    <!-- <a-button type="link" @click.stop="handleRenewClick(record.id)">
+                        <a-popover v-model:visible="record.popoverVisible" title="Title" trigger="click">
+                            <template #content>
+                                <a-input placeholder="修改名称"></a-input>
+                            </template>
+                            <a-button type="primary">修改白名单名称</a-button>
+                        </a-popover>
+                    </a-button> -->
                 </template>
             </a-table>
         </div>
@@ -76,7 +84,7 @@ export default {
         const whiteList = ref([]);
         const currentWhiteData = ref({});
         const scrollHeight = ref();
-
+        const popoverVisible = ref(false);
         const router = useRouter();
         onMounted(() => {
             queryAllWhiteList();
@@ -97,8 +105,15 @@ export default {
         const queryAllWhiteList = async () => {
             const result = await queryAllWhiteListApi();
             if (result.err_code === "0") {
-                whiteList.value = result.result;
+                whiteList.value = result.result.map((item) => ({ ...item, popoverVisible: false }));
             }
+        };
+
+        const handleSearchEnter = (e) => {
+            if (e.target.value.trim() === "") {
+                return queryAllWhiteList();
+            }
+            whiteList.value = whiteList.value.filter((item) => item.name === e.target.value.trim());
         };
 
         const handleDetailClick = (id, name) => {
@@ -113,6 +128,7 @@ export default {
         };
         return {
             queryAddress,
+            popoverVisible,
             whiteList,
             createWhiteVisible,
             scrollHeight,
@@ -121,6 +137,7 @@ export default {
             handleGroupWhiteClick,
             handleAddWhiteListClick,
             handleDetailClick,
+            handleSearchEnter,
         };
     },
 };
@@ -135,6 +152,9 @@ export default {
     display: flex;
     justify-content: end;
     height: 40px;
+    .input {
+        width: 200px;
+    }
     .btn {
         margin-left: 20px;
 
