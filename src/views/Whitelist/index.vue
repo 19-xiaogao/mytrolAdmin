@@ -46,14 +46,15 @@
         </div>
         <AddGroupModal v-model:createVisible="createWhiteVisible" @ok="handleAddWhiteListClick" />
         <AddUserModal
+            v-if="currentWhiteData.id"
             v-model:createVisible="addUserVisible"
-            :whitelistId="currentWhiteData.id"
+            :whitelistId="currentWhiteData.id ? currentWhiteData.id : ''"
             @ok="handleSureAddUserClick"
         />
         <ExportUserModal
+            v-if="currentWhiteData.id"
             v-show="isConversionActivity"
-            ref="ConversionActivity"
-            :whitelistId="currentWhiteData.id"
+            :whitelistId="currentWhiteData.id ? currentWhiteData.id : ''"
             @close="handleConversionActivityClick"
         />
     </div>
@@ -104,6 +105,7 @@ export default {
 
         onMounted(() => {
             queryAllWhiteList().then(() => {
+                if (whiteList.value.length === 0) return;
                 currentWhiteData.value = whiteList.value[0];
                 queryWhiteList(currentWhiteData.value.id, currentWhiteData.value.name);
             });
