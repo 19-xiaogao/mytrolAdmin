@@ -34,9 +34,6 @@
                             <a-menu-item @click="handleNftTransferStatusClick(item.id, item.can_transfer)">
                                 <span> {{ item.can_transfer ? "关闭转赠" : "开启转赠" }} </span>
                             </a-menu-item>
-                            <a-menu-item @click="handleAddWhiteListClick(item.id, item.can_transfer)">
-                                <span> 关联白名单 </span>
-                            </a-menu-item>
                             <a-menu-item
                                 v-if="showQrCode(item.free, item.publish)"
                                 @click="handleQrCodeClick(item.id)"
