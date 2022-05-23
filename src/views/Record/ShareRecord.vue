@@ -28,6 +28,9 @@
                             <a-menu-item @click="handleExportOrderClick(item.id, item.name)"
                                 >导出订单数据
                             </a-menu-item>
+                            <a-menu-item @click="handleNftTransferStatusClick(item.id, item.can_transfer)">
+                                <span> {{ item.can_transfer ? "关闭转赠" : "开启转赠" }} </span>
+                            </a-menu-item>
                         </a-menu>
                     </template>
                 </a-dropdown>
@@ -99,7 +102,7 @@
 <script>
 import { computed, defineComponent, getCurrentInstance, onMounted, ref, reactive } from "vue";
 import dayjs from "dayjs";
-import { getSuccessOrderApi, GetAdminAllNftApi, getShareAccessToken } from "@api";
+import { getSuccessOrderApi, GetAdminAllNftApi, getShareAccessToken,setNftTransferStatusApi } from "@api";
 import { exportXlsx, warningNotify, successNotify } from "@/utils";
 import Order from "./Order";
 import OrderDetail from "./OrderDetail";
@@ -232,6 +235,18 @@ export default defineComponent({
                 shareLink.value = `${window.origin}/share?id=${item.id}&access_token=${result.access_token}`;
             }
         };
+
+        const handleNftTransferStatusClick = async (id, can_transfer) => {
+            const result = await setNftTransferStatusApi({
+                denom_id: String(id),
+                status: String(can_transfer),
+            });
+            if (result.err_code == "0") {
+                successNotify("设置成功");
+                getWorksList();
+            }
+        };
+
         const copyClick = () => {
             proxy.$refs.input.select();
             document.execCommand("copy");
@@ -255,6 +270,7 @@ export default defineComponent({
             shareTime,
             handlePaginationChange,
             handleOrderDetailClick,
+            handleNftTransferStatusClick,
             currentNftParams,
             showOrderComponent,
             handleBlockClick,
