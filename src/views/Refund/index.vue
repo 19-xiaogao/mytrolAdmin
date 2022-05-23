@@ -1,100 +1,61 @@
 <template>
-    <div class="share-record">
-        <Order
-            v-if="showOrderComponent"
-            :id="currentNftParams.id"
-            @showOrderDetailComponent="handleShowOrderDetailComponent"
-        />
-        <div class="ip-lists" v-show="!showOrderComponent">
-            <div
-                v-for="item in renderWorksList"
-                :key="item.id"
-                class="card"
-                @click="handleItemCardClick(item)"
-                @mouseout="() => handleMouseover(false, item.id)"
-                @mouseover="() => handleMouseover(true, item.id)"
-            >
-                <div :ref="String(item.id)" class="img">
-                    <img :src="item.file" alt="" />
-                </div>
-                <a-dropdown v-if="showOptionsElement(item.publish)" class="options">
-                    <p>
-                        <span class="text">设置</span>
-                        <icon-svg class="icon" icon="icon-a-bianzu13"></icon-svg>
-                    </p>
-                    <template #overlay>
-                        <a-menu>
-                            <!-- v-if="item.publish == 2" -->
-                            <a-menu-item @click="handleExportOrderClick(item.id, item.name)"
-                                >导出订单数据
-                            </a-menu-item>
-                            <a-menu-item @click="handleNftTransferStatusClick(item.id, item.no_transfer)">
-                                <span> {{ item.no_transfer === "false" ? "禁止转赠" : "开启转赠" }} </span>
-                            </a-menu-item>
-                        </a-menu>
-                    </template>
-                </a-dropdown>
-
-                <div v-if="showOpenTime(item)" class="sale">
-                    <icon-svg class="icon" icon="icon-naozhong"></icon-svg>
-                    <span> {{ dayjs(item.opening_time * 1000).format("YYYY-MM-DD HH:mm") }}</span>
-                </div>
-
-                <div class="me">
-                    <div class="me-t">
-                        <h3>{{ item.name }}</h3>
-                        <div class="avator-des">
-                            <div class="imgs">
-                                <img :src="item.author_avatar" alt="" />
-                                <img alt="" class="icon" src="@assets/images/v-icon.png" />
-                            </div>
-                            <span class="txt-overflow" style="width: 100px">{{ item.nickname }}</span>
-                        </div>
-                    </div>
-                    <div class="me-m">
-                        <div class="_limit">
-                            <div class="_t1">限量</div>
-                            <div class="_t2">{{ item.number }}</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="mask"></div>
-            </div>
-            <p v-if="renderWorksList.length <= 0" class="no-found">暂无作品</p>
+    <div class="page-height">
+        <div class="header-search">
+            <a-input
+                class="search"
+                placeholder="请输入需要查询的作品名称"
+                v-model:value="searchValue"
+                @keydown.enter="handleKeydownEnterClick"
+            ></a-input>
+            <a-button type="primary" @click="handleKeydownEnterClick">搜索</a-button>
         </div>
-        <a-pagination
-            v-show="!showOrderComponent"
-            class="pagination"
-            @change="handlePaginationChange"
-            v-model="pagination.current"
-            :show-total="(total) => `一共 ${total} 条`"
-            :total="pagination.total"
-        />
-        <OrderDetail v-if="isOrderShow" :orderItem="currentOrderItem" @close="handleOrderDetailClick" />
+        <div class="share-record">
+            <div class="ip-lists">
+                <div
+                    v-for="item in renderWorksList"
+                    :key="item.id"
+                    class="card"
+                    @click="handleItemCardClick(item)"
+                    @mouseout="() => handleMouseover(false, item.id)"
+                    @mouseover="() => handleMouseover(true, item.id)"
+                >
+                    <div :ref="String(item.id)" class="img">
+                        <img :src="item.file" alt="" />
+                    </div>
+                    <div v-if="showOpenTime(item)" class="sale">
+                        <icon-svg class="icon" icon="icon-naozhong"></icon-svg>
+                        <span> {{ dayjs(item.opening_time * 1000).format("YYYY-MM-DD HH:mm") }}</span>
+                    </div>
 
-        <div class="current-title" v-if="showOrderComponent">
-            <div class="title">
-                <span class="t1">{{ currentNftParams.name }}</span>
-                <span class="t2" @click="handleBlockClick">返回</span>
-            </div>
-            <a-popover title="设置分享" trigger="click">
-                <template #content>
-                    <div class="share-content">
-                        <div class="share-time">
-                            <span>分享到期时间</span>
-                            <a-date-picker show-time v-model:value="shareTime" @change="handleSureClick" />
+                    <div class="me">
+                        <div class="me-t">
+                            <h3>{{ item.name }}</h3>
+                            <div class="avator-des">
+                                <div class="imgs">
+                                    <img :src="item.author_avatar" alt="" />
+                                    <img alt="" class="icon" src="@assets/images/v-icon.png" />
+                                </div>
+                                <span class="txt-overflow" style="width: 100px">{{ item.nickname }}</span>
+                            </div>
                         </div>
-                        <div class="share-link">
-                            <span class="t1">分享链接</span>
-                            <div class="input">
-                                <input type="text" :value="shareLink" ref="input" />
-                                <icon-svg icon="icon-fuzhi" class="icon" @click="copyClick"></icon-svg>
+                        <div class="me-m">
+                            <div class="_limit">
+                                <div class="_t1">限量</div>
+                                <div class="_t2">{{ item.number }}</div>
                             </div>
                         </div>
                     </div>
-                </template>
-                <div class="share">分享</div>
-            </a-popover>
+                    <div class="mask"></div>
+                </div>
+                <p v-if="renderWorksList.length <= 0" class="no-found">暂无作品</p>
+            </div>
+            <a-pagination
+                class="pagination"
+                @change="handlePaginationChange"
+                v-model="pagination.current"
+                :show-total="(total) => `一共 ${total} 条`"
+                :total="pagination.total"
+            />
         </div>
     </div>
 </template>
@@ -102,23 +63,25 @@
 <script>
 import { computed, defineComponent, getCurrentInstance, onMounted, ref, reactive } from "vue";
 import dayjs from "dayjs";
-import { getSuccessOrderApi, GetAdminAllNftApi, getShareAccessToken, setNftTransferStatusApi } from "@api";
+import {
+    getSuccessOrderApi,
+    GetAdminAllNftApi,
+    getShareAccessToken,
+    setNftTransferStatusApi,
+    queryNftApi,
+} from "@api";
 import { exportXlsx, warningNotify, successNotify } from "@/utils";
-import Order from "./Order";
-import OrderDetail from "./OrderDetail";
 // publishStatusUnPublish = "0"; //下架
 // publishStatusPublishing = "1" //审核
 // publishStatusSuccess    = "2" //发布成功
 // publishStatusFailed     = "3" //发布失败
 export default defineComponent({
-    components: {
-        Order,
-        OrderDetail,
-    },
+    components: {},
     setup() {
         const { proxy } = getCurrentInstance();
         const renderWorksList = ref([]);
         const pagination = reactive({ current: 1, pageSize: 10, total: 0 });
+        const searchValue = ref("");
 
         const currentNftParams = ref({});
         const currentOrderItem = ref({});
@@ -142,7 +105,6 @@ export default defineComponent({
                 item.publish === "2" && Date.parse(new Date()) / 1000 < Number(item.opening_time);
         });
 
-        const showOrderComponent = computed(() => Object.keys(currentNftParams.value).length > 0);
         onMounted(() => {
             shareLink.value = `${window.origin}/share?`;
             getWorksList();
@@ -154,6 +116,19 @@ export default defineComponent({
         };
         const handleOrderDetailClick = () => {
             isOrderShow.value = !isOrderShow.value;
+        };
+
+        const handleKeydownEnterClick = async () => {
+            if (searchValue.value.trim() === "") {
+                return getWorksList();
+            }
+            const result = await queryNftApi({
+                field: "name",
+                value: searchValue.value,
+            });
+            if (result.err_code === "0") {
+                renderWorksList.value = returnPrivateTableData(result.result.list);
+            }
         };
 
         const returnPrivateTableData = (result) => {
@@ -237,11 +212,9 @@ export default defineComponent({
         };
 
         const handleNftTransferStatusClick = async (id, can_transfer) => {
-            const status = can_transfer === "false";
-            console.log(can_transfer);
             const result = await setNftTransferStatusApi({
                 denom_id: String(id),
-                status: String(status),
+                status: String(can_transfer),
             });
             if (result.err_code == "0") {
                 successNotify("设置成功");
@@ -262,6 +235,7 @@ export default defineComponent({
             showOpenTime,
             isOrderShow,
             currentOrderItem,
+            searchValue,
             handleMouseover,
             handleExportOrderClick,
             handleItemCardClick,
@@ -273,8 +247,8 @@ export default defineComponent({
             handlePaginationChange,
             handleOrderDetailClick,
             handleNftTransferStatusClick,
+            handleKeydownEnterClick,
             currentNftParams,
-            showOrderComponent,
             handleBlockClick,
             handleShowOrderDetailComponent,
         };
@@ -283,6 +257,14 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
+.header-search {
+    display: flex;
+    justify-content: end;
+    .search {
+        width: 300px;
+        margin-right: 10px;
+    }
+}
 .share-record {
     position: relative;
     height: 79vh;
@@ -379,7 +361,6 @@ export default defineComponent({
 .ip-lists {
     position: absolute;
     top: 50px;
-    margin-top: 20px;
     overflow-y: auto;
     height: 85%;
     display: flex;

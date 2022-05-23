@@ -95,6 +95,15 @@ const routes = [
                 component: () => import(/*webpackChunkName:'WhitelistDetail'*/ "@/views/Whitelist/WhiteDetail.vue"),
                 children: [],
             },
+            {
+                path: "/refund",
+                name: "refund",
+                meta: {
+                    title: "退款",
+                },
+                component: () => import(/*webpackChunkName:'Refund'*/ "@/views/Refund/index.vue"),
+                children: [],
+            },
         ],
     },
     {
