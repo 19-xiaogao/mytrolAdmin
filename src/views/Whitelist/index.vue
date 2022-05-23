@@ -23,6 +23,9 @@
                     <a-button type="link" @click.stop="handleDetailClick(record.id, record.name)"
                         >查看详情</a-button
                     >
+                    <a-button type="link" @click.stop="handleAssociationClick(record.id, record.name)"
+                        >关联作品</a-button
+                    >
                     <!-- <a-button type="link" @click.stop="handleRenewClick(record.id)">
                         <a-popover v-model:visible="record.popoverVisible" title="Title" trigger="click">
                             <template #content>
@@ -35,6 +38,12 @@
             </a-table>
         </div>
         <AddGroupModal v-model:createVisible="createWhiteVisible" @ok="handleAddWhiteListClick" />
+        <ExportUserModal
+            :btnType="isExportBtn"
+            v-show="isConversionActivity"
+            :whitelistId="currentId ? currentId : ''"
+            @close="handleConversionActivityClick"
+        />
     </div>
 </template>
 
@@ -42,6 +51,7 @@
 import { onMounted, ref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import AddGroupModal from "./AddGroupModal.vue";
+import ExportUserModal from "./ExportUserModal.vue";
 import { queryAllWhiteListApi } from "@/api/api.js";
 
 const whiteListColumns = [
@@ -77,15 +87,19 @@ const whiteListColumns = [
 export default {
     components: {
         AddGroupModal,
+        ExportUserModal,
     },
     setup() {
         const queryAddress = ref("");
         const createWhiteVisible = ref(false);
         const whiteList = ref([]);
-        const currentWhiteData = ref({});
+        const currentId = ref("0");
         const scrollHeight = ref();
         const popoverVisible = ref(false);
         const router = useRouter();
+        const isConversionActivity = ref(false);
+        const isExportBtn = ref("association");
+
         onMounted(() => {
             queryAllWhiteList();
         });
@@ -126,17 +140,32 @@ export default {
         const handleAddWhiteListClick = () => {
             queryAllWhiteList();
         };
+        const handleAssociationClick = (id) => {
+            currentId.value = id;
+            isConversionActivity.value = true;
+        };
+        const handleConversionActivityClick = (item) => {
+            isConversionActivity.value = false;
+            if (item) {
+                return;
+            }
+            queryAllWhiteList();
+        };
         return {
             queryAddress,
             popoverVisible,
+            isConversionActivity,
             whiteList,
             createWhiteVisible,
             scrollHeight,
-            currentWhiteData,
+            currentId,
+            isExportBtn,
             whiteListColumns,
             handleGroupWhiteClick,
             handleAddWhiteListClick,
+            handleAssociationClick,
             handleDetailClick,
+            handleConversionActivityClick,
             handleSearchEnter,
         };
     },

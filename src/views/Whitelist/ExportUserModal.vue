@@ -1,7 +1,9 @@
 <template>
     <div ref="conversionRef" class="operation-activity">
         <div class="header">
-            <span class="title">将用户数据导入白名单</span>
+            <span class="title">{{
+                btnType === "association" ? "白名单于作品关联" : "将用户数据导入白名单"
+            }}</span>
             <icon-svg class="icon" icon="icon-a-bianzu101" @click="handleHideClick"></icon-svg>
         </div>
         <div class="input-search">
@@ -50,14 +52,14 @@
         </div>
         <a-button :loading="loading" class="save-setting" @click="handleSaveSettingClick">
             <icon-svg icon="icon-save"></icon-svg>
-            {{ btnType === "add" ? "导入" : "删除" }}
+            {{ btnText }}
         </a-button>
     </div>
 </template>
 
 <script>
-import { onMounted, onUpdated, ref, getCurrentInstance } from "vue";
-import { GetAdminAllNftApi, queryNftHoldersApi, queryNftApi } from "@/api/api.js";
+import { onMounted, onUpdated, ref, getCurrentInstance, computed } from "vue";
+import { GetAdminAllNftApi, queryNftHoldersApi, queryNftApi, denomBindWhitelistApi } from "@/api/api.js";
 import { addUserToWhiteListPollingApi } from "@/api/pllingApi.js";
 // import { useStore } from "vuex";
 import { successNotify, warningNotify } from "@/utils";
@@ -92,7 +94,15 @@ export default {
         };
 
         // const user = computed(() => store.getters.getUser);
-
+        const btnText = computed(() => {
+            if (props.btnType === "association") {
+                return "关联";
+            } else if (props.btnType === "add") {
+                return "导入";
+            } else {
+                return "删除";
+            }
+        });
         onUpdated(() => {
             conversionRef.value.style.animation = "sliding-show 0.5s linear 0s";
         });
@@ -132,32 +142,45 @@ export default {
         };
 
         const handleSaveSettingClick = async () => {
-            loading.value = true;
             const findData = worksList.value.find((item) => item.selected);
             if (!findData) return warningNotify("请选择作品");
-            const result = await queryNftHoldersApi(String(findData.id));
-            const deduplicationData = new Set(result.result);
-            if (result.err_code === "0") {
-                for await (let item of deduplicationData) {
-                    try {
-                        await addUserToWhiteListPollingApi({
-                            action: props.btnType,
-                            address: item, // 用户id
-                            whitelist_id: String(props.whitelistId), // 白名单列表
-                        });
-                    } catch (error) {
-                        console.log(error);
+            if (props.btnType === "association") {
+                const result = await denomBindWhitelistApi({
+                    denom_id: String(findData.id),
+                    whitelist_id: String(props.whitelistId),
+                });
+                if (result.err_code === "0") {
+                    successNotify("关联成功");
+                    searchValue.value = "";
+                    getWorksList();
+                    emit("close");
+                }
+            } else {
+                loading.value = true;
+                const result = await queryNftHoldersApi(String(findData.id));
+                const deduplicationData = new Set(result.result);
+                if (result.err_code === "0") {
+                    for await (let item of deduplicationData) {
+                        try {
+                            await addUserToWhiteListPollingApi({
+                                action: props.btnType,
+                                address: item, // 用户id
+                                whitelist_id: String(props.whitelistId), // 白名单列表
+                            });
+                        } catch (error) {
+                            console.log(error);
+                        }
                     }
+                    loading.value = false;
+                    if (props.btnType === "add") {
+                        successNotify("导入成功");
+                    } else {
+                        successNotify("删除成功");
+                    }
+                    searchValue.value = "";
+                    getWorksList();
+                    emit("close");
                 }
-                loading.value = false;
-                if (props.btnType === "add") {
-                    successNotify("导入成功");
-                } else {
-                    successNotify("删除成功");
-                }
-                searchValue.value = "";
-                getWorksList();
-                emit("close");
             }
         };
         const handleSelectedClick = (index) => {
@@ -178,6 +201,7 @@ export default {
             conversionRef,
             loading,
             worksList,
+            btnText,
             handleSaveSettingClick,
             handleEnterClick,
             handleSelectedClick,
