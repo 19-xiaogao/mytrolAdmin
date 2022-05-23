@@ -93,12 +93,6 @@ const makeMenu = [
         path: "/items",
         id: 6,
     },
-    {
-        icon: "icon-a-bianzu8",
-        text: "白名单",
-        path: "/whitelist",
-        id: 9,
-    },
 ];
 const operationMenu = [
     {
@@ -124,12 +118,6 @@ const operationMenu = [
         text: "作品",
         path: "/items",
         id: 6,
-    },
-    {
-        icon: "icon-a-bianzu8",
-        text: "白名单",
-        path: "/whitelist",
-        id: 9,
     },
 ];
 export default {
