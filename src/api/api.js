@@ -174,7 +174,10 @@ export const queryNftHoldersApi = (denom_id) => server.get('/backend/get_nft_hol
 export const queryDenomBindWhiteListApi = (denom_id) => server.get('/backend/show_denom_bind_whitelist/' + denom_id)
 
 // 删除ip
-export const remoteIpApi = (params) => server.post('backend/drop_ip', params)
+export const remoteIpApi = (params) => server.post('/backend/drop_ip', params)
 
 //查询nft数据
 export const queryNftApi = (params) => server.get(`/admin_seach_all_nft/${params.field}/${params.value}`)
+
+// 解除绑定
+export const unBindDenomWhiteListApi = (params) => server.post('/backend/denom_unbind_whitelist', params)

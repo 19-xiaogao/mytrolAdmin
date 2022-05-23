@@ -19,11 +19,30 @@
                 :scroll="{ y: scrollHeight }"
                 class="tx-table"
             >
+                <template #id="{ record }"> {{ record.WhiteList.id }} </template>
+                <template #name="{ record }"> {{ record.WhiteList.name }} </template>
+                <template #memo="{ record }"> {{ record.WhiteList.memo }} </template>
+                <template #bindDenoms="{ record }">
+                    <span v-if="record.BindDenoms.length === 0"> 暂无绑定作品</span>
+                    <a-tag
+                        closable
+                        @close="handleWhiteCloseClick(item.id, record.WhiteList.id)"
+                        @close.prevent
+                        v-for="(item, index) in record.BindDenoms"
+                        :key="index"
+                        >{{ item.name }}</a-tag
+                    >
+                </template>
+
                 <template #setting="{ record }">
-                    <a-button type="link" @click.stop="handleDetailClick(record.id, record.name)"
+                    <a-button
+                        type="link"
+                        @click.stop="handleDetailClick(record.WhiteList.id, record.WhiteList.name)"
                         >查看详情</a-button
                     >
-                    <a-button type="link" @click.stop="handleAssociationClick(record.id, record.name)"
+                    <a-button
+                        type="link"
+                        @click.stop="handleAssociationClick(record.WhiteList.id, record.WhiteList.name)"
                         >关联作品</a-button
                     >
                     <!-- <a-button type="link" @click.stop="handleRenewClick(record.id)">
@@ -52,7 +71,8 @@ import { onMounted, ref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import AddGroupModal from "./AddGroupModal.vue";
 import ExportUserModal from "./ExportUserModal.vue";
-import { queryAllWhiteListApi } from "@/api/api.js";
+import { queryAllWhiteListApi, unBindDenomWhiteListApi } from "@/api/api.js";
+import { Modal } from "ant-design-vue";
 
 const whiteListColumns = [
     {
@@ -65,16 +85,23 @@ const whiteListColumns = [
     {
         title: "白名单名称",
         key: "name",
-        width: "30%",
+        width: "20%",
         dataIndex: "name",
         slots: { customRender: "name" },
     },
     {
         title: "白名单描述",
         dataIndex: "memo",
-        width: "50%",
+        width: "20%",
         key: "memo",
         slots: { customRender: "memo" },
+    },
+    {
+        title: "已绑定的作品",
+        dataIndex: "bindDenoms",
+        width: "40%",
+        key: "bindDenoms",
+        slots: { customRender: "bindDenoms" },
     },
     {
         title: "操作",
@@ -151,6 +178,21 @@ export default {
             }
             queryAllWhiteList();
         };
+        const handleWhiteCloseClick = (denom_id, whitelist_id) => {
+            Modal.confirm({
+                title: "你确定想解除绑定嘛?",
+                async onOk() {
+                    const result = await unBindDenomWhiteListApi({
+                        denom_id: String(denom_id),
+                        whitelist_id: String(whitelist_id),
+                    });
+                    if (result.err_code === "0") {
+                        queryAllWhiteList();
+                    }
+                },
+                onCancel() {},
+            });
+        };
         return {
             queryAddress,
             popoverVisible,
@@ -162,6 +204,7 @@ export default {
             isExportBtn,
             whiteListColumns,
             handleGroupWhiteClick,
+            handleWhiteCloseClick,
             handleAddWhiteListClick,
             handleAssociationClick,
             handleDetailClick,
