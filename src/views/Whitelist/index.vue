@@ -97,7 +97,7 @@ const whiteListColumns = [
         slots: { customRender: "memo" },
     },
     {
-        title: "已绑定的作品",
+        title: "已关联的作品",
         dataIndex: "bindDenoms",
         width: "40%",
         key: "bindDenoms",
