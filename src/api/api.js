@@ -181,3 +181,9 @@ export const queryNftApi = (params) => server.get(`/admin_seach_all_nft/${params
 
 // 解除绑定
 export const unBindDenomWhiteListApi = (params) => server.post('/backend/denom_unbind_whitelist', params)
+
+//查询退款列表
+export const queryRefundOrdersApi = (denomId) => server.get('/unionpay/get_orderids_to_refund/' + denomId);
+
+// 退款
+export const refundsOrderApi = (orderId) => server.post('/unionh5_pay_refunds/' + orderId)

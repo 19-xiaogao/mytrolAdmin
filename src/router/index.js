@@ -104,6 +104,15 @@ const routes = [
                 component: () => import(/*webpackChunkName:'Refund'*/ "@/views/Refund/index.vue"),
                 children: [],
             },
+            {
+                path: "/refund/detail",
+                name: "refundDetail",
+                meta: {
+                    title: "退款详情",
+                },
+                component: () => import(/*webpackChunkName:'Refund'*/ "@/views/Refund/RefundDetail.vue"),
+                children: [],
+            },
         ],
     },
     {

@@ -1,13 +1,19 @@
 <template>
     <div class="page-height">
         <div class="header-search">
-            <a-input
-                class="search"
-                placeholder="请输入需要查询的作品名称"
-                v-model:value="searchValue"
-                @keydown.enter="handleKeydownEnterClick"
-            ></a-input>
-            <a-button type="primary" @click="handleKeydownEnterClick">搜索</a-button>
+            <a-breadcrumb>
+                <a-breadcrumb-item>Mytrol</a-breadcrumb-item>
+                <a-breadcrumb-item><router-link to="/refund">退款</router-link></a-breadcrumb-item>
+            </a-breadcrumb>
+            <div class="search-box">
+                <a-input
+                    class="search"
+                    placeholder="请输入需要查询的作品名称"
+                    v-model:value="searchValue"
+                    @keydown.enter="handleKeydownEnterClick"
+                ></a-input>
+                <a-button type="primary" @click="handleKeydownEnterClick">搜索</a-button>
+            </div>
         </div>
         <div class="share-record">
             <div class="ip-lists">
@@ -63,18 +69,9 @@
 <script>
 import { computed, defineComponent, getCurrentInstance, onMounted, ref, reactive } from "vue";
 import dayjs from "dayjs";
-import {
-    getSuccessOrderApi,
-    GetAdminAllNftApi,
-    getShareAccessToken,
-    setNftTransferStatusApi,
-    queryNftApi,
-} from "@api";
-import { exportXlsx, warningNotify, successNotify } from "@/utils";
-// publishStatusUnPublish = "0"; //下架
-// publishStatusPublishing = "1" //审核
-// publishStatusSuccess    = "2" //发布成功
-// publishStatusFailed     = "3" //发布失败
+import { GetAdminAllNftApi, queryNftApi } from "@api";
+import { useRouter } from "vue-router";
+
 export default defineComponent({
     components: {},
     setup() {
@@ -82,14 +79,9 @@ export default defineComponent({
         const renderWorksList = ref([]);
         const pagination = reactive({ current: 1, pageSize: 10, total: 0 });
         const searchValue = ref("");
+        const router = useRouter();
 
         const currentNftParams = ref({});
-        const currentOrderItem = ref({});
-
-        const isOrderShow = ref(false);
-
-        const shareTime = ref("");
-        const shareLink = ref("");
 
         const handleMouseover = (bol, id) => {
             bol
@@ -97,26 +89,14 @@ export default defineComponent({
                 : (proxy.$refs[id][0].style.transform = "scale(1)");
         };
 
-        // 是否显示设置元素
-        const showOptionsElement = computed(() => (publish) => publish !== "1");
-
         const showOpenTime = computed(() => {
             return (item) =>
                 item.publish === "2" && Date.parse(new Date()) / 1000 < Number(item.opening_time);
         });
 
         onMounted(() => {
-            shareLink.value = `${window.origin}/share?`;
             getWorksList();
         });
-
-        const handleShowOrderDetailComponent = (item) => {
-            isOrderShow.value = true;
-            currentOrderItem.value = item;
-        };
-        const handleOrderDetailClick = () => {
-            isOrderShow.value = !isOrderShow.value;
-        };
 
         const handleKeydownEnterClick = async () => {
             if (searchValue.value.trim() === "") {
@@ -150,107 +130,25 @@ export default defineComponent({
             }
         };
 
-        // 对导出数据做处理
-        const handleExportDataFile = (result) => {
-            if (!Array.isArray(result) && result.length < 0) return;
-            result.forEach((item) => {
-                delete item.avatar;
-                delete item.created_at;
-                delete item.description;
-                delete item.nft_file;
-            });
-            return result.map((item) => Object.values(item));
-        };
-
-        // 处理订单导出数据
-        const handleExportOrderClick = async (id, name) => {
-            const { err_code, result } = await getSuccessOrderApi(id);
-            console.log(result);
-            if (err_code == "0" && result.length > 0) {
-                const th = handleExportDataFile(result);
-                const td = [
-                    "价格",
-                    "买家hash地址",
-                    "NFT编号",
-                    "NFT名称",
-                    "剩余数量",
-                    "NFT卖方名称",
-                    "mytrol订单号",
-                    "NFT卖方地址",
-                    "NFT总数",
-                    "交易hash",
-                    "订单号",
-                ];
-                exportXlsx(td, th, name);
-            } else {
-                warningNotify("暂无数据");
-            }
-        };
-
         const handleItemCardClick = async (item) => {
             currentNftParams.value = item;
+            router.push(`/refund/detail?id=${item.id}`);
         };
         const handlePaginationChange = (page, pageSize) => {
             pagination.current = page;
             pagination.pageSize = pageSize;
             getWorksList();
         };
-        const handleBlockClick = () => {
-            currentNftParams.value = {};
-            shareLink.value = `${window.origin}/share?`;
-            shareTime.value = "";
-        };
-
-        const handleSureClick = async () => {
-            const pastTime = dayjs(shareTime.value).unix();
-            const item = currentNftParams.value;
-            const accessTokenResult = await getShareAccessToken(pastTime, item.id);
-            if (accessTokenResult.err_code === "0") {
-                const { result } = accessTokenResult;
-                shareLink.value = `${window.origin}/share?id=${item.id}&access_token=${result.access_token}`;
-            }
-        };
-
-        const handleNftTransferStatusClick = async (id, can_transfer) => {
-            const result = await setNftTransferStatusApi({
-                denom_id: String(id),
-                status: String(can_transfer),
-            });
-            if (result.err_code == "0") {
-                successNotify("设置成功");
-                getWorksList();
-            }
-        };
-
-        const copyClick = () => {
-            proxy.$refs.input.select();
-            document.execCommand("copy");
-            successNotify("复制成功");
-        };
-
         return {
             renderWorksList,
-            showOptionsElement,
             pagination,
             showOpenTime,
-            isOrderShow,
-            currentOrderItem,
             searchValue,
             handleMouseover,
-            handleExportOrderClick,
             handleItemCardClick,
-            handleSureClick,
-            copyClick,
             dayjs,
-            shareLink,
-            shareTime,
             handlePaginationChange,
-            handleOrderDetailClick,
-            handleNftTransferStatusClick,
             handleKeydownEnterClick,
-            currentNftParams,
-            handleBlockClick,
-            handleShowOrderDetailComponent,
         };
     },
 });
@@ -259,10 +157,15 @@ export default defineComponent({
 <style scoped lang="scss">
 .header-search {
     display: flex;
-    justify-content: end;
-    .search {
-        width: 300px;
-        margin-right: 10px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    .search-box {
+        display: flex;
+        .search {
+            width: 300px;
+            margin-right: 10px;
+        }
     }
 }
 .share-record {

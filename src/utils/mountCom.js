@@ -17,7 +17,8 @@ import {
     Popover,
     Tabs,
     Checkbox,
-    Breadcrumb
+    Breadcrumb,
+    Radio,
 } from "ant-design-vue";
 
 import IconSvg from "@/components/IconSvg";
@@ -25,6 +26,7 @@ import IconSvg from "@/components/IconSvg";
 const { Item: MenuItem } = Menu;
 const { TabPane } = Tabs;
 const { Item: BreadcrumbItem } = Breadcrumb
+const { Group: RadioGroup } = Radio
 export default function (app) {
     app.component("icon-svg", IconSvg);
     app.component("a-dropdown", Dropdown);
@@ -50,4 +52,6 @@ export default function (app) {
     app.component("a-checkbox", Checkbox);
     app.component("a-breadcrumb", Breadcrumb);
     app.component("a-breadcrumb-item", BreadcrumbItem);
+    app.component("a-radio", Radio);
+    app.component("a-radio-group", RadioGroup);
 }

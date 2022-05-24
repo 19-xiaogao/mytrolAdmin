@@ -73,12 +73,12 @@ const adminMenu = [
         path: "/whitelist",
         id: 9,
     },
-    // {
-    //     icon: "icon-tui",
-    //     text: "退款",
-    //     path: "/refund",
-    //     id: 10,
-    // },
+    {
+        icon: "icon-tui",
+        text: "退款",
+        path: "/refund",
+        id: 10,
+    },
 ];
 const makeMenu = [
     {
