@@ -3,10 +3,12 @@ import { Modal } from "ant-design-vue";
 import { errorNotify } from "@/utils";
 import router from "@/router";
 import store from "@/store";
-
+//https://mytroladmin.dbchain.cloud
 const baseUrl = process.env.VUE_APP_BASE_URL;
+const environment = process.env.NODE_ENV;
+
 const server = axios.create({
-    baseURL: baseUrl,
+    baseURL: environment === "development" ? baseUrl : window.origin + baseUrl,
 });
 
 server.interceptors.request.use(
