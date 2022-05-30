@@ -191,12 +191,13 @@ export function exportXlsx(td, th, fileName) {
 }
 
 // 生成二维码
-export async function generatorQrCode(id, result) {
+export async function generatorQrCode(id) {
+    console.log(id);
     const shareUrl = process.env.VUE_APP_BASE_SMELL_SHARE;
     const local = process.env.NODE_ENV !== "production";
     const shellBaseUrl = local
-        ? `${shareUrl}?id${id}=${result.redeem_code}#wechat-redirect`
-        : `${shareUrl}?id${id}=${result.redeem_code}`;
+        ? `${shareUrl}?id=${id}`
+        : `${shareUrl}?id=${id}`;
 
     return await QRCode.toDataURL(shellBaseUrl);
 }

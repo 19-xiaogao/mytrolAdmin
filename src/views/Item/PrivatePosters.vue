@@ -55,8 +55,9 @@ export default defineComponent({
         };
         const generatorQrCodeApi = async () => {
             const { err_code, result } = await redeemCodeApi(props.params.id);
+            console.log(result);
             if (err_code !== "0") return;
-            qrCode.value = await generatorQrCode(props.params.id, result);
+            qrCode.value = await generatorQrCode(props.params.id);
         };
         watchEffect(() => {
             if (Object.keys(props.params).length > 0) {
