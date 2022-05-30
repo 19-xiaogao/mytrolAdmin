@@ -258,6 +258,7 @@ export default defineComponent({
             uploadParams.equity_cover = "";
             currentIpName.value = "首页";
             btnDisabled.value = false;
+            uploadParams.is_whitelisted = false;
         };
 
         const uploadAllNftToOssApi = (formData) => {

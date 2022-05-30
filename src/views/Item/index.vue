@@ -206,7 +206,8 @@ export default defineComponent({
         });
 
         const returnPrivateTableData = (result) => {
-            return result.filter((item) => item.free === String(!!currentIndex.value));
+            console.log(currentIndex.value);
+            return result.filter((item) => item.private_sell === !!currentIndex.value);
         };
         const getWorksList = async () => {
             const { err_code, result } = await getWorksApi(user.value.user_id);
