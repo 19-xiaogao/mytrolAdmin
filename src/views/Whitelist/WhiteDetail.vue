@@ -229,7 +229,7 @@ export default {
 .h-r {
     margin-top: 10px;
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
     height: 40px;
     .input {
