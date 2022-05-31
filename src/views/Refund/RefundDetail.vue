@@ -189,7 +189,7 @@ export default {
 <style lang="scss" scoped>
 .h-r {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     align-items: center;
     height: 40px;
     .input {

@@ -222,7 +222,7 @@ export default {
 }
 .h-r {
     display: flex;
-    justify-content: end;
+    justify-content: flex-end;
     height: 40px;
     .input {
         width: 200px;
