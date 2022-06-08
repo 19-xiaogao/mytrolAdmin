@@ -16,6 +16,7 @@
         <ModalSettingDay v-model:dayVisible="dayVisible" v-model:days="days" @close="handleCloseEmit" />
         <ModalSettingClassVue v-model:classVisible="classVisible" />
         <ModalSend v-model:sendVisible="sendVisible" />
+        <ModalProject v-model:projectVisible="projectVisible" />
     </div>
 </template>
 
@@ -27,7 +28,7 @@ const settingList = [
     },
     {
         icon: "icon-setting-icon2",
-        text: "信息",
+        text: "项目开启/维护",
     },
     {
         icon: "icon-setting-icon3",
@@ -49,12 +50,14 @@ import ModalUser from "./ModalUser";
 import ModalSettingDay from "./ModalSettingDay";
 import ModalSettingClassVue from "./ModalSettingClass";
 import ModalSend from "./sendModal.vue";
+import ModalProject from "./ModalProject.vue";
 export default defineComponent({
     components: {
         ModalUser,
         ModalSettingDay,
         ModalSettingClassVue,
         ModalSend,
+        ModalProject,
     },
     setup() {
         const currentIndex = ref(-1);
@@ -64,6 +67,7 @@ export default defineComponent({
         const dayVisible = ref(false);
         const classVisible = ref(false);
         const sendVisible = ref(false);
+        const projectVisible = ref(false);
         const isShowActiveClass = computed(() => {
             return (index) => (currentIndex.value === index ? "ms active" : "ms");
         });
@@ -71,6 +75,9 @@ export default defineComponent({
             currentIndex.value = index;
             if (index === 0) {
                 createVisible.value = true;
+            }
+            if (index === 1) {
+                projectVisible.value = true;
             }
             if (index === 2) {
                 sendVisible.value = true;
@@ -113,6 +120,7 @@ export default defineComponent({
             classVisible,
             handleCloseEmit,
             sendVisible,
+            projectVisible,
         };
     },
 });

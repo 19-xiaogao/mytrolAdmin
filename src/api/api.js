@@ -187,3 +187,10 @@ export const queryRefundOrdersApi = (denomId) => server.get('/unionpay/get_order
 
 // 退款
 export const refundsOrderApi = (orderId) => server.post('/unionh5_pay_refunds/' + orderId)
+
+
+//设置项目的开启和维护
+export const setSystemStatusApi = (params) => server.post('/set_system_status/' + params.status)
+
+//查询项目的系统状态
+export const querySystemStatusApi = () => server.get('/get_system_status')

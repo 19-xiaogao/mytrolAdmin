@@ -68,7 +68,8 @@ export default defineComponent({
 
             if (response.err_code === "0") {
                 notify("提示", "欢迎回来", "success");
-
+                        router.push("/");
+    
                 getUserInfoApi().then(({ err_code, result }) => {
                     if (err_code === "0") {
                         // 本地存一份，vuex 存一份
