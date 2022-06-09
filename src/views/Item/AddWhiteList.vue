@@ -46,6 +46,7 @@ export default defineComponent({
 
         watchEffect(() => {
             if (props.denomId) {
+                console.log(props.denomId);
                 queryDenomBindWhiteListApi(props.denomId).then((res) => {
                     if (res.err_code === "0") {
                         exitWhiteList.value = res.result.join("-");

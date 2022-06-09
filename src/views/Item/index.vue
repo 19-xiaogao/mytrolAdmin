@@ -85,11 +85,11 @@
             v-model:postersVisible="postersParams.postersVisible"
             :params="postersParams.params"
         />
-        <AddWhiteList
+        <!-- <AddWhiteList
             v-model:visible="addWhiteVisible"
             :denomId="shelvesObject.id"
             @close="handleCloseClick"
-        />
+        /> -->
     </div>
 </template>
 
@@ -112,7 +112,7 @@ import { generatorQrCode, successNotify } from "@/utils";
 import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
-import AddWhiteList from "./AddWhiteList.vue";
+// import AddWhiteList from "./AddWhiteList.vue";
 
 // publishStatusUnPublish = "0"; //下架
 // publishStatusPublishing = "1" //审核
@@ -137,7 +137,7 @@ export default defineComponent({
         TabBar,
         ShelvesNft,
         PrivatePosters,
-        AddWhiteList,
+        // AddWhiteList,
     },
     setup() {
         const { proxy } = getCurrentInstance();
@@ -192,6 +192,7 @@ export default defineComponent({
 
         // watchEffect listen table switch change event
         watchEffect(() => {
+            console.log(currentMenu.value);
             renderWorksList.value = worksList.value
                 .filter((item) => item.publish === currentMenu.value)
                 .map((item) => ({
@@ -259,6 +260,7 @@ export default defineComponent({
         };
 
         const handleShelvesClick = (id, publish) => {
+            console.log(publish);
             if (publish === "2") {
                 handleUnShelvesNft(id, publish);
             }
