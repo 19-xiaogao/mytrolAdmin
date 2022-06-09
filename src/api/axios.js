@@ -1,6 +1,6 @@
 import axios from "axios";
 import { Modal } from "ant-design-vue";
-import { errorNotify } from "@/utils";
+import { errorNotify, warningNotify } from "@/utils";
 import router from "@/router";
 import store from "@/store";
 //https://mytroladmin.dbchain.cloud
@@ -82,6 +82,8 @@ server.interceptors.response.use((config) => {
         errorNotify("未经授权");
     } else if (responseData.err_code === "14") {
         errorNotify("身份验证失败");
+    }else if (responseData.err_code === "28"){
+        warningNotify("系统维护中...")
     }
 
     return responseData;
