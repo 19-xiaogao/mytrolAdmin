@@ -10,14 +10,21 @@
                 v-for="item in renderWorksList"
                 :key="item.id"
                 class="card"
-                @click="handleItemCardClick(item)"
                 @mouseout="() => handleMouseover(false, item.id)"
                 @mouseover="() => handleMouseover(true, item.id)"
             >
                 <div :ref="String(item.id)" class="img">
                     <img :src="item.file" alt="" />
                 </div>
-                <a-dropdown v-if="showOptionsElement(item.publish)" class="options">
+                <a-switch
+                    class="options-left"
+                    v-model:checked="item.is_whitelisted"
+                    @click="handleSetWhiteStatusClick(e, item.id, item.is_whitelisted)"
+                    checked-children="开启白名单"
+                    un-checked-children="关闭白名单"
+                />
+                <a-button class="lookDetail" @click="handleItemCardClick(item)">查看详情</a-button>
+                <a-dropdown class="options">
                     <p>
                         <span class="text">设置</span>
                         <icon-svg class="icon" icon="icon-a-bianzu13"></icon-svg>
@@ -102,7 +109,13 @@
 <script>
 import { computed, defineComponent, getCurrentInstance, onMounted, ref, reactive } from "vue";
 import dayjs from "dayjs";
-import { getSuccessOrderApi, GetAdminAllNftApi, getShareAccessToken, setNftTransferStatusApi } from "@api";
+import {
+    getSuccessOrderApi,
+    GetAdminAllNftApi,
+    setWhitelistStatusApi,
+    getShareAccessToken,
+    setNftTransferStatusApi,
+} from "@api";
 import { exportXlsx, warningNotify, successNotify } from "@/utils";
 import Order from "./Order";
 import OrderDetail from "./OrderDetail";
@@ -235,6 +248,16 @@ export default defineComponent({
                 shareLink.value = `${window.origin}/share?id=${item.id}&access_token=${result.access_token}`;
             }
         };
+        const handleSetWhiteStatusClick = async (e, id, status) => {
+            console.log(e);
+            const result = await setWhitelistStatusApi({
+                denom_id: String(id),
+                status: String(status),
+            });
+            if (result.err_code === "0") {
+                getWorksList();
+            }
+        };
 
         const handleNftTransferStatusClick = async (id, can_transfer) => {
             const status = can_transfer === "false";
@@ -277,6 +300,7 @@ export default defineComponent({
             showOrderComponent,
             handleBlockClick,
             handleShowOrderDetailComponent,
+            handleSetWhiteStatusClick,
         };
     },
 });
@@ -422,7 +446,19 @@ export default defineComponent({
                 object-position: 50% 50%;
             }
         }
-
+        .options-left {
+            position: absolute;
+            top: 20px;
+            left: 2;
+            z-index: 3;
+        }
+        .lookDetail {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 4;
+        }
         .options {
             position: absolute;
             top: 11px;

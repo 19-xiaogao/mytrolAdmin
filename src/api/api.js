@@ -194,3 +194,6 @@ export const setSystemStatusApi = (params) => server.post('/set_system_status/' 
 
 //查询项目的系统状态
 export const querySystemStatusApi = () => server.get('/get_system_status')
+
+//设置白名单状态
+export const setWhitelistStatusApi = (params) => server.post('/backend/set_demon_whitelist_status', params)
