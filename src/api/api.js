@@ -200,3 +200,6 @@ export const setWhitelistStatusApi = (params) => server.post("/backend/set_demon
 
 // 创建盲盒nft
 export const makeBindBoxNftApi = (params) => server.post("/nft_make_without_money", params);
+
+//管理员获取盲盒列表
+export const getBindBoxNftPublishingApi = (params) => server.get("/blind_box/publishing/" + params.current + "/" + params.numbers)
