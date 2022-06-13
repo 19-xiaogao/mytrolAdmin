@@ -53,5 +53,6 @@ export default function (app) {
     app.component("a-breadcrumb", Breadcrumb);
     app.component("a-breadcrumb-item", BreadcrumbItem);
     app.component("a-radio", Radio);
+    app.component("a-radio-button", Radio.Button)
     app.component("a-radio-group", RadioGroup);
 }
