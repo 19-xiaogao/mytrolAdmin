@@ -22,109 +22,115 @@ const adminMenu = [
         icon: "icon-icon2-hover1",
         text: "总揽",
         id: 1,
-        path: "/overview",
+        path: "/overview"
     },
     {
         icon: "icon-a-bianzu4",
         text: "审核",
         path: "/audit",
-        id: 3,
+        id: 3
     },
     {
         icon: "icon-a-bianzu311",
         text: "新增",
         path: "/setting",
-        id: 7,
+        id: 7
     },
 
     {
         icon: "icon-a-bianzu32",
         text: "运营",
         path: "/operation",
-        id: 5,
+        id: 5
     },
     {
         icon: "icon-icon3",
         text: "创作",
         path: "/shelves",
-        id: 4,
+        id: 4
+    },
+    {
+        icon: "icon-icon3",
+        text: "盲盒创作",
+        path: "/bindBox",
+        id: 11
     },
     {
         icon: "icon-a-bianzu3",
         text: "作品",
         path: "/items",
-        id: 6,
+        id: 6
     },
     {
         icon: "icon-a-bianzu4",
         text: "订单",
         path: "/record",
-        id: 2,
+        id: 2
     },
     {
         icon: "icon-a-bianzu4",
         text: "查询",
         path: "/query",
-        id: 8,
+        id: 8
     },
     {
         icon: "icon-a-bianzu8",
         text: "白名单",
         path: "/whitelist",
-        id: 9,
+        id: 9
     },
     {
         icon: "icon-tui",
         text: "退款",
         path: "/refund",
-        id: 10,
-    },
+        id: 10
+    }
 ];
 const makeMenu = [
     {
         icon: "icon-icon2-hover1",
         text: "总揽",
         id: 1,
-        path: "/overview",
+        path: "/overview"
     },
     {
         icon: "icon-icon3",
         text: "创作",
         path: "/shelves",
-        id: 4,
+        id: 4
     },
     {
         icon: "icon-a-bianzu3",
         text: "作品",
         path: "/items",
-        id: 6,
-    },
+        id: 6
+    }
 ];
 const operationMenu = [
     {
         icon: "icon-icon2-hover1",
         text: "总揽",
         id: 1,
-        path: "/overview",
+        path: "/overview"
     },
     {
         icon: "icon-icon3",
         text: "创作",
         path: "/shelves",
-        id: 4,
+        id: 4
     },
     {
         icon: "icon-a-bianzu32",
         text: "运营",
         path: "/operation",
-        id: 5,
+        id: 5
     },
     {
         icon: "icon-a-bianzu3",
         text: "作品",
         path: "/items",
-        id: 6,
-    },
+        id: 6
+    }
 ];
 export default {
     setup() {
@@ -144,7 +150,7 @@ export default {
         const isOpacity = computed(() => (path) => path === currentPath.value ? "" : "opacity");
         const isColor = computed(() => (path) => path === currentPath.value ? "color:#ED6637" : "");
         return { menus, isOpacity, isColor };
-    },
+    }
 };
 </script>
 

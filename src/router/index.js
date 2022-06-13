@@ -15,135 +15,144 @@ const routes = [
                 path: "/overview",
                 name: "overview",
                 meta: {
-                    title: "总揽",
+                    title: "总揽"
                 },
-                component: () => import(/* webpackChunkName: 'overview' */ "@/views/Overview/index.vue"),
+                component: () => import(/* webpackChunkName: 'overview' */ "@/views/Overview/index.vue")
             },
             {
                 path: "/record",
                 name: "record",
                 meta: {
-                    title: "订单",
+                    title: "订单"
                 },
-                component: () => import(/* webpackChunkName: 'record' */ "@/views/Record/index.vue"),
+                component: () => import(/* webpackChunkName: 'record' */ "@/views/Record/index.vue")
             },
             {
                 path: "/audit",
                 name: "audit",
                 meta: {
-                    title: "审核",
+                    title: "审核"
                 },
-                component: () => import(/* webpackChunkName: 'Audit' */ "@/views/Audit/index.vue"),
+                component: () => import(/* webpackChunkName: 'Audit' */ "@/views/Audit/index.vue")
             },
             {
                 path: "/shelves",
                 name: "shelves",
                 meta: {
-                    title: "上架",
+                    title: "上架"
                 },
-                component: () => import(/* webpackChunkName: 'Shelves' */ "@/views/Shelves/index.vue"),
+                component: () => import(/* webpackChunkName: 'Shelves' */ "@/views/Shelves/index.vue")
             },
             {
                 path: "/operation",
                 name: "operation",
                 meta: {
-                    title: "运营",
+                    title: "运营"
                 },
-                component: () => import(/*webpackChunkName:'Operation'*/ "@/views/Operation/index.vue"),
+                component: () => import(/*webpackChunkName:'Operation'*/ "@/views/Operation/index.vue")
             },
             {
                 path: "/items",
                 name: "item",
                 meta: {
-                    title: "作品",
+                    title: "作品"
                 },
-                component: () => import(/*webpackChunkName:'item'*/ "@/views/Item/index.vue"),
+                component: () => import(/*webpackChunkName:'item'*/ "@/views/Item/index.vue")
             },
             {
                 path: "/setting",
                 name: "setting",
                 meta: {
-                    title: "设置",
+                    title: "设置"
                 },
                 component: () => import(/*webpackChunkName:'Setting'*/ "@/views/Setting/index.vue"),
-                children: [],
+                children: []
             },
             {
                 path: "/query",
                 name: "query",
                 meta: {
-                    title: "查询",
+                    title: "查询"
                 },
                 component: () => import(/*webpackChunkName:'Setting'*/ "@/views/Query/index.vue"),
-                children: [],
+                children: []
             },
             {
                 path: "/whitelist",
                 name: "Whitelist",
                 meta: {
-                    title: "白名单",
+                    title: "白名单"
                 },
                 component: () => import(/*webpackChunkName:'whitelist'*/ "@/views/Whitelist/index.vue"),
-                children: [],
+                children: []
             },
             {
                 path: "/whitelist/detail",
                 name: "Whitelist_detail",
                 meta: {
-                    title: "白名单详情",
+                    title: "白名单详情"
                 },
                 component: () => import(/*webpackChunkName:'WhitelistDetail'*/ "@/views/Whitelist/WhiteDetail.vue"),
-                children: [],
+                children: []
             },
             {
                 path: "/refund",
                 name: "refund",
                 meta: {
-                    title: "退款",
+                    title: "退款"
                 },
                 component: () => import(/*webpackChunkName:'Refund'*/ "@/views/Refund/index.vue"),
-                children: [],
+                children: []
             },
             {
                 path: "/refund/detail",
                 name: "refundDetail",
                 meta: {
-                    title: "退款详情",
+                    title: "退款详情"
                 },
                 component: () => import(/*webpackChunkName:'Refund'*/ "@/views/Refund/RefundDetail.vue"),
-                children: [],
+                children: []
             },
-        ],
+            {
+                path: "/bindBox",
+                name: "bindBox",
+                meta: {
+                    title: "创造盲盒"
+                },
+                component: () => import(/*webpackChunkName:'bindBox'*/"@/views/BindBox/index.vue"),
+                children: []
+            }
+        ]
     },
     {
         path: "/login",
         name: "login",
         meta: {
-            title: "登录",
+            title: "登录"
         },
-        component: () => import(/* webpackChunkName: 'Login' */ "@/views/Login.vue"),
+        component: () => import(/* webpackChunkName: 'Login' */ "@/views/Login.vue")
     },
     {
         path: "/share",
         name: "share",
         meta: {
-            title: "分享",
+            title: "分享"
         },
-        component: () => import(/* webpackChunkName:'Share'*/ "@/views/Share.vue"),
+        component: () => import(/* webpackChunkName:'Share'*/ "@/views/Share.vue")
     },
     {
         path: "/:catchAll(.*)",
         name: "NotFound",
         meta: {
-            title: "Not Found",
+            title: "Not Found"
         },
-        component: () => import(/* webpackChunkName: 'NotFound' */ "@/views/NotFound"),
-    },
+        component: () => import(/* webpackChunkName: 'NotFound' */ "@/views/NotFound")
+    }
 ];
 
 const router = createRouter({
     history: createWebHistory(),
-    routes,
+    routes
 });
 
 // 前置路由拦截
