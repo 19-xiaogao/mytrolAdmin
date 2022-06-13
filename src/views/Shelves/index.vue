@@ -112,14 +112,39 @@
                     </div>
                     <div v-if="free_number" class="ope-tag">限量免费</div>
                     <div v-if="private_sale" class="ope-tag">私人发售</div>
-                    <a-checkbox v-model:checked="is_whitelisted" style="font-size: 20px"
-                        >是否需要白名单</a-checkbox
-                    >
+                    <a-checkbox v-model:checked="is_whitelisted" style="font-size: 18px" class="ope-checkobx">
+                        是否需要白名单
+                    </a-checkbox>
+                    <a-popover title="提示" trigger="hover">
+                        <template #content>
+                            <p>
+                                设置该属性,属于盲盒开出的nft,私人发售，免费领取数量，价格，兑换关联，开售时间，都将无效。
+                            </p>
+                        </template>
+                        <a-checkbox
+                            v-model:checked="bind_box_nft"
+                            style="font-size: 18px"
+                            class="ope-checkobx"
+                        >
+                            是否属于盲盒藏品
+                        </a-checkbox>
+                    </a-popover>
                 </div>
             </div>
         </div>
         <div class="btns">
-            <a-button :loading="btnDisabled" class="btn" @click="handleUploadNftClick">
+            <a-button
+                :loading="btnDisabled"
+                class="btn"
+                v-if="bind_box_nft"
+                @click="handleMakeBindBoxNftClick"
+            >
+                <template #icon>
+                    <icon-svg class="icon" icon="icon-icon4"></icon-svg>
+                </template>
+                <span>创作</span>
+            </a-button>
+            <a-button :loading="btnDisabled" class="btn" v-else @click="handleUploadNftClick">
                 <template #icon>
                     <icon-svg class="icon" icon="icon-icon4"></icon-svg>
                 </template>
@@ -153,7 +178,13 @@
 <script>
 import { defineComponent, getCurrentInstance, onMounted, onUnmounted, reactive, ref, toRefs } from "vue";
 import dayjs from "dayjs";
-import { getClassificationApi, getSerisesIpApi, uploadAliOssApi, uploadNftApi } from "@api";
+import {
+    getClassificationApi,
+    getSerisesIpApi,
+    makeBindBoxNftApi,
+    uploadAliOssApi,
+    uploadNftApi,
+} from "@api";
 
 import { successNotify, uuidToCreateHash, warningNotify } from "@/utils";
 
@@ -179,6 +210,7 @@ let shelvesParams = {
     classification: [],
     equity_cover: "",
     is_whitelisted: false,
+    bind_box_nft: false,
 };
 export default defineComponent({
     components: {
@@ -259,6 +291,7 @@ export default defineComponent({
             currentIpName.value = "首页";
             btnDisabled.value = false;
             uploadParams.is_whitelisted = false;
+            uploadParams.bind_box_nft = false;
         };
 
         const uploadAllNftToOssApi = (formData) => {
@@ -295,7 +328,6 @@ export default defineComponent({
         };
 
         const handleUploadNftClick = async () => {
-            console.log(uploadParams.is_whitelisted);
             btnDisabled.value = true;
             const userSelectTime = dayjs(uploadParams.opening_time).unix();
             if (userSelectTime < dayjs(Date.now()).unix()) {
@@ -389,6 +421,99 @@ export default defineComponent({
                 successNotify("创作成功，请等待审核通过。区块上链中...");
             }
         };
+
+        const handleMakeBindBoxNftClick = async () => {
+            btnDisabled.value = true;
+            const userSelectTime = dayjs(uploadParams.opening_time).unix();
+            if (userSelectTime < dayjs(Date.now()).unix()) {
+                btnDisabled.value = false;
+                return warningNotify("请选择正确的开售时间，当前你选择的时间已过。");
+            }
+            if (!uploadParams.name.trim()) {
+                warningNotify("请输入作品名称");
+                return (btnDisabled.value = false);
+            }
+            if (uploadParams.name.trim().length >= 50) {
+                warningNotify("作品名称过长,50字以内");
+                return (btnDisabled.value = false);
+            }
+
+            if (!uploadParams.description.trim()) {
+                warningNotify("请输入描述");
+                return (btnDisabled.value = false);
+            }
+            if (!uploadParams.number) {
+                warningNotify("请输入输入数量");
+                return (btnDisabled.value = false);
+            }
+            if (Number(uploadParams.number) <= 0) {
+                warningNotify("数量不能小于或等于0");
+                return (btnDisabled.value = false);
+            }
+            // nft 创作的数量小于10张
+            if (Number(uploadParams.number) >= 100000) {
+                warningNotify("创作的数量应小于10万张");
+                return (btnDisabled.value = false);
+            }
+            if (!uploadParams.price) {
+                warningNotify("请输入价格");
+                return (btnDisabled.value = false);
+            }
+            if (uploadParams.classification.length === 0) {
+                warningNotify("请选择分类");
+                return (btnDisabled.value = false);
+            }
+            if (Number(uploadParams.price) < 0) {
+                warningNotify("价格不能小于0");
+                return (btnDisabled.value = false);
+            }
+            if (Number(uploadParams.price) < 0.01) {
+                warningNotify("价格不能小于一分钱");
+                return (btnDisabled.value = false);
+            }
+            if (!uploadParams.opening_time) {
+                warningNotify("请选择上架时间");
+                return (btnDisabled.value = false);
+            }
+            if (!uploadParams.nft_file.size) {
+                warningNotify("请上传数字藏品");
+                return (btnDisabled.value = false);
+            }
+            if (!uploadParams.nft_background.size) {
+                warningNotify("请上传藏品描述图片");
+                return (btnDisabled.value = false);
+            }
+            if (!uploadParams.nft_thumbnail.size) {
+                warningNotify("请上传缩略图");
+                return (btnDisabled.value = false);
+            }
+            const formData = new FormData();
+
+            uploadParams.classification = uploadParams.classification.join();
+            uploadParams.is_whitelisted = String(uploadParams.is_whitelisted);
+            for (let key in uploadParams) {
+                formData.append(key, uploadParams[key]);
+            }
+            if (!uploadParams.nft_background.size) {
+                formData.set("nft_background", "");
+            }
+            formData.set("opening_time", String(userSelectTime));
+            formData.set("is_blind_box_nft", String(uploadParams.bind_box_nft));
+            const { err_code } = await makeBindBoxNftApi(formData, {
+                headers: { "content-type": "application/x-www-form-urlencoded" },
+            });
+            if (err_code === "0") {
+                initParams();
+                proxy.$refs.uploadNftRef.imgSrc = "";
+                proxy.$refs.uploadCollection.imgSrc = "";
+                proxy.$refs.nftThumbnailRef.imgSrc = "";
+                proxy.$refs.operationActivity.free_number = 0;
+                proxy.$refs.operationActivity.private_sale = false;
+                proxy.$refs.equityActivity.initData();
+                successNotify("创作成功，请等待审核通过。区块上链中...");
+            }
+        };
+
         const handleMenuClick = (e) => {
             uploadParams.series_ip = e.key;
             const findName = ipList.value.find((item) => item.name === e.key);
@@ -437,6 +562,7 @@ export default defineComponent({
             handleCloseEquityActivityClick,
             handleAssociatedFusionClick,
             handleConversionActivityClick,
+            handleMakeBindBoxNftClick,
             isEquityActivity,
             nftAllImgType,
             priviesImgComponentParams,
@@ -711,6 +837,7 @@ export default defineComponent({
             .ope-act-b-l {
                 display: flex;
                 margin-top: 24px;
+                align-items: center;
             }
 
             .opeAct-button {
