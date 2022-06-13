@@ -51,7 +51,7 @@ const adminMenu = [
     },
     {
         icon: "icon-icon3",
-        text: "盲盒创作",
+        text: "盲盒",
         path: "/bindBox",
         id: 11
     },
