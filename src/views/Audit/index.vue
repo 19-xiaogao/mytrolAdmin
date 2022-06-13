@@ -2,6 +2,12 @@
     <div class="order page-height">
         <div class="header">
             <h4>审核</h4>
+            <div>
+                <a-radio-group v-model:value="auditStatus" @change="handleRadioChange">
+                    <a-radio-button value="a">审核nft</a-radio-button>
+                    <a-radio-button value="b">审核盲盒</a-radio-button>
+                </a-radio-group>
+            </div>
             <div class="search-box">
                 <div class="dropdown">
                     <div class="current-option">
@@ -55,7 +61,7 @@ import { defineComponent, onMounted, onUnmounted, reactive, ref, toRefs } from "
 import dayjs from "dayjs";
 
 import { joinPreviewUrl, successNotify } from "@/utils";
-import { getPublishingApi } from "@api";
+import { getPublishingApi, getBindBoxNftPublishingApi } from "@api";
 import { pollingQueryPublishingApi } from "@/api/pllingApi";
 import AuditDetail from "./AuditDetail";
 
@@ -146,7 +152,7 @@ export default defineComponent({
             defaultPageSize: 10,
             showTotal: (total) => `一共 ${total} 条`,
         });
-
+        const auditStatus = ref("a");
         let currentItemDetail = reactive({ isOrderShow: false, detailMessage: {} });
 
         const queryParams = ref(queryList);
@@ -179,6 +185,9 @@ export default defineComponent({
         onUnmounted(() => {
             window.removeEventListener("resize", calculateScroll);
         });
+        const handleRadioChange = () => {
+            getPublishingList(pagination);
+        };
         const assignmentFunc = (result) => {
             // no data ,result is array.
             if (Array.isArray(result)) {
@@ -196,9 +205,17 @@ export default defineComponent({
             }));
         };
         const getPublishingList = async (pagination) => {
-            const { err_code, result } = await getPublishingApi(pagination);
-            if (err_code === "0") {
-                assignmentFunc(result);
+            if (auditStatus.value === "a") {
+                const { err_code, result } = await getPublishingApi(pagination);
+                if (err_code === "0") {
+                    assignmentFunc(result);
+                }
+            } else {
+                const { err_code, result } = await getBindBoxNftPublishingApi(pagination);
+                console.log(result);
+                if (err_code === "0") {
+                    assignmentFunc(result);
+                }
             }
         };
         const handleOrderDetailClick = (row) => {
@@ -227,8 +244,10 @@ export default defineComponent({
             queryValue,
             scrollHeight,
             pagination,
+            auditStatus,
             ...toRefs(currentItemDetail),
             handlePaginationChange,
+            handleRadioChange,
         };
     },
 });
