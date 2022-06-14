@@ -1,80 +1,95 @@
 <template>
     <div class="ip-detail page-height">
-        <div class="ip-detail-title">
-            <div class="title-l">
-                <div :class="showPrivateClass(0)" @click="handleTitleClick(0)">作品</div>
-                <div :class="showPrivateClass(1)" @click="handleTitleClick(1)">私人发售</div>
-            </div>
-            <div class="title-r">
-                <TabBar v-model:currentIndex="currentMenu" :menuList="menuList" />
-            </div>
-        </div>
-        <div class="ip-lists">
-            <div
-                v-for="item in renderWorksList"
-                :key="item.id"
-                class="card"
-                @click="handleItemCardClick(item)"
-                @mouseout="() => handleMouseover(false, item.id)"
-                @mouseover="() => handleMouseover(true, item.id)"
-            >
-                <div :ref="String(item.id)" class="img">
-                    <img :src="item.file" alt="" />
+        <a-tabs size="small">
+            <a-tab-pane key="1" tab="nft作品">
+                <div class="ip-detail-title">
+                    <div class="title-l">
+                        <div :class="showPrivateClass(0)" @click="handleTitleClick(0)">作品</div>
+                        <div :class="showPrivateClass(1)" @click="handleTitleClick(1)">私人发售</div>
+                    </div>
+                    <div class="title-r">
+                        <TabBar v-model:currentIndex="currentMenu" :menuList="menuList" />
+                    </div>
                 </div>
-                <a-dropdown v-if="showOptionsElement(item.publish)" class="options">
-                    <p>
-                        <span class="text">设置</span>
-                        <icon-svg class="icon" icon="icon-a-bianzu13"></icon-svg>
-                    </p>
-                    <template #overlay>
-                        <a-menu>
-                            <a-menu-item @click="handleShelvesClick(item.id, item.publish)">
-                                <span>{{ showSwitchShelves(item.publish) }}</span>
-                            </a-menu-item>
-                            <a-menu-item @click="handleNftTransferStatusClick(item.id, item.can_transfer)">
-                                <span> {{ item.can_transfer ? "关闭转赠" : "开启转赠" }} </span>
-                            </a-menu-item>
-                            <a-menu-item
-                                v-if="showQrCode(item.free, item.publish)"
-                                @click="handleQrCodeClick(item.id)"
-                            >
-                                <span>小程序二维码</span>
-                            </a-menu-item>
-                        </a-menu>
-                    </template>
-                </a-dropdown>
+                <div class="ip-lists">
+                    <div
+                        v-for="item in renderWorksList"
+                        :key="item.id"
+                        class="card"
+                        @click="handleItemCardClick(item)"
+                        @mouseout="() => handleMouseover(false, item.id)"
+                        @mouseover="() => handleMouseover(true, item.id)"
+                    >
+                        <div :ref="String(item.id)" class="img">
+                            <img :src="item.file" alt="" />
+                        </div>
+                        <a-dropdown v-if="showOptionsElement(item.publish)" class="options">
+                            <p>
+                                <span class="text">设置</span>
+                                <icon-svg class="icon" icon="icon-a-bianzu13"></icon-svg>
+                            </p>
+                            <template #overlay>
+                                <a-menu>
+                                    <a-menu-item @click="handleShelvesClick(item.id, item.publish)">
+                                        <span>{{ showSwitchShelves(item.publish) }}</span>
+                                    </a-menu-item>
+                                    <a-menu-item
+                                        @click="handleNftTransferStatusClick(item.id, item.can_transfer)"
+                                    >
+                                        <span> {{ item.can_transfer ? "关闭转赠" : "开启转赠" }} </span>
+                                    </a-menu-item>
+                                    <a-menu-item
+                                        v-if="showQrCode(item.free, item.publish)"
+                                        @click="handleQrCodeClick(item.id)"
+                                    >
+                                        <span>小程序二维码</span>
+                                    </a-menu-item>
+                                </a-menu>
+                            </template>
+                        </a-dropdown>
 
-                <div v-if="showOpenTime(item)" class="sale">
-                    <icon-svg class="icon" icon="icon-naozhong"></icon-svg>
-                    <span> {{ dayjs(item.opening_time * 1000).format("YYYY-MM-DD HH:mm") }}</span>
-                </div>
+                        <div v-if="showOpenTime(item)" class="sale">
+                            <icon-svg class="icon" icon="icon-naozhong"></icon-svg>
+                            <span> {{ dayjs(item.opening_time * 1000).format("YYYY-MM-DD HH:mm") }}</span>
+                        </div>
 
-                <div class="me">
-                    <div class="me-t">
-                        <h3>{{ item.name }}</h3>
-                        <div class="avator-des">
-                            <div class="imgs">
-                                <img :src="item.author_avatar" alt="" />
-                                <img alt="" class="icon" src="@assets/images/v-icon.png" />
+                        <div class="me">
+                            <div class="me-t">
+                                <h3>{{ item.name }}</h3>
+                                <div class="avator-des">
+                                    <div class="imgs">
+                                        <img :src="item.author_avatar" alt="" />
+                                        <img alt="" class="icon" src="@assets/images/v-icon.png" />
+                                    </div>
+                                    <span class="txt-overflow" style="width: 100px">{{
+                                        item.author_nickname
+                                    }}</span>
+                                </div>
                             </div>
-                            <span class="txt-overflow" style="width: 100px">{{ item.author_nickname }}</span>
-                        </div>
-                    </div>
-                    <div class="me-m">
-                        <div v-if="showPrice(item.publish)" class="manay">
-                            {{ showFreePrice(item.free, item.price) }}
-                        </div>
+                            <div class="me-m">
+                                <div v-if="showPrice(item.publish)" class="manay">
+                                    {{ showFreePrice(item.free, item.price) }}
+                                </div>
 
-                        <div class="_limit">
-                            <div class="_t1">限量</div>
-                            <div class="_t2">{{ item.number }}</div>
+                                <div class="_limit">
+                                    <div class="_t1">限量</div>
+                                    <div class="_t2">{{ item.number }}</div>
+                                </div>
+                            </div>
                         </div>
+                        <div class="mask"></div>
                     </div>
+                    <p v-if="renderWorksList.length <= 0" class="no-found">暂无作品</p>
                 </div>
-                <div class="mask"></div>
-            </div>
-            <p v-if="renderWorksList.length <= 0" class="no-found">暂无作品</p>
-        </div>
+            </a-tab-pane>
+            <a-tab-pane key="2" tab="盲盒nft" force-render>
+                <BindBoxNft />
+            </a-tab-pane>
+            <a-tab-pane key="3" tab="盲盒" force-render>
+                <BindBoxNft />
+            </a-tab-pane>
+        </a-tabs>
+
         <ShelvesNft
             v-model:shelvesVisible="shelvesVisible"
             :params="shelvesObject"
@@ -112,6 +127,7 @@ import { generatorQrCode, successNotify } from "@/utils";
 import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
+import BindBoxNft from "./BindBoxNft";
 // import AddWhiteList from "./AddWhiteList.vue";
 
 // publishStatusUnPublish = "0"; //下架
@@ -137,6 +153,7 @@ export default defineComponent({
         TabBar,
         ShelvesNft,
         PrivatePosters,
+        BindBoxNft,
         // AddWhiteList,
     },
     setup() {
@@ -207,13 +224,13 @@ export default defineComponent({
         });
 
         const returnPrivateTableData = (result) => {
-            console.log(currentIndex.value);
             return result.filter((item) => item.private_sell === !!currentIndex.value);
         };
         const getWorksList = async () => {
             const { err_code, result } = await getWorksApi(user.value.user_id);
             if (err_code === "0") {
                 worksList.value = returnPrivateTableData(result);
+                // worksList.value = result;
             }
         };
 
