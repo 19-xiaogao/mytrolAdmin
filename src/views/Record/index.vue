@@ -4,6 +4,7 @@
             <div class="switch-table">
                 <h4 :class="renderCurrentActive(0)" @click="handleSwitchTableClick(0)">全部订单</h4>
                 <h4 :class="renderCurrentActive(1)" @click="handleSwitchTableClick(1)">作品订单分类</h4>
+                <h4 :class="renderCurrentActive(2)" @click="handleSwitchTableClick(2)">所有盲盒管理</h4>
             </div>
             <!-- <div class="search-box">
                 <div class="dropdown">
@@ -28,6 +29,7 @@
         </div>
         <Order v-show="currentTableIndex === 0" @showOrderDetailComponent="handleShowOrderDetailComponent" />
         <ShareRecord v-show="currentTableIndex === 1" />
+        <ShareRecord v-show="currentTableIndex === 2" />
         <OrderDetail v-if="isOrderShow" :orderItem="currentOrderItem" @close="handleOrderDetailClick" />
     </div>
 </template>
