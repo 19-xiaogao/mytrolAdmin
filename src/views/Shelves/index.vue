@@ -120,6 +120,9 @@
                             <p>
                                 设置该属性,属于盲盒开出的nft,私人发售，免费领取数量，价格，兑换关联，开售时间，都将无效。
                             </p>
+                            <p>
+                                设置盲盒nft数量,就是设置盲盒开出nft的数量(假设该盲盒nft 为3,那么通过盲盒开出该nft数量就为3)
+                            </p>
                         </template>
                         <a-checkbox
                             v-model:checked="bind_box_nft"
