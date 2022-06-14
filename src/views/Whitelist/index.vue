@@ -38,12 +38,17 @@
                     <a-button
                         type="link"
                         @click.stop="handleDetailClick(record.WhiteList.id, record.WhiteList.name)"
-                        >查看详情</a-button
+                        >查看详情名单</a-button
                     >
                     <a-button
                         type="link"
                         @click.stop="handleAssociationClick(record.WhiteList.id, record.WhiteList.name)"
-                        >关联作品</a-button
+                        >关联nft作品</a-button
+                    >
+                    <a-button
+                        type="link"
+                        @click.stop="handleAssociationClick(record.WhiteList.id, record.WhiteList.name)"
+                        >关联盲盒</a-button
                     >
                     <!-- <a-button type="link" @click.stop="handleRenewClick(record.id)">
                         <a-popover v-model:visible="record.popoverVisible" title="Title" trigger="click">
@@ -85,21 +90,28 @@ const whiteListColumns = [
     {
         title: "白名单名称",
         key: "name",
-        width: "20%",
+        width: "10%",
         dataIndex: "name",
         slots: { customRender: "name" },
     },
     {
         title: "白名单描述",
         dataIndex: "memo",
-        width: "20%",
+        width: "10%",
         key: "memo",
         slots: { customRender: "memo" },
     },
     {
-        title: "已关联的作品",
+        title: "已关联的nft作品",
         dataIndex: "bindDenoms",
-        width: "40%",
+        width: "30%",
+        key: "bindDenoms",
+        slots: { customRender: "bindDenoms" },
+    },
+     {
+        title: "已关联的盲盒",
+        dataIndex: "bindDenoms",
+        width: "30%",
         key: "bindDenoms",
         slots: { customRender: "bindDenoms" },
     },
@@ -107,7 +119,7 @@ const whiteListColumns = [
         title: "操作",
         dataIndex: "setting",
         key: "setting",
-        width: "20%",
+        width: "10%",
         slots: { customRender: "setting" },
     },
 ];
