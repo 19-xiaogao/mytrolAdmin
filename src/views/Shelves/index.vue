@@ -121,7 +121,8 @@
                                 设置该属性,属于盲盒开出的nft,私人发售，免费领取数量，价格，兑换关联，开售时间，都将无效。
                             </p>
                             <p>
-                                设置盲盒nft数量,就是设置盲盒开出nft的数量(假设该盲盒nft 为3,那么通过盲盒开出该nft数量就为3)
+                                设置盲盒nft数量,就是设置盲盒开出nft的数量(假设该盲盒nft
+                                为3,那么通过盲盒开出该nft数量就为3)
                             </p>
                         </template>
                         <a-checkbox
@@ -428,10 +429,7 @@ export default defineComponent({
         const handleMakeBindBoxNftClick = async () => {
             btnDisabled.value = true;
             const userSelectTime = dayjs(uploadParams.opening_time).unix();
-            if (userSelectTime < dayjs(Date.now()).unix()) {
-                btnDisabled.value = false;
-                return warningNotify("请选择正确的开售时间，当前你选择的时间已过。");
-            }
+
             if (!uploadParams.name.trim()) {
                 warningNotify("请输入作品名称");
                 return (btnDisabled.value = false);
@@ -458,24 +456,8 @@ export default defineComponent({
                 warningNotify("创作的数量应小于10万张");
                 return (btnDisabled.value = false);
             }
-            if (!uploadParams.price) {
-                warningNotify("请输入价格");
-                return (btnDisabled.value = false);
-            }
             if (uploadParams.classification.length === 0) {
                 warningNotify("请选择分类");
-                return (btnDisabled.value = false);
-            }
-            if (Number(uploadParams.price) < 0) {
-                warningNotify("价格不能小于0");
-                return (btnDisabled.value = false);
-            }
-            if (Number(uploadParams.price) < 0.01) {
-                warningNotify("价格不能小于一分钱");
-                return (btnDisabled.value = false);
-            }
-            if (!uploadParams.opening_time) {
-                warningNotify("请选择上架时间");
                 return (btnDisabled.value = false);
             }
             if (!uploadParams.nft_file.size) {
@@ -500,8 +482,12 @@ export default defineComponent({
             if (!uploadParams.nft_background.size) {
                 formData.set("nft_background", "");
             }
+            formData.delete("bind_box_nft");
+            formData.set("price", "0");
             formData.set("opening_time", String(userSelectTime));
             formData.set("is_blind_box_nft", String(uploadParams.bind_box_nft));
+            const ossResult = await uploadAllNftToOssApi(formData);
+            setFormDateNft(formData, ossResult);
             const { err_code } = await makeBindBoxNftApi(formData, {
                 headers: { "content-type": "application/x-www-form-urlencoded" },
             });
