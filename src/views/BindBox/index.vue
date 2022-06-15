@@ -50,6 +50,17 @@
                         />
                     </div>
                     <div class="price">
+                        <div>盲盒开出nft数量</div>
+                        <a-input-number
+                            v-model:value="nft_number_per_blind_box"
+                            :max="100000"
+                            :min="0.01"
+                            placeholder="请输入数量"
+                            style="width: 150px"
+                            type="number"
+                        />
+                    </div>
+                    <div class="price">
                         <div>设置分类</div>
                         <a-select
                             v-model:value="classification"
@@ -58,7 +69,7 @@
                             placeholder="请选择分类"
                         >
                             <a-select-option v-for="item in classData" :key="item.id" :value="item.id"
-                            >{{ item.name }}
+                                >{{ item.name }}
                             </a-select-option>
                         </a-select>
                     </div>
@@ -98,9 +109,8 @@
                     <div v-if="free_number" class="ope-tag">限量免费</div>
                     <div v-if="private_sale" class="ope-tag">私人发售</div>
                     <a-checkbox v-model:checked="is_whitelisted" style="font-size: 20px"
-                    >是否需要白名单
-                    </a-checkbox
-                    >
+                        >是否需要白名单
+                    </a-checkbox>
                 </div>
             </div>
         </div>
@@ -126,14 +136,15 @@
         <AssociationActivity
             v-show="isConversionActivity"
             ref="ConversionActivity"
-            @close="handleConversionActivityClick" />
+            @close="handleConversionActivityClick"
+        />
     </div>
 </template>
 
 <script>
 import { defineComponent, getCurrentInstance, onMounted, onUnmounted, reactive, ref, toRefs } from "vue";
 import dayjs from "dayjs";
-import { getClassificationApi, uploadAliOssApi, uploadNftApi } from "@api";
+import { getClassificationApi, uploadAliOssApi, makeBindBoxApi } from "@api";
 
 import { successNotify, uuidToCreateHash, warningNotify } from "@/utils";
 
@@ -157,7 +168,9 @@ let shelvesParams = {
     private_sale: "",
     classification: [],
     equity_cover: "",
-    is_whitelisted: false
+    nft_number_per_blind_box: "",
+    is_whitelisted: false,
+    selectIds: [],
 };
 export default defineComponent({
     components: {
@@ -165,7 +178,7 @@ export default defineComponent({
         UploadCollection,
         PreviewImg,
         OperationActivity,
-        AssociationActivity
+        AssociationActivity,
     },
     setup() {
         const { proxy } = getCurrentInstance();
@@ -176,7 +189,7 @@ export default defineComponent({
 
         const priviesImgComponentParams = reactive({
             imgUrl: "",
-            visible: false
+            visible: false,
         });
 
         const uploadParams = reactive(shelvesParams);
@@ -184,7 +197,7 @@ export default defineComponent({
         const nftAllImgType = reactive({
             nft_file_type: "",
             nft_background_type: "",
-            nft_thumbnail_type: ""
+            nft_thumbnail_type: "",
         });
 
         const btnDisabled = ref(false);
@@ -226,6 +239,8 @@ export default defineComponent({
             currentIpName.value = "首页";
             btnDisabled.value = false;
             uploadParams.is_whitelisted = false;
+            uploadParams.selectIds = [];
+            uploadParams.nft_number_per_blind_box = "";
         };
 
         const uploadAllNftToOssApi = (formData) => {
@@ -242,13 +257,13 @@ export default defineComponent({
                 Promise.all([
                     uploadAliOssApi(nft_file_name, nft_file),
                     uploadAliOssApi(nft_background_name, nft_background),
-                    uploadAliOssApi(nft_thumbnail_name, nft_thumbnail)
+                    uploadAliOssApi(nft_thumbnail_name, nft_thumbnail),
                 ])
                     .then((result) => {
                         resolve({
                             nft_file: result[0].res.requestUrls[0],
                             nft_background: result[1].res.requestUrls[0],
-                            nft_thumbnail: result[2].res.requestUrls[0]
+                            nft_thumbnail: result[2].res.requestUrls[0],
                         });
                     })
                     .catch((err) => reject(err));
@@ -327,6 +342,8 @@ export default defineComponent({
                 warningNotify("请上传缩略图");
                 return (btnDisabled.value = false);
             }
+            //@@@@
+            btnDisabled.value = false;
             const formData = new FormData();
 
             uploadParams.classification = uploadParams.classification.join();
@@ -339,19 +356,21 @@ export default defineComponent({
             }
             formData.set("opening_time", String(userSelectTime));
 
+            formData.delete("selectIds");
+            formData.set("blind_box_binds", uploadParams.selectIds);
             const ossResult = await uploadAllNftToOssApi(formData);
             setFormDateNft(formData, ossResult);
-
-            const { err_code } = await uploadNftApi(formData, {
-                headers: { "content-type": "application/x-www-form-urlencoded" }
-            });
+            const jsonParams = {};
+            formData.forEach((v, k) => (jsonParams[k] = v));
+            jsonParams.blind_box_binds = jsonParams.blind_box_binds.split(",").map((v) => Number(v));
+            const { err_code } = await makeBindBoxApi(jsonParams);
             if (err_code === "0") {
-                initParams();
-                proxy.$refs.uploadNftRef.imgSrc = "";
-                proxy.$refs.uploadCollection.imgSrc = "";
-                proxy.$refs.nftThumbnailRef.imgSrc = "";
+                // initParams();
+                // proxy.$refs.uploadNftRef.imgSrc = "";
+                // proxy.$refs.uploadCollection.imgSrc = "";
+                // proxy.$refs.nftThumbnailRef.imgSrc = "";
                 proxy.$refs.operationActivity.free_number = 0;
-                proxy.$refs.operationActivity.private_sale = false;
+                // proxy.$refs.operationActivity.private_sale = false;
                 successNotify("创作成功，请等待审核通过。区块上链中...");
             }
         };
@@ -368,11 +387,12 @@ export default defineComponent({
         };
 
         const handleAssociatedFusionClick = () => {
-            console.log("关联nft");
             isConversionActivity.value = true;
         };
-        const handleConversionActivityClick = (item) => {
-            console.log(item);
+        const handleConversionActivityClick = (selectIds) => {
+            if (selectIds) {
+                uploadParams.selectIds = JSON.parse(JSON.stringify(selectIds));
+            }
             isConversionActivity.value = false;
         };
 
@@ -390,9 +410,9 @@ export default defineComponent({
             btnDisabled,
             isOperationActivity,
             classData,
-            currentIpName
+            currentIpName,
         };
-    }
+    },
 });
 </script>
 

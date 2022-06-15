@@ -1,7 +1,7 @@
 <template>
     <div ref="conversionRef" class="operation-activity">
         <div class="header">
-            <span class="title">添加兑换关联</span>
+            <span class="title">添加盲盒NFT关联</span>
             <icon-svg class="icon" icon="icon-a-bianzu101" @click="handleHideClick"></icon-svg>
         </div>
         <div class="nft-list">
@@ -27,9 +27,8 @@
                         </div>
                     </div>
                     <div class="me-m">
-                        <div class="manay">{{ item.price }}$</div>
                         <div class="_limit">
-                            <div class="_t1">限量</div>
+                            <div class="_t1">数量</div>
                             <div class="_t2">{{ item.number }}</div>
                         </div>
                     </div>
@@ -48,9 +47,8 @@
 </template>
 
 <script>
-import { onMounted, onUpdated, ref, getCurrentInstance, computed } from "vue";
-import { getWorksApi } from "@/api/api.js";
-import { useStore } from "vuex";
+import { onMounted, onUpdated, ref, getCurrentInstance } from "vue";
+import { getBindBoxNftApi } from "@/api/api.js";
 export default {
     emits: ["close"],
 
@@ -59,7 +57,6 @@ export default {
     },
     setup(props, { emit }) {
         const { proxy } = getCurrentInstance();
-        const store = useStore();
 
         const conversionRef = ref(null);
         const loading = ref(false);
@@ -71,8 +68,6 @@ export default {
             }, 400);
         };
 
-        const user = computed(() => store.getters.getUser);
-
         onUpdated(() => {
             conversionRef.value.style.animation = "sliding-show 0.5s linear 0s";
         });
@@ -82,36 +77,27 @@ export default {
         });
 
         const returnPrivateTableData = (result) => {
-            return result
-                .map((item) => ({
-                    ...item,
-                    file: proxy.joinPreviewUrl(item.file),
-                    author_avatar: proxy.joinPreviewUrl(item.author_avatar),
-                    selected: false,
-                }))
-                .filter((item) => item.publish === "2" && item.free === "false");
+            return result.map((item) => ({
+                ...item,
+                file: proxy.joinPreviewUrl(item.file),
+                author_avatar: proxy.joinPreviewUrl(item.author_avatar),
+                selected: false,
+            }));
         };
 
         const getWorksList = async () => {
-            const { err_code, result } = await getWorksApi(user.value.user_id);
+            const { err_code, result } = await getBindBoxNftApi();
             if (err_code === "0") {
-                worksList.value = returnPrivateTableData(result);
+                worksList.value = returnPrivateTableData(result.list);
             }
         };
 
         const handleSaveSettingClick = () => {
-            console.log("save");
+            const selectIds = worksList.value.filter((v) => v.selected).map((m) => m.id);
+            emit("close", selectIds);
         };
         const handleSelectedClick = (index) => {
-            const selectedNumber = worksList.value.filter((item) => item.selected).length;
-            worksList.value.forEach((item) => {
-                if (selectedNumber < 2) {
-                    worksList.value[index].selected = true;
-                } else {
-                    item.selected = false;
-                    worksList.value[index].selected = true;
-                }
-            });
+            worksList.value[index].selected = !worksList.value[index].selected;
         };
 
         return {
@@ -286,15 +272,6 @@ export default {
                 }
 
                 .me-m {
-                    margin-left: 20px;
-
-                    .manay {
-                        font-size: 19px;
-                        color: #fff;
-                        font-weight: 500;
-                        text-align: right;
-                    }
-
                     ._limit {
                         height: 20px;
                         border-radius: 6px;
