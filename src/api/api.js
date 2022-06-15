@@ -205,7 +205,7 @@ export const makeBindBoxNftApi = (data) => server.post("/nft_make_without_money"
     }
 });
 
-//管理员获取盲盒列表
+//管理员获取盲盒审核列表
 export const getBindBoxNftPublishingApi = (params) => server.get("/blind_box/publishing/" + params.current + "/" + params.numbers)
 
 //获取盲盒nft列表
@@ -216,3 +216,4 @@ export const makeBindBoxApi = (data) => server.post("/blind_box_make", data)
 
 //管理员审核盲盒
 export const reviewBindBoxApi = (data) => server.post("/blind_box/review", data)
+

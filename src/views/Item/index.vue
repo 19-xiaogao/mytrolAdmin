@@ -85,9 +85,9 @@
             <a-tab-pane key="2" tab="盲盒nft" force-render>
                 <BindBoxNft />
             </a-tab-pane>
-            <a-tab-pane key="3" tab="盲盒" force-render>
-                <BindBoxNft />
-            </a-tab-pane>
+            <!-- <a-tab-pane key="3" tab="盲盒" force-render>
+                <BindBox />
+            </a-tab-pane> -->
         </a-tabs>
 
         <ShelvesNft
@@ -128,6 +128,7 @@ import PrivatePosters from "@/views/Item/PrivatePosters";
 import TabBar from "@/components/TabBar";
 import ShelvesNft from "./ShelvesNft";
 import BindBoxNft from "./BindBoxNft";
+// import BindBox from "./BindBox.vue";
 // import AddWhiteList from "./AddWhiteList.vue";
 
 // publishStatusUnPublish = "0"; //下架
@@ -154,6 +155,7 @@ export default defineComponent({
         ShelvesNft,
         PrivatePosters,
         BindBoxNft,
+        // BindBox,
         // AddWhiteList,
     },
     setup() {
