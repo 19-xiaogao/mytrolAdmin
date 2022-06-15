@@ -37,13 +37,14 @@
 
 <script>
 import { getCurrentInstance, onUpdated, ref } from "vue";
-import { auditPassedApi } from "@api";
-import { errorNotify } from "@/utils";
+import { auditPassedApi, reviewBindBoxApi } from "@api";
+import { errorNotify, successNotify } from "@/utils";
 
 export default {
     emits: ["clonse"],
     props: {
         messageDetail: Object,
+        auditStatus: String,
     },
     setup(props, { emit }) {
         const { proxy } = getCurrentInstance();
@@ -62,7 +63,23 @@ export default {
         };
         const handleAuditClick = (bol) => {
             const status = bol ? "success" : "failed";
-            auditPassed(String(props.messageDetail.id), status);
+            if (props.auditStatus === "a") {
+                auditPassed(String(props.messageDetail.id), status);
+            } else {
+                auditBindBox(String(props.messageDetail.id), status);
+            }
+        };
+        const auditBindBox = async (denom_id, status) => {
+            const { err_code } = await reviewBindBoxApi({
+                denom_id: String(denom_id),
+                status,
+            });
+            if (err_code === "0") {
+                emit("clonse", "refresh", props.messageDetail.id);
+                successNotify("审核成功");
+            } else {
+                errorNotify("审核失败,区块上链中...");
+            }
         };
         const auditPassed = async (denom_id, status) => {
             const { err_code } = await auditPassedApi({
@@ -70,6 +87,7 @@ export default {
                 status,
             });
             if (err_code === "0") {
+                successNotify("审核成功");
                 emit("clonse", "refresh", props.messageDetail.id);
             } else {
                 errorNotify("审核失败,区块上链中...");

@@ -52,7 +52,12 @@
                 <a-button type="link" @click.stop="handleOrderDetailClick(record)">查看 </a-button>
             </template>
         </a-table>
-        <AuditDetail v-if="isOrderShow" v-model:messageDetail="detailMessage" @clonse="handleCloseClick" />
+        <AuditDetail
+            v-if="isOrderShow"
+            v-model:messageDetail="detailMessage"
+            v-model="auditStatus"
+            @clonse="handleCloseClick"
+        />
     </div>
 </template>
 
@@ -60,9 +65,8 @@
 import { defineComponent, onMounted, onUnmounted, reactive, ref, toRefs } from "vue";
 import dayjs from "dayjs";
 
-import { joinPreviewUrl, successNotify } from "@/utils";
+import { joinPreviewUrl } from "@/utils";
 import { getPublishingApi, getBindBoxNftPublishingApi } from "@api";
-import { pollingQueryPublishingApi } from "@/api/pllingApi";
 import AuditDetail from "./AuditDetail";
 
 const columns = [
@@ -222,13 +226,10 @@ export default defineComponent({
             currentItemDetail.detailMessage = row.record;
             currentItemDetail.isOrderShow = !currentItemDetail.isOrderShow;
         };
-        const handleCloseClick = async (refresh, id) => {
+        const handleCloseClick = async (refresh) => {
             if (refresh) {
                 // 由于区块链有延迟,所以递归查询数据
-                pollingQueryPublishingApi(pagination, id, (result) => {
-                    assignmentFunc(result);
-                    successNotify("审核成功。");
-                });
+                getPublishingList(pagination);
             }
             currentItemDetail.isOrderShow = !currentItemDetail.isOrderShow;
         };
