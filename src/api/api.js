@@ -199,7 +199,20 @@ export const querySystemStatusApi = () => server.get("/get_system_status");
 export const setWhitelistStatusApi = (params) => server.post("/backend/set_demon_whitelist_status", params);
 
 // 创建盲盒nft
-export const makeBindBoxNftApi = (params) => server.post("/nft_make_without_money", params);
+export const makeBindBoxNftApi = (data) => server.post("/nft_make_without_money", data, {
+    headers: {
+        "content-type": "application/x-www-form-urlencoded"
+    }
+});
 
 //管理员获取盲盒列表
 export const getBindBoxNftPublishingApi = (params) => server.get("/blind_box/publishing/" + params.current + "/" + params.numbers)
+
+//获取盲盒nft列表
+export const getBindBoxNftApi = () => server.get('/backend_get_blind_box_nft')
+
+//创建盲盒
+export const makeBindBoxApi = (data) => server.post("/blind_box_make", data)
+
+//管理员审核盲盒
+export const reviewBindBoxApi = (data) => server.post("/blind_box/review", data)
