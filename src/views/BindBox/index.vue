@@ -102,10 +102,10 @@
                         <icon-svg v-else icon="icon-a-bianzu34"></icon-svg>
                         关联nft
                     </div>
-                    <div class="opeAct-button" @click="handleShowOperationActivityClick">
+                    <!-- <div class="opeAct-button" @click="handleShowOperationActivityClick">
                         <icon-svg class="icon" icon="icon-qizi"></icon-svg>
                         运营活动
-                    </div>
+                    </div> -->
                     <div v-if="free_number" class="ope-tag">限量免费</div>
                     <div v-if="private_sale" class="ope-tag">私人发售</div>
                     <a-checkbox v-model:checked="is_whitelisted" style="font-size: 20px"
