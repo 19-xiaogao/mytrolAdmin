@@ -365,12 +365,12 @@ export default defineComponent({
             jsonParams.blind_box_binds = jsonParams.blind_box_binds.split(",").map((v) => Number(v));
             const { err_code } = await makeBindBoxApi(jsonParams);
             if (err_code === "0") {
-                // initParams();
-                // proxy.$refs.uploadNftRef.imgSrc = "";
-                // proxy.$refs.uploadCollection.imgSrc = "";
-                // proxy.$refs.nftThumbnailRef.imgSrc = "";
+                initParams();
+                proxy.$refs.uploadNftRef.imgSrc = "";
+                proxy.$refs.uploadCollection.imgSrc = "";
+                proxy.$refs.nftThumbnailRef.imgSrc = "";
                 proxy.$refs.operationActivity.free_number = 0;
-                // proxy.$refs.operationActivity.private_sale = false;
+                proxy.$refs.operationActivity.private_sale = false;
                 successNotify("创作成功，请等待审核通过。区块上链中...");
             }
         };
