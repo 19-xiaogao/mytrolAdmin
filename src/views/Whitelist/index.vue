@@ -7,6 +7,9 @@
         <div class="h-r">
             <a-input placeholder="搜索白名单" class="input" @keydown.enter="handleSearchEnter"></a-input>
             <a-button class="btn" type="primary" @click="handleGroupWhiteClick">添加白名单分组</a-button>
+            <a-button class="btn" type="primary" @click="handleGroupLimitWhiteClick"
+                >添加限购白名单分组</a-button
+            >
         </div>
         <div class="content">
             <a-table
@@ -62,6 +65,7 @@
             </a-table>
         </div>
         <AddGroupModal v-model:createVisible="createWhiteVisible" @ok="handleAddWhiteListClick" />
+        <AddLimitGroupModal v-model:createVisible="createWhiteLimitVisible" @ok="handleAddWhiteListClick" />
         <ExportUserModal
             :btnType="isExportBtn"
             v-show="isConversionActivity"
@@ -75,6 +79,7 @@
 import { onMounted, ref, onUnmounted } from "vue";
 import { useRouter } from "vue-router";
 import AddGroupModal from "./AddGroupModal.vue";
+import AddLimitGroupModal from "./AddLimitGroupModal.vue";
 import ExportUserModal from "./ExportUserModal.vue";
 import { queryAllWhiteListApi, unBindDenomWhiteListApi } from "@/api/api.js";
 import { Modal } from "ant-design-vue";
@@ -108,7 +113,7 @@ const whiteListColumns = [
         key: "bindDenoms",
         slots: { customRender: "bindDenoms" },
     },
-     {
+    {
         title: "已关联的盲盒",
         dataIndex: "bindDenoms",
         width: "30%",
@@ -127,10 +132,12 @@ export default {
     components: {
         AddGroupModal,
         ExportUserModal,
+        AddLimitGroupModal,
     },
     setup() {
         const queryAddress = ref("");
         const createWhiteVisible = ref(false);
+        const createWhiteLimitVisible = ref(false);
         const whiteList = ref([]);
         const currentId = ref("0");
         const scrollHeight = ref();
@@ -190,6 +197,10 @@ export default {
             }
             queryAllWhiteList();
         };
+        const handleGroupLimitWhiteClick = () => {
+            createWhiteLimitVisible.value = true;
+        };
+
         const handleWhiteCloseClick = (denom_id, whitelist_id) => {
             Modal.confirm({
                 title: "你确定想解除绑定嘛?",
@@ -208,6 +219,7 @@ export default {
         return {
             queryAddress,
             popoverVisible,
+            createWhiteLimitVisible,
             isConversionActivity,
             whiteList,
             createWhiteVisible,
@@ -221,6 +233,7 @@ export default {
             handleAssociationClick,
             handleDetailClick,
             handleConversionActivityClick,
+            handleGroupLimitWhiteClick,
             handleSearchEnter,
         };
     },

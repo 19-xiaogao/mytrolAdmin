@@ -217,3 +217,8 @@ export const makeBindBoxApi = (data) => server.post("/blind_box_make", data)
 //管理员审核盲盒
 export const reviewBindBoxApi = (data) => server.post("/blind_box/review", data)
 
+//白名单关联nft
+export const addLimitWhitelistApi = (data) => server.post('/restrict_buy_number_whitelist', data)
+
+//获取绑定白名单的nft
+export const GetBindWhitelistNftApi = () => server.get('/get_nfts_bind_whitelist')

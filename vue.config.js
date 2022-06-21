@@ -30,7 +30,7 @@ module.exports = {
         proxy: {
             // 本地开发环境地址....
             "/relay/dbchain/oracle/nft": {
-                target: "http://192.168.0.19:3001",
+                target: "http://192.168.0.58:3001",
                 ws: true,
                 changeOrigin: true,
             },

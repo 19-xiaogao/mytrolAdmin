@@ -30,6 +30,9 @@
                 <template #setting="{ record }">
                     <a-button type="link" @click.stop="handleRemoteToWhiteClick(record)">删除 </a-button>
                 </template>
+                <template #buyNumber="{ record }">
+                    <span>{{ record.buyNumber ? record.buyNumber : "暂无限购" }}</span>
+                </template>
             </a-table>
         </div>
         <AddGroupModal v-model:createVisible="createWhiteVisible" @ok="handleAddWhiteListClick" />
@@ -68,6 +71,12 @@ const txColumns = [
         key: "address",
         dataIndex: "address",
         slots: { customRender: "address" },
+    },
+    {
+        title: "限购数量",
+        key: "buyNumber",
+        dataIndex: "buyNumber",
+        slots: { customRender: "buyNumber" },
     },
     {
         title: "操作",
@@ -133,18 +142,17 @@ export default {
             }
         };
 
-        const queryWhiteList = async (id, name) => {
+        const queryWhiteList = async (id) => {
             const result = await queryWhiteListApi(id);
-
+            console.log(result);
             if (result.err_code === "0") {
-                if (result.result[name]) {
-                    currentWhiteUserData.value = result.result[name].map((item, index) => ({
-                        id: index + 1,
-                        address: item,
-                    }));
-                } else {
-                    currentWhiteUserData.value = [];
-                }
+                currentWhiteUserData.value = result.result.map((item, index) => ({
+                    id: index + 1,
+                    address: item.user_address,
+                    buyNumber: item.restrict_buying_number,
+                }));
+            } else {
+                currentWhiteUserData.value = [];
             }
         };
 
