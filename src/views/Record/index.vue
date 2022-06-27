@@ -4,7 +4,7 @@
             <div class="switch-table">
                 <h4 :class="renderCurrentActive(0)" @click="handleSwitchTableClick(0)">全部订单</h4>
                 <h4 :class="renderCurrentActive(1)" @click="handleSwitchTableClick(1)">作品订单分类</h4>
-                <h4 :class="renderCurrentActive(2)" @click="handleSwitchTableClick(2)">所有盲盒管理</h4>
+                <!-- <h4 :class="renderCurrentActive(2)" @click="handleSwitchTableClick(2)">所有盲盒管理</h4> -->
             </div>
             <!-- <div class="search-box">
                 <div class="dropdown">

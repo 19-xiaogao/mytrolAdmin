@@ -50,7 +50,7 @@
                     >
                     <a-button
                         type="link"
-                        @click.stop="handleAssociationClick(record.WhiteList.id, record.WhiteList.name)"
+                        @click.stop="handleAssociationBindClick(record.WhiteList.id, record.WhiteList.name)"
                         >关联盲盒</a-button
                     >
                     <!-- <a-button type="link" @click.stop="handleRenewClick(record.id)">
@@ -113,13 +113,13 @@ const whiteListColumns = [
         key: "bindDenoms",
         slots: { customRender: "bindDenoms" },
     },
-    {
-        title: "已关联的盲盒",
-        dataIndex: "bindDenoms",
-        width: "30%",
-        key: "bindDenoms",
-        slots: { customRender: "bindDenoms" },
-    },
+    // {
+    //     title: "已关联的盲盒",
+    //     dataIndex: "bindDenoms",
+    //     width: "30%",
+    //     key: "bindDenoms",
+    //     slots: { customRender: "bindDenoms" },
+    // },
     {
         title: "操作",
         dataIndex: "setting",
@@ -187,6 +187,12 @@ export default {
             queryAllWhiteList();
         };
         const handleAssociationClick = (id) => {
+            isExportBtn.value = "association";
+            currentId.value = id;
+            isConversionActivity.value = true;
+        };
+        const handleAssociationBindClick = (id) => {
+            isExportBtn.value = "bindBox";
             currentId.value = id;
             isConversionActivity.value = true;
         };
@@ -231,6 +237,7 @@ export default {
             handleWhiteCloseClick,
             handleAddWhiteListClick,
             handleAssociationClick,
+            handleAssociationBindClick,
             handleDetailClick,
             handleConversionActivityClick,
             handleGroupLimitWhiteClick,

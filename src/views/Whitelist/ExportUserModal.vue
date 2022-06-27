@@ -2,7 +2,7 @@
     <div ref="conversionRef" class="operation-activity">
         <div class="header">
             <span class="title">{{
-                btnType === "association" ? "白名单于作品关联" : "将用户数据导入白名单"
+                btnType === "association" || btnType === "bindBox" ? "白名单于作品关联" : "将用户数据导入白名单"
             }}</span>
             <icon-svg class="icon" icon="icon-a-bianzu101" @click="handleHideClick"></icon-svg>
         </div>
@@ -59,7 +59,7 @@
 
 <script>
 import { onMounted, onUpdated, ref, getCurrentInstance, computed } from "vue";
-import { GetAdminAllNftApi, queryNftHoldersApi, queryNftApi, denomBindWhitelistApi } from "@/api/api.js";
+import { GetAdminAllNftApi, queryNftHoldersApi, queryNftApi, denomBindWhitelistApi,bindBoxWhitelistApi } from "@/api/api.js";
 import { addUserToWhiteListPollingApi } from "@/api/pllingApi.js";
 // import { useStore } from "vuex";
 import { successNotify, warningNotify } from "@/utils";
@@ -95,7 +95,7 @@ export default {
 
         // const user = computed(() => store.getters.getUser);
         const btnText = computed(() => {
-            if (props.btnType === "association") {
+            if (props.btnType === "association" || props.btnType === "bindBox") {
                 return "关联";
             } else if (props.btnType === "add") {
                 return "导入";
@@ -146,6 +146,17 @@ export default {
             if (!findData) return warningNotify("请选择作品");
             if (props.btnType === "association") {
                 const result = await denomBindWhitelistApi({
+                    denom_id: String(findData.id),
+                    whitelist_id: String(props.whitelistId),
+                });
+                if (result.err_code === "0") {
+                    successNotify("关联成功");
+                    searchValue.value = "";
+                    getWorksList();
+                    emit("close");
+                }
+            } else if (props.btnType === "bindBox") {
+                const result = await bindBoxWhitelistApi({
                     denom_id: String(findData.id),
                     whitelist_id: String(props.whitelistId),
                 });
