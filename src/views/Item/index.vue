@@ -407,7 +407,7 @@ export default defineComponent({
     .ip-lists {
         margin-top: 20px;
         overflow-y: auto;
-        height: 90%;
+        height: 80%;
         display: flex;
         flex-wrap: wrap;
         position: relative;
