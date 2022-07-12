@@ -85,6 +85,12 @@ const adminMenu = [
         path: "/refund",
         id: 10,
     },
+    {
+        icon: "icon-tui",
+        text: "合成",
+        path: "/fuse",
+        id: 11,
+    },
 ];
 const makeMenu = [
     {
@@ -169,12 +175,12 @@ export default {
 <style lang="scss" scoped>
 .sidebar {
     height: 100vh;
-    width: 60px;
+    width: 75px;
     background: var(--white);
     box-shadow: 4px 0px 8px 0px rgba(156, 156, 156, 0);
     overflow: hidden;
-    padding-top: 80px;
-
+    padding-top: 60px;
+    overflow-y: auto;
     li {
         height: 60px;
         margin-bottom: 10px;

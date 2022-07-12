@@ -121,6 +121,14 @@ const routes = [
                 },
                 component: () => import(/*webpackChunkName:'bindBox'*/"@/views/BindBox/index.vue"),
                 children: []
+            },
+            {
+                path: "/fuse",
+                name: "fuse",
+                meta: {
+                    title: "设置nft融合规则"
+                },
+                component: () => import(/*webpackChunkName:'fuse'*/"@/views/Fuse/index.vue")
             }
         ]
     },
