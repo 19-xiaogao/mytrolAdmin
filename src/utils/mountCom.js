@@ -19,6 +19,7 @@ import {
     Checkbox,
     Breadcrumb,
     Radio,
+    Drawer
 } from "ant-design-vue";
 
 import IconSvg from "@/components/IconSvg";
@@ -31,6 +32,7 @@ export default function (app) {
     app.component("icon-svg", IconSvg);
     app.component("a-dropdown", Dropdown);
     app.component("a-menu", Menu);
+    app.component("a-drawer", Drawer);
     app.component("a-menu-item", MenuItem);
     app.component("a-modal", Modal);
     app.component("a-button", Button);

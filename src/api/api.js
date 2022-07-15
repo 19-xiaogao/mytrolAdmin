@@ -225,3 +225,6 @@ export const GetBindWhitelistNftApi = () => server.get('/get_whitelist_bound_nft
 
 //管理员绑定盲盒和白名单
 export const bindBoxWhitelistApi = (data) => server.post("/backend/blind_box_bind_whitelist", data)
+
+//创建nft兑换规则
+export const addNftCompositionRules = (data) => server.post("/add_nft_composition_rules", data)

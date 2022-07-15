@@ -1,21 +1,38 @@
 <template>
-    <a-modal :visible="createVisible" class="modal" title="添加限购白名单分组">
+    <a-drawer
+        :visible="createVisible"
+        class="modal"
+        :width="720"
+        title="添加nft合成分组"
+        @close="handleClose"
+    >
         <div class="user-input">
             <div class="user">
-                <span>白名单名称</span>
-                <input v-model="groupName" placeholder="请输入白名单名称" required type="text " />
+                <span>规则名称</span>
+                <input v-model="groupName" placeholder="请输入合成名称" required type="text " />
             </div>
             <div class="user">
-                <span>白名单描述</span>
-                <input v-model="groupDesc" placeholder="请输入白名单描述" required type="text " />
-            </div>
-            <div class="user">
-                <span>关联nft</span>
+                <span>关联被合成的NFT</span>
                 <a-select
                     v-model:value="selectNft"
                     mode="multiple"
                     style="width: 100%"
-                    placeholder="请关联nft"
+                    placeholder="请关联被合成的NFT"
+                    :options="allNft"
+                    @change="handleChange"
+                    option-label-prop="name"
+                >
+                    <template #option="{ value: val, name }">
+                        <span role="img" :aria-label="val">{{ name }}</span>
+                    </template>
+                </a-select>
+            </div>
+            <div class="user">
+                <span>关联合成的NFT</span>
+                <a-select
+                    v-model:value="selectFuseNft"
+                    style="width: 100%"
+                    placeholder="请关联合成的NFT"
                     :options="allNft"
                     @change="handleChange"
                     option-label-prop="name"
@@ -32,14 +49,13 @@
         <template #footer>
             <a-button :loading="loading" class="create-user" @click="handleSureClick">确定 </a-button>
         </template>
-    </a-modal>
+    </a-drawer>
 </template>
 
 <script>
-import { defineComponent, onMounted, ref } from "vue";
-import { addLimitWhitelistApi, GetBindWhitelistNftApi } from "@/api/api.js";
+import { defineComponent, ref, onMounted } from "vue";
+import { addNftCompositionRules, GetAdminAllNftApi } from "@/api/api.js";
 import { successNotify, warningNotify } from "@/utils";
-
 export default defineComponent({
     props: {
         createVisible: {
@@ -49,9 +65,10 @@ export default defineComponent({
     setup(props, { emit }) {
         const loading = ref(false);
         const groupName = ref("");
-        const groupDesc = ref("");
-        const allNft = ref([]);
         const selectNft = ref([]);
+        const selectFuseNft = ref(undefined);
+        const allNft = ref([]);
+
         const handleClose = () => {
             emit("update:createVisible", false);
         };
@@ -59,23 +76,14 @@ export default defineComponent({
             if (groupName.value.trim() === "") {
                 return warningNotify("请输入名称");
             }
-            if (groupDesc.value.trim() === "") {
-                return warningNotify("请输入描述");
-            }
-            if (selectNft.value.length <= 0) {
-                return warningNotify("请关联nft");
-            }
 
-            const result = await addLimitWhitelistApi({
+            const result = await addNftCompositionRules({
                 name: groupName.value,
-                memo: groupDesc.value,
-                denom_list: selectNft.value,
             });
             if (result.err_code === "0") {
                 successNotify("添加成功");
                 setTimeout(() => {
                     groupName.value = "";
-                    groupDesc.value = "";
                     emit("update:createVisible", false);
                     emit("ok", false);
                 }, 1000);
@@ -84,25 +92,25 @@ export default defineComponent({
         onMounted(() => {
             getAllNft();
         });
-
         const getAllNft = async () => {
-            const result = await GetBindWhitelistNftApi();
+            const result = await GetAdminAllNftApi(1, 100000000);
             if (result.err_code === "0") {
-                allNft.value = result.result.map((v) => ({ value: v.id, ...v }));
+                allNft.value = result.result.list.map((v) => ({
+                    value: v.name + "," + v.id,
+                    ...v,
+                    title: v.name,
+                }));
+                console.log(allNft.value.length);
             }
-        };
-        const handleChange = (value) => {
-            console.log(`selected ${value}`);
         };
         return {
             handleClose,
             groupName,
             handleSureClick,
-            loading,
-            groupDesc,
             selectNft,
-            handleChange,
             allNft,
+            selectFuseNft,
+            loading,
         };
     },
 });
